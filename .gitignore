@@ -74,3 +74,9 @@ scripts/users_import.json
 # Cursor/VS Code settings (IDE-specific)
 .vscode/
 .cursor/
+
+# Platform-specific directories (iOS and Android only)
+linux/
+macos/
+web/
+windows/
