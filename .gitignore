@@ -48,3 +48,29 @@ app.*.map.json
 .env
 .env.local
 .env.*.local
+
+# Flutter metadata
+.metadata
+
+# Generated localization files (auto-generated from .arb files)
+lib/l10n/app_localizations*.dart
+
+# Utility/fix scripts (temporary development scripts)
+fix_*.py
+fix_*.sh
+
+# Temporary documentation files
+FIREBASE_FIX_SUMMARY.md
+IMPLEMENTATION_COMPLETE.md
+IMPROVEMENTS_SUMMARY.md
+IMPROVEMENT_PLAN.md
+LOCALIZATION_REPORT.md
+PROGRESS_REPORT.md
+PROJECT_STRUCTURE_REPORT.md
+
+# Test data files (may contain sensitive information)
+scripts/users_import.json
+
+# Cursor/VS Code settings (IDE-specific)
+.vscode/
+.cursor/
