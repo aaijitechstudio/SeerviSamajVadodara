@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Theme Colors -->
+    <color name="primary_orange">#F57C00</color>
+    <color name="background_cream">#FFF9F2</color>
+    <color name="background_white">#FFFFFF</color>
+</resources>
+

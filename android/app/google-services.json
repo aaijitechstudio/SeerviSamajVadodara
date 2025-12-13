@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "848209580988",
+    "project_id": "seervikshatriyasamajvadodara",
+    "storage_bucket": "seervikshatriyasamajvadodara.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848209580988:android:8c2b65f5bcf2a5594e11b9",
+        "android_client_info": {
+          "package_name": "org.seervi.samaj.vadodara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGATckWDb9MEK4pLjdk89eSbJils1qxVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
