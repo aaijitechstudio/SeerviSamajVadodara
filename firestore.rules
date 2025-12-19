@@ -51,17 +51,20 @@ service cloud.firestore {
       // Allow read if authenticated
       allow read: if isAuthenticated();
 
-      // Allow create if authenticated
+      // Allow create if authenticated and user is the author
       allow create: if isAuthenticated() &&
                      request.resource.data.authorId == request.auth.uid;
 
       // Allow update if:
       // - User is the author (for editing content), OR
       // - User is updating likes (any authenticated user can like), OR
+      // - User is updating comment count (any authenticated user can comment), OR
       // - User is admin
       allow update: if isAuthenticated() &&
                      (resource.data.authorId == request.auth.uid ||
                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likedBy', 'likesCount']) ||
+                      request.resource.data.diff(resource.data).affectedKeys().hasOnly(['commentsCount']) ||
+                      request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likedBy', 'likesCount', 'commentsCount']) ||
                       isAdmin());
 
       // Allow delete if:
@@ -69,6 +72,31 @@ service cloud.firestore {
       // - User is admin
       allow delete: if isAuthenticated() &&
                      (resource.data.authorId == request.auth.uid || isAdmin());
+
+      // ============================================
+      // COMMENTS SUBCOLLECTION
+      // ============================================
+      match /comments/{commentId} {
+        // Allow read if authenticated
+        allow read: if isAuthenticated();
+
+        // Allow create if authenticated
+        allow create: if isAuthenticated() &&
+                       request.resource.data.authorId == request.auth.uid &&
+                       request.resource.data.postId == postId;
+
+        // Allow update if:
+        // - User is the author (for editing), OR
+        // - User is admin
+        allow update: if isAuthenticated() &&
+                       (resource.data.authorId == request.auth.uid || isAdmin());
+
+        // Allow delete if:
+        // - User is the author, OR
+        // - User is admin
+        allow delete: if isAuthenticated() &&
+                       (resource.data.authorId == request.auth.uid || isAdmin());
+      }
     }
 
     // ============================================

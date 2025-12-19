@@ -29,7 +29,7 @@ class PostItem extends StatelessWidget {
             _buildContent(context),
 
             // Media
-            if (post.hasImages || post.hasVideo) ...[
+            if (post.hasImages || post.hasVideos) ...[
               const SizedBox(height: 12),
               _buildMedia(context),
             ],
@@ -197,12 +197,27 @@ class PostItem extends StatelessWidget {
           },
         ),
       );
-    } else if (post.hasVideo) {
-      // Video
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: VideoPlayerWidget(videoUrl: post.videoUrl!),
-      );
+    } else if (post.hasVideos) {
+      // Videos - show first video, or list if multiple
+      if (post.videoUrls!.length == 1) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: VideoPlayerWidget(videoUrl: post.videoUrls!.first),
+        );
+      } else {
+        // Multiple videos - show as list
+        return Column(
+          children: post.videoUrls!.map((videoUrl) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: VideoPlayerWidget(videoUrl: videoUrl),
+              ),
+            );
+          }).toList(),
+        );
+      }
     }
 
     return const SizedBox.shrink();

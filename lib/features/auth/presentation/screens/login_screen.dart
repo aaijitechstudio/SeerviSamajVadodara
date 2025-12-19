@@ -6,6 +6,7 @@ import '../../../../core/utils/app_utils.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/language_switcher.dart';
 import '../../../../core/widgets/loading_overlay.dart';
+import '../../../../core/widgets/google_sign_in_button.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'signup_screen.dart';
@@ -240,6 +241,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                   const SizedBox(height: 16),
 
+                  // Divider with "OR"
+                  Row(
+                    children: [
+                      Expanded(child: Divider(color: Colors.grey.shade300)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'OR',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Divider(color: Colors.grey.shade300)),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Google Sign In Button (Standard Design)
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final authState = ref.watch(authControllerProvider);
+                      return GoogleSignInButton(
+                        onPressed: _handleGoogleSignIn,
+                        isLoading: authState.isGoogleSignInLoading,
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
                   // Error Message
                   Consumer(
                     builder: (context, ref, child) {
@@ -373,6 +407,40 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
       );
+    } else if (mounted) {
+      // Check for error in auth state
+      final authState = ref.read(authControllerProvider);
+      if (authState.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authState.error!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    final authController = ref.read(authControllerProvider.notifier);
+
+    final success = await authController.signInWithGoogle();
+
+    if (success && mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+      );
+    } else if (mounted) {
+      // Check for error in auth state
+      final authState = ref.read(authControllerProvider);
+      if (authState.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authState.error!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 

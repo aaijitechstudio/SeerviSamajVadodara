@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,93 +17,115 @@ void main() async {
   // Load environment variables
   await AppConfig.load();
 
-  // Initialize Firebase - required for app to work
-  // MUST complete before any Firebase services are accessed
+  // Initialize Firebase - with robust error handling and retry logic
   // Firebase.initializeApp() will auto-detect config from google-services.json
   // and GoogleService-Info.plist files
-  try {
-    // Check if Firebase is already initialized
-    if (Firebase.apps.isEmpty) {
-      AppLogger.info('Initializing Firebase...');
-      await Firebase.initializeApp();
 
-      // Verify initialization was successful
-      if (Firebase.apps.isEmpty) {
-        throw Exception('Firebase.initializeApp() completed but no apps found');
-      }
-
-      // Additional verification - try to access a Firebase service
-      try {
-        final app = Firebase.app();
-        AppLogger.info(
-            'Firebase initialized successfully. App name: ${app.name}');
-      } catch (e) {
-        AppLogger.warning('Firebase app created but verification failed: $e');
-        // Continue anyway - might work
-      }
-
-      AppLogger.logFirebaseInit(success: true);
-    } else {
-      AppLogger.info(
-          'Firebase already initialized (${Firebase.apps.length} app(s))');
+  // Check if Firebase is already initialized
+  bool firebaseInitialized = false;
+  if (Firebase.apps.isNotEmpty) {
+    AppLogger.info(
+        'Firebase already initialized (${Firebase.apps.length} app(s))');
+    firebaseInitialized = true;
+  } else {
+    // Verify config files exist before attempting initialization
+    bool configFilesExist = _verifyFirebaseConfigFiles();
+    if (!configFilesExist) {
+      AppLogger.warning('Firebase config files may be missing. Please ensure:\n'
+          '- android/app/google-services.json exists\n'
+          '- ios/Runner/GoogleService-Info.plist exists\n'
+          'Then run: flutter clean && flutter pub get && flutter run');
     }
-  } catch (e, stackTrace) {
-    // Log error with full details - Firebase is required for this app
-    AppLogger.logFirebaseInit(success: false, error: e);
-    AppLogger.error('Firebase initialization failed', e, stackTrace);
 
-    // Don't continue if Firebase fails - show error screen
-    runApp(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Firebase Initialization Failed',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Error: ${e.toString()}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Please check:\n'
-                      '1. google-services.json is in android/app/\n'
-                      '2. GoogleService-Info.plist is in ios/Runner/\n'
-                      '3. Firebase project is properly configured\n'
-                      '4. Run: flutter clean && flutter pub get',
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'For more help, visit:\n'
-                      'https://firebase.google.com/docs/flutter/setup',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12, color: Colors.blue),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    return;
+    // Try to initialize Firebase with retry logic
+    for (int attempt = 1; attempt <= 3; attempt++) {
+      try {
+        AppLogger.info('Initializing Firebase... (Attempt $attempt/3)');
+
+        // Use default initialization - it will auto-detect config files
+        await Firebase.initializeApp();
+
+        // Verify initialization was successful
+        if (Firebase.apps.isEmpty) {
+          throw Exception(
+              'Firebase.initializeApp() completed but no apps found');
+        }
+
+        // Additional verification - try to access a Firebase service
+        try {
+          final app = Firebase.app();
+          AppLogger.info(
+              'Firebase initialized successfully. App name: ${app.name}');
+          AppLogger.logFirebaseInit(success: true);
+          firebaseInitialized = true;
+          break; // Success, exit retry loop
+        } catch (e) {
+          AppLogger.warning('Firebase app created but verification failed: $e');
+          if (attempt < 3) {
+            // Wait before retry
+            await Future.delayed(Duration(seconds: attempt));
+            continue;
+          } else {
+            // Last attempt failed
+            throw Exception(
+                'Firebase verification failed after all attempts: $e');
+          }
+        }
+      } on FirebaseException catch (e) {
+        // Handle Firebase-specific errors
+        AppLogger.error(
+            'Firebase initialization attempt $attempt failed with FirebaseException',
+            e,
+            StackTrace.current);
+
+        // Check for specific error codes
+        if (e.code == 'not-initialized' ||
+            e.message?.contains('not been correctly initialized') == true) {
+          AppLogger.warning('Firebase config files may not be processed. '
+              'This usually requires a clean rebuild:\n'
+              '1. Run: flutter clean\n'
+              '2. Run: flutter pub get\n'
+              '3. For iOS: cd ios && pod install && cd ..\n'
+              '4. Run: flutter run');
+        }
+
+        if (attempt < 3) {
+          // Wait before retry (exponential backoff)
+          await Future.delayed(Duration(seconds: attempt));
+          continue;
+        } else {
+          // All attempts failed
+          AppLogger.logFirebaseInit(success: false, error: e);
+          AppLogger.error('Firebase initialization failed after 3 attempts.', e,
+              StackTrace.current);
+          rethrow; // Re-throw to prevent app from starting without Firebase
+        }
+      } catch (e, stackTrace) {
+        AppLogger.error(
+            'Firebase initialization attempt $attempt failed', e, stackTrace);
+
+        if (attempt < 3) {
+          // Wait before retry (exponential backoff)
+          await Future.delayed(Duration(seconds: attempt));
+          continue;
+        } else {
+          // All attempts failed
+          AppLogger.logFirebaseInit(success: false, error: e);
+          AppLogger.error('Firebase initialization failed after 3 attempts.', e,
+              stackTrace);
+          rethrow; // Re-throw to prevent app from starting without Firebase
+        }
+      }
+    }
   }
 
+  // Verify Firebase is initialized before proceeding
+  if (!firebaseInitialized || Firebase.apps.isEmpty) {
+    throw Exception(
+        'Firebase initialization failed. Cannot start the app without Firebase.');
+  }
+
+  // Run the app - Firebase is now guaranteed to be initialized
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -125,7 +148,7 @@ class MyApp extends ConsumerWidget {
       themeMode: themeMode,
       locale: locale,
       home: const SplashScreen(),
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -139,4 +162,37 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
     );
   }
+}
+
+/// Verifies that Firebase config files exist in the expected locations
+/// Only checks in debug mode to avoid performance impact in release
+bool _verifyFirebaseConfigFiles() {
+  // Skip file system checks in release mode for better performance
+  if (!const bool.fromEnvironment('dart.vm.product')) {
+    try {
+      // Check Android config file
+      final androidConfig = File('android/app/google-services.json');
+      final androidExists = androidConfig.existsSync();
+
+      // Check iOS config file
+      final iosConfig = File('ios/Runner/GoogleService-Info.plist');
+      final iosExists = iosConfig.existsSync();
+
+      if (!androidExists) {
+        AppLogger.warning(
+            'Android config file not found: android/app/google-services.json');
+      }
+      if (!iosExists) {
+        AppLogger.warning(
+            'iOS config file not found: ios/Runner/GoogleService-Info.plist');
+      }
+
+      return androidExists && iosExists;
+    } catch (e) {
+      AppLogger.warning('Could not verify Firebase config files: $e');
+      return false;
+    }
+  }
+  // In release mode, assume files exist (they should be bundled)
+  return true;
 }

@@ -61,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Welcome Section
+                // Welcome Section - Only show if user is authenticated
                 if (user != null)
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -146,24 +146,34 @@ class HomeScreen extends ConsumerWidget {
                       ],
                     ),
                   )
-                else
+                else if (authState.isLoading)
+                  // Show loading state while checking authentication
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color:
                           Theme.of(context).primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Theme.of(context)
-                            .primaryColor
-                            .withValues(alpha: 0.3),
-                      ),
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else
+                  // User not authenticated - should redirect to login
+                  // This should not normally be visible as splash screen handles routing
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade50,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.orange.shade200),
                     ),
                     child: Row(
                       children: [
                         Icon(
-                          Icons.info_outline,
-                          color: Theme.of(context).primaryColor,
+                          Icons.login,
+                          color: Colors.orange.shade700,
                           size: 32,
                         ),
                         const SizedBox(width: 16),
@@ -172,19 +182,18 @@ class HomeScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                l10n.guestMode,
+                                'Please Login',
                                 style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Colors.orange.shade700,
                                   fontSize: DesignTokens.fontSizeXL,
                                   fontWeight: DesignTokens.fontWeightBold,
                                 ),
                               ),
                               const SizedBox(height: DesignTokens.spacingXS),
                               Text(
-                                l10n.limitedAccess,
+                                'You need to login to access the app',
                                 style: TextStyle(
-                                  color: Theme.of(context)
-                                      .primaryColor
+                                  color: Colors.orange.shade700
                                       .withValues(alpha: 0.8),
                                   fontSize: DesignTokens.fontSizeM,
                                 ),

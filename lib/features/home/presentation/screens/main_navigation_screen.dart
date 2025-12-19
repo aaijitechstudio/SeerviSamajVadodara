@@ -7,6 +7,9 @@ import '../../../news/presentation/screens/news_screen.dart';
 import '../../../committee/presentation/screens/committee_screen.dart';
 import '../../../auth/presentation/screens/profile_screen.dart';
 import '../../../auth/providers/auth_provider.dart';
+import '../../../community/presentation/screens/community_board_screen.dart';
+import '../../../community/presentation/screens/post_composer_screen.dart';
+import '../../../../shared/models/post_model.dart';
 import '../widgets/app_drawer.dart';
 import 'home_screen.dart';
 
@@ -30,11 +33,17 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     // Initialize screens list - NewsScreen without const to avoid hot reload issues
     _screens = [
       const HomeScreen(),
+      const CommunityBoardScreen(),
       const NewsScreen(),
       const CommitteeScreen(),
       const MembersScreen(),
       const ProfileScreen(),
     ];
+    // Ensure initial index is valid
+    final currentIndex = ref.read(navigationIndexProvider);
+    if (currentIndex < 0 || currentIndex >= _screens.length) {
+      ref.read(navigationIndexProvider.notifier).state = 0;
+    }
     // Listen to navigation index changes
     ref.read(navigationIndexProvider.notifier).addListener((state) {
       if (mounted) {
@@ -57,15 +66,35 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     final user = authState.user;
     final isAdmin = user?.isAdmin ?? false;
 
+    // Ensure selectedIndex is within valid range
+    final safeIndex = selectedIndex >= 0 && selectedIndex < _screens.length
+        ? selectedIndex
+        : 0;
+
     return Scaffold(
       drawer: AppDrawer(
         user: user,
         isAdmin: isAdmin,
       ),
       body: IndexedStack(
-        index: selectedIndex,
+        index: safeIndex,
         children: _screens,
       ),
+      floatingActionButton: safeIndex == 1 && user != null
+          ? FloatingActionButton(
+              onPressed: () {
+                // Navigate to post composer - default to discussion category
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PostComposerScreen(
+                      initialCategory: PostCategory.discussion,
+                    ),
+                  ),
+                );
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: DesignTokens.backgroundWhite,
@@ -93,27 +122,33 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 ),
                 _buildNavItem(
                   context,
+                  icon: Icons.forum_rounded,
+                  label: 'Community',
+                  index: 1,
+                ),
+                _buildNavItem(
+                  context,
                   icon: Icons.newspaper_rounded,
                   label: l10n.news,
-                  index: 1,
+                  index: 2,
                 ),
                 _buildNavItem(
                   context,
                   icon: Icons.groups_rounded,
                   label: l10n.committee,
-                  index: 2,
+                  index: 3,
                 ),
                 _buildNavItem(
                   context,
                   icon: Icons.people_rounded,
                   label: l10n.members,
-                  index: 3,
+                  index: 4,
                 ),
                 _buildNavItem(
                   context,
                   icon: Icons.person_rounded,
                   label: l10n.profile,
-                  index: 4,
+                  index: 5,
                 ),
               ],
             ),
@@ -130,7 +165,10 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     required int index,
   }) {
     final selectedIndex = ref.watch(navigationIndexProvider);
-    final isSelected = selectedIndex == index;
+    final safeIndex = selectedIndex >= 0 && selectedIndex < _screens.length
+        ? selectedIndex
+        : 0;
+    final isSelected = safeIndex == index;
     final selectedColor = DesignTokens.primaryOrange;
     final unselectedColor = DesignTokens.grey500;
 

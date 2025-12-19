@@ -72,6 +72,7 @@
   "close": "Close",
   "memberDetails": "Member Details",
   "houseId": "House ID",
+  "samajId": "Samaj ID",
   "contactInformation": "Contact Information",
   "phone": "Phone",
   "details": "Details",
@@ -325,6 +326,7 @@
   "niyam10": "Tenth, marry off daughters righteously",
   "niyam11": "Eleventh, walk the path of righteousness with eleven knots",
   "shree": "Shree",
+  "ji": "Ji",
   "forgotPasswordTitle": "Forgot Password",
   "resetYourPassword": "Reset Your Password",
   "resetPasswordDescription": "Enter your email address and we'll send you a link to reset your password.",
@@ -391,5 +393,15 @@
   "childrensPrivacyContent": "Our application is not intended for children under 13 years of age. We do not knowingly collect personal information from children.",
   "changesToThisPolicy": "7. Changes to This Policy",
   "changesToThisPolicyContent": "We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page.",
-  "privacyContactDescription": "If you have any questions about this Privacy Policy, please contact us through the app's contact section."
+  "privacyContactDescription": "If you have any questions about this Privacy Policy, please contact us through the app's contact section.",
+  "failedToPickImage": "Failed to pick image: {error}",
+  "@failedToPickImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "profileCreatedImageUploadFailed": "Profile created but image upload failed. You can update it later.",
+  "poweredBy": "Powered by - Seervi Kshatriya Samaj - Vadodara"
 }

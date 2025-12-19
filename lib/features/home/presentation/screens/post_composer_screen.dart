@@ -468,17 +468,17 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
     }
 
     // Convert video to URL (this would typically upload to Firebase Storage)
-    String? videoUrl;
+    List<String>? videoUrls;
     if (_selectedVideo != null) {
       // In a real app, you would upload video to Firebase Storage here
-      videoUrl = _selectedVideo!.path;
+      videoUrls = [_selectedVideo!.path];
     }
 
     final success = await postController.createPost(
       content: _contentController.text.trim(),
       type: _selectedType,
       imageUrls: imageUrls,
-      videoUrl: videoUrl,
+      videoUrls: videoUrls,
       isAnnouncement: _isAnnouncement,
     );
 

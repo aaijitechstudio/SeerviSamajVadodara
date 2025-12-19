@@ -7,9 +7,11 @@ import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/google_sign_in_button.dart';
 import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../shared/data/firebase_service.dart';
+import '../../../home/presentation/screens/main_navigation_screen.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
@@ -295,6 +297,40 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           ),
 
           const SizedBox(height: 32),
+
+          // Google Sign In Button (Standard Design)
+          Consumer(
+            builder: (context, ref, child) {
+              final authState = ref.watch(authControllerProvider);
+              return GoogleSignInButton(
+                onPressed: () => _handleGoogleSignIn(ref),
+                isLoading: authState.isGoogleSignInLoading,
+                buttonType: GoogleSignInButtonType.signUp,
+              );
+            },
+          ),
+
+          const SizedBox(height: 16),
+
+          // Divider with "OR"
+          Row(
+            children: [
+              Expanded(child: Divider(color: AppColors.dividerColor)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  l10n.or,
+                  style: TextStyle(
+                    color: AppColors.grey600,
+                    fontWeight: DesignTokens.fontWeightMedium,
+                  ),
+                ),
+              ),
+              Expanded(child: Divider(color: AppColors.dividerColor)),
+            ],
+          ),
+
+          const SizedBox(height: 16),
 
           // Name Field
           TextFormField(
@@ -604,7 +640,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           child: Text(
                             l10n.goToSignIn,
                             style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                              color: AppColors.primaryOrange,
                               fontWeight: DesignTokens.fontWeightBold,
                             ),
                           ),
@@ -736,10 +772,34 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       }
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       AppUtils.showErrorSnackBar(
         context,
-        'Failed to pick image: $e',
+        l10n.failedToPickImage(e.toString()),
       );
+    }
+  }
+
+  Future<void> _handleGoogleSignIn(WidgetRef ref) async {
+    final authController = ref.read(authControllerProvider.notifier);
+
+    final success = await authController.signInWithGoogle();
+
+    if (success && mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+      );
+    } else if (mounted) {
+      // Check for error in auth state
+      final authState = ref.read(authControllerProvider);
+      if (authState.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authState.error!),
+            backgroundColor: AppColors.errorColor,
+          ),
+        );
+      }
     }
   }
 
@@ -793,9 +853,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       } catch (e) {
         // Don't block navigation if image upload fails
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           AppUtils.showErrorSnackBar(
             context,
-            'Profile created but image upload failed. You can update it later.',
+            l10n.profileCreatedImageUploadFailed,
           );
         }
       }
@@ -807,7 +868,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       AppUtils.showTopSnackBar(
         context,
         '${l10n.signUpSuccess} - ${l10n.userId}: $displayId',
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.successColor,
       );
 
       // Navigate to login screen

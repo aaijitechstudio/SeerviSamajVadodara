@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/screens/welcome_screen.dart';
 import 'main_navigation_screen.dart';
 
@@ -22,14 +23,27 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
     );
+    _precacheAssets();
     _animationController.forward();
     _navigateToNextScreen();
+  }
+
+  Future<void> _precacheAssets() async {
+    // Precache splash GIF and welcome screen logo in parallel
+    final imageProvider = const AssetImage('assets/images/Aai-Bail_350.gif');
+    final logoProvider =
+        const AssetImage('assets/images/seervisamajvadodara.png');
+
+    await Future.wait([
+      precacheImage(imageProvider, context),
+      precacheImage(logoProvider, context),
+    ]);
   }
 
   @override
@@ -39,34 +53,23 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigateToNextScreen() async {
-    // Wait for splash animation
-    await Future.delayed(const Duration(seconds: 3));
+    // Wait for minimum splash display (1.5s) and run checks in parallel
+    await Future.wait([
+      Future.delayed(const Duration(milliseconds: 1500)),
+      _checkAuthState(),
+    ]);
+
+    if (!mounted) return;
+  }
+
+  Future<void> _checkAuthState() async {
+    // Small delay to ensure Firebase is ready (already initialized in main.dart)
+    await Future.delayed(const Duration(milliseconds: 300));
 
     if (!mounted) return;
 
-    // Wait a bit more to ensure Firebase is fully initialized
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    if (!mounted) return;
-
-    // Verify Firebase is initialized before accessing providers
-    try {
-      // Check if Firebase is ready
-      if (Firebase.apps.isEmpty) {
-        // Firebase not ready yet, wait a bit more
-        await Future.delayed(const Duration(milliseconds: 1000));
-        if (Firebase.apps.isEmpty) {
-          // Still not ready, navigate to welcome screen anyway
-          if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-            );
-          }
-          return;
-        }
-      }
-    } catch (e) {
-      // Firebase check failed, navigate to welcome screen
+    // Verify Firebase is initialized
+    if (Firebase.apps.isEmpty) {
       if (mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const WelcomeScreen()),
@@ -83,19 +86,14 @@ class _SplashScreenState extends State<SplashScreen>
 
       authState.when(
         data: (user) {
-          if (user != null) {
-            if (mounted) {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (context) => const MainNavigationScreen()),
-              );
-            }
-          } else {
-            if (mounted) {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-              );
-            }
+          if (mounted) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => user != null
+                    ? const MainNavigationScreen()
+                    : const WelcomeScreen(),
+              ),
+            );
           }
         },
         loading: () {
@@ -106,7 +104,6 @@ class _SplashScreenState extends State<SplashScreen>
           }
         },
         error: (error, stackTrace) {
-          // If Firebase error, show welcome screen anyway
           if (mounted) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const WelcomeScreen()),
@@ -115,7 +112,6 @@ class _SplashScreenState extends State<SplashScreen>
         },
       );
     } catch (e) {
-      // If any error occurs, navigate to welcome screen
       if (mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const WelcomeScreen()),
@@ -127,7 +123,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: DesignTokens.backgroundWhite,
+      backgroundColor: AppColors.backgroundWhite,
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -136,12 +132,13 @@ class _SplashScreenState extends State<SplashScreen>
             fit: BoxFit.contain,
             height: 250,
             width: 250,
+            cacheWidth: 250,
+            cacheHeight: 250,
             errorBuilder: (context, error, stackTrace) {
-              // Simple fallback icon if GIF fails to load
               return const Icon(
                 Icons.people,
                 size: DesignTokens.iconSizeXL,
-                color: DesignTokens.primaryOrange,
+                color: AppColors.primaryOrange,
               );
             },
           ),

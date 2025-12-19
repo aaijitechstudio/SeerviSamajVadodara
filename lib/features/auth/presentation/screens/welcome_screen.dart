@@ -8,12 +8,34 @@ import '../../../../core/widgets/app_button.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
 
-class WelcomeScreen extends ConsumerWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Precache logo image for smooth display
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(
+        const AssetImage('assets/images/seervisamajvadodara.png'),
+        context,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final scaffoldBgColor = theme.scaffoldBackgroundColor;
+    final textColor =
+        theme.textTheme.bodySmall?.color ?? AppColors.textSecondary;
+
     return Scaffold(
       appBar: AppBar(
         actions: const [LanguageSwitcher()],
@@ -27,7 +49,7 @@ class WelcomeScreen extends ConsumerWidget {
             end: Alignment.bottomCenter,
             colors: [
               AppColors.primaryOrange.withValues(alpha: 0.1),
-              Theme.of(context).scaffoldBackgroundColor,
+              scaffoldBgColor,
             ],
           ),
         ),
@@ -47,7 +69,7 @@ class WelcomeScreen extends ConsumerWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Theme.of(context).scaffoldBackgroundColor,
+                        scaffoldBgColor,
                         AppColors.primaryOrange.withValues(alpha: 0.05),
                       ],
                     ),
@@ -73,11 +95,13 @@ class WelcomeScreen extends ConsumerWidget {
                       child: Image.asset(
                         'assets/images/seervisamajvadodara.png',
                         fit: BoxFit.contain,
+                        cacheWidth: 140,
+                        cacheHeight: 140,
                         errorBuilder: (context, error, stackTrace) {
-                          return Icon(
+                          return const Icon(
                             Icons.people,
                             size: DesignTokens.iconSizeXL,
-                            color: Theme.of(context).primaryColor,
+                            color: AppColors.primaryOrange,
                           );
                         },
                       ),
@@ -89,7 +113,7 @@ class WelcomeScreen extends ConsumerWidget {
 
                 // App Title with Gradient Effect
                 ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
+                  shaderCallback: (bounds) => const LinearGradient(
                     colors: [
                       AppColors.primaryOrange,
                       AppColors.primaryOrangeDark,
@@ -97,11 +121,11 @@ class WelcomeScreen extends ConsumerWidget {
                   ).createShader(bounds),
                   child: Text(
                     l10n.samajTitle,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: DesignTokens.fontWeightBold,
-                          color: Colors.white,
-                          fontSize: DesignTokens.fontSizeH5,
-                        ),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: DesignTokens.fontWeightBold,
+                      color: AppColors.textOnPrimary,
+                      fontSize: DesignTokens.fontSizeH5,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -110,11 +134,11 @@ class WelcomeScreen extends ConsumerWidget {
 
                 Text(
                   l10n.samajVadodara,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.primaryOrangeDark,
-                        fontWeight: DesignTokens.fontWeightSemiBold,
-                        letterSpacing: 0.5,
-                      ),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: AppColors.primaryOrangeDark,
+                    fontWeight: DesignTokens.fontWeightSemiBold,
+                    letterSpacing: 0.5,
+                  ),
                 ),
 
                 const SizedBox(height: 20),
@@ -211,11 +235,7 @@ class WelcomeScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: DesignTokens.fontSizeXS,
                                 fontWeight: DesignTokens.fontWeightMedium,
-                                color: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.color ??
-                                    AppColors.textSecondary,
+                                color: textColor,
                               ),
                             ),
                           ],
@@ -258,15 +278,10 @@ class WelcomeScreen extends ConsumerWidget {
                 // Powered By Footer
                 Center(
                   child: Text(
-                    'Powered by - Seervi Kshatriya Samaj - Vadodara',
+                    l10n.poweredBy,
                     style: TextStyle(
                       fontSize: DesignTokens.fontSizeXS,
-                      color: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.color
-                              ?.withValues(alpha: 0.6) ??
-                          AppColors.textSecondary,
+                      color: textColor.withValues(alpha: 0.6),
                       fontWeight: DesignTokens.fontWeightRegular,
                     ),
                     textAlign: TextAlign.center,

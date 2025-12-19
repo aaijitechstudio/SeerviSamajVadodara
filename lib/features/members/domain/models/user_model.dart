@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum UserRole { admin, member, guest }
+enum UserRole { admin, member }
 
 class UserModel {
   final String id;
@@ -18,6 +18,9 @@ class UserModel {
   final DateTime createdAt;
   final bool isVerified;
   final bool isActive;
+  final List<String>?
+      blockedUsers; // For blocking unwanted messages/interactions
+  final bool allowDirectMessages; // Allow direct messages from other members
   final Map<String, dynamic>? additionalInfo;
 
   UserModel({
@@ -36,6 +39,8 @@ class UserModel {
     required this.createdAt,
     this.isVerified = false,
     this.isActive = true,
+    this.blockedUsers,
+    this.allowDirectMessages = true,
     this.additionalInfo,
   });
 
@@ -70,6 +75,10 @@ class UserModel {
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       isVerified: map['isVerified'] ?? false,
       isActive: map['isActive'] ?? true,
+      blockedUsers: map['blockedUsers'] != null
+          ? List<String>.from(map['blockedUsers'])
+          : null,
+      allowDirectMessages: map['allowDirectMessages'] ?? true,
       additionalInfo: map['additionalInfo'],
     );
   }
@@ -90,6 +99,8 @@ class UserModel {
       'createdAt': Timestamp.fromDate(createdAt),
       'isVerified': isVerified,
       'isActive': isActive,
+      'blockedUsers': blockedUsers,
+      'allowDirectMessages': allowDirectMessages,
       'additionalInfo': additionalInfo,
     };
   }
@@ -110,6 +121,8 @@ class UserModel {
     DateTime? createdAt,
     bool? isVerified,
     bool? isActive,
+    List<String>? blockedUsers,
+    bool? allowDirectMessages,
     Map<String, dynamic>? additionalInfo,
   }) {
     return UserModel(
@@ -128,13 +141,14 @@ class UserModel {
       createdAt: createdAt ?? this.createdAt,
       isVerified: isVerified ?? this.isVerified,
       isActive: isActive ?? this.isActive,
+      blockedUsers: blockedUsers ?? this.blockedUsers,
+      allowDirectMessages: allowDirectMessages ?? this.allowDirectMessages,
       additionalInfo: additionalInfo ?? this.additionalInfo,
     );
   }
 
   bool get isAdmin => role == UserRole.admin;
   bool get isMember => role == UserRole.member;
-  bool get isGuest => role == UserRole.guest;
 
   @override
   String toString() {

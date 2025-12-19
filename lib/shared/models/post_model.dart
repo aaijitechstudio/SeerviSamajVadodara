@@ -2,6 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum PostType { text, image, video, announcement }
 
+enum PostCategory {
+  announcement, // Admin announcements
+  discussion, // General discussion
+  events, // Events and celebrations
+  gallery, // Photo gallery
+}
+
 class PostModel {
   final String id;
   final String authorId;
@@ -10,7 +17,7 @@ class PostModel {
   final String content;
   final PostType type;
   final List<String>? imageUrls;
-  final String? videoUrl;
+  final List<String>? videoUrls;
   final DateTime createdAt;
   final DateTime? updatedAt;
   final int likesCount;
@@ -18,6 +25,7 @@ class PostModel {
   final List<String> likedBy;
   final bool isAnnouncement;
   final bool isPinned;
+  final PostCategory category; // Section/category for community board
   final Map<String, dynamic>? metadata;
 
   PostModel({
@@ -28,7 +36,7 @@ class PostModel {
     required this.content,
     required this.type,
     this.imageUrls,
-    this.videoUrl,
+    this.videoUrls,
     required this.createdAt,
     this.updatedAt,
     this.likesCount = 0,
@@ -36,6 +44,7 @@ class PostModel {
     this.likedBy = const [],
     this.isAnnouncement = false,
     this.isPinned = false,
+    this.category = PostCategory.discussion,
     this.metadata,
   });
 
@@ -52,7 +61,8 @@ class PostModel {
       ),
       imageUrls:
           map['imageUrls'] != null ? List<String>.from(map['imageUrls']) : null,
-      videoUrl: map['videoUrl'],
+      videoUrls:
+          map['videoUrls'] != null ? List<String>.from(map['videoUrls']) : null,
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (map['updatedAt'] as Timestamp?)?.toDate(),
       likesCount: map['likesCount'] ?? 0,
@@ -60,6 +70,12 @@ class PostModel {
       likedBy: map['likedBy'] != null ? List<String>.from(map['likedBy']) : [],
       isAnnouncement: map['isAnnouncement'] ?? false,
       isPinned: map['isPinned'] ?? false,
+      category: map['category'] != null
+          ? PostCategory.values.firstWhere(
+              (e) => e.toString() == 'PostCategory.${map['category']}',
+              orElse: () => PostCategory.discussion,
+            )
+          : PostCategory.discussion,
       metadata: map['metadata'],
     );
   }
@@ -72,7 +88,7 @@ class PostModel {
       'content': content,
       'type': type.toString().split('.').last,
       'imageUrls': imageUrls,
-      'videoUrl': videoUrl,
+      'videoUrls': videoUrls,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
       'likesCount': likesCount,
@@ -80,6 +96,7 @@ class PostModel {
       'likedBy': likedBy,
       'isAnnouncement': isAnnouncement,
       'isPinned': isPinned,
+      'category': category.toString().split('.').last,
       'metadata': metadata,
     };
   }
@@ -92,7 +109,7 @@ class PostModel {
     String? content,
     PostType? type,
     List<String>? imageUrls,
-    String? videoUrl,
+    List<String>? videoUrls,
     DateTime? createdAt,
     DateTime? updatedAt,
     int? likesCount,
@@ -100,6 +117,7 @@ class PostModel {
     List<String>? likedBy,
     bool? isAnnouncement,
     bool? isPinned,
+    PostCategory? category,
     Map<String, dynamic>? metadata,
   }) {
     return PostModel(
@@ -110,7 +128,7 @@ class PostModel {
       content: content ?? this.content,
       type: type ?? this.type,
       imageUrls: imageUrls ?? this.imageUrls,
-      videoUrl: videoUrl ?? this.videoUrl,
+      videoUrls: videoUrls ?? this.videoUrls,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       likesCount: likesCount ?? this.likesCount,
@@ -118,12 +136,13 @@ class PostModel {
       likedBy: likedBy ?? this.likedBy,
       isAnnouncement: isAnnouncement ?? this.isAnnouncement,
       isPinned: isPinned ?? this.isPinned,
+      category: category ?? this.category,
       metadata: metadata ?? this.metadata,
     );
   }
 
   bool get hasImages => imageUrls != null && imageUrls!.isNotEmpty;
-  bool get hasVideo => videoUrl != null && videoUrl!.isNotEmpty;
+  bool get hasVideos => videoUrls != null && videoUrls!.isNotEmpty;
   bool get isLiked => likedBy
       .isNotEmpty; // This would need current user ID in real implementation
 

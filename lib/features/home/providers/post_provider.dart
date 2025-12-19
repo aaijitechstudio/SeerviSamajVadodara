@@ -58,7 +58,7 @@ class PostController extends Notifier<PostState> {
     required String content,
     required PostType type,
     List<String>? imageUrls,
-    String? videoUrl,
+    List<String>? videoUrls,
     bool isAnnouncement = false,
   }) async {
     state = state.copyWith(isLoading: true, error: null);
@@ -82,7 +82,7 @@ class PostController extends Notifier<PostState> {
         content: content,
         type: type,
         imageUrls: imageUrls,
-        videoUrl: videoUrl,
+        videoUrls: videoUrls,
         createdAt: DateTime.now(),
         isAnnouncement: isAnnouncement,
       );
@@ -107,7 +107,8 @@ class PostController extends Notifier<PostState> {
       await FirebaseService.deletePost(postId);
 
       // Remove from local state
-      final updatedPosts = state.posts.where((post) => post.id != postId).toList();
+      final updatedPosts =
+          state.posts.where((post) => post.id != postId).toList();
       state = state.copyWith(
         isLoading: false,
         posts: updatedPosts,
@@ -149,7 +150,8 @@ class PostController extends Notifier<PostState> {
       state = state.copyWith(posts: updatedPosts);
 
       // Update in Firebase
-      await FirebaseService.updatePostLikes(postId, updatedLikedBy, updatedPost.likesCount);
+      await FirebaseService.updatePostLikes(
+          postId, updatedLikedBy, updatedPost.likesCount);
 
       return true;
     } catch (e) {
@@ -221,7 +223,8 @@ class PostController extends Notifier<PostState> {
 
   // Remove post from local state
   void removePost(String postId) {
-    final updatedPosts = state.posts.where((post) => post.id != postId).toList();
+    final updatedPosts =
+        state.posts.where((post) => post.id != postId).toList();
     state = state.copyWith(posts: updatedPosts);
   }
 
@@ -238,7 +241,8 @@ class PostController extends Notifier<PostState> {
   }) {
     return state.posts.where((post) {
       if (type != null && post.type != type) return false;
-      if (isAnnouncement != null && post.isAnnouncement != isAnnouncement) return false;
+      if (isAnnouncement != null && post.isAnnouncement != isAnnouncement)
+        return false;
       if (isPinned != null && post.isPinned != isPinned) return false;
       return true;
     }).toList();

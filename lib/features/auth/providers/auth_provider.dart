@@ -51,22 +51,27 @@ final authControllerProvider = NotifierProvider<AuthController, AuthState>(() {
 // Auth state class
 class AuthState {
   final bool isLoading;
+  final bool isGoogleSignInLoading;
   final String? error;
   final UserModel? user;
 
   const AuthState({
     this.isLoading = false,
+    this.isGoogleSignInLoading = false,
     this.error,
     this.user,
   });
 
   AuthState copyWith({
     bool? isLoading,
+    bool? isGoogleSignInLoading,
     String? error,
     UserModel? user,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
+      isGoogleSignInLoading:
+          isGoogleSignInLoading ?? this.isGoogleSignInLoading,
       error: error,
       user: user ?? this.user,
     );
@@ -190,12 +195,32 @@ class AuthController extends Notifier<AuthState> {
       );
 
       if (credential?.user != null) {
+        // Fetch user data and ensure it's loaded
         final userData =
             await FirebaseService.getUserData(credential!.user!.uid);
+
+        if (userData == null) {
+          // User authenticated but no Firestore document - create one
+          AppLogger.warning(
+              'User authenticated but no Firestore document found. Creating...');
+          // This should not happen in normal flow, but handle gracefully
+          state = state.copyWith(
+            isLoading: false,
+            error: 'User account not properly set up. Please contact support.',
+          );
+          return false;
+        }
+
+        // Update state with user data
         state = state.copyWith(
           isLoading: false,
           user: userData,
+          error: null,
         );
+
+        // Force refresh auth state listener
+        ref.invalidate(authStateProvider);
+
         return true;
       }
       state = state.copyWith(isLoading: false);
@@ -355,6 +380,64 @@ class AuthController extends Notifier<AuthState> {
       }
       state = state.copyWith(
         isLoading: false,
+        error: errorMessage,
+      );
+      return false;
+    }
+  }
+
+  // Sign in with Google
+  Future<bool> signInWithGoogle() async {
+    state = state.copyWith(
+      isLoading: true,
+      isGoogleSignInLoading: true,
+      error: null,
+    );
+
+    try {
+      final credential = await FirebaseService.signInWithGoogle();
+
+      if (credential?.user != null) {
+        // Fetch user data and ensure it's loaded
+        final userData =
+            await FirebaseService.getUserData(credential!.user!.uid);
+
+        if (userData == null) {
+          state = state.copyWith(
+            isLoading: false,
+            isGoogleSignInLoading: false,
+            error: 'User account not properly set up. Please contact support.',
+          );
+          return false;
+        }
+
+        // Update state with user data
+        state = state.copyWith(
+          isLoading: false,
+          isGoogleSignInLoading: false,
+          user: userData,
+          error: null,
+        );
+
+        // Force refresh auth state listener
+        ref.invalidate(authStateProvider);
+
+        return true;
+      }
+      state = state.copyWith(
+        isLoading: false,
+        isGoogleSignInLoading: false,
+      );
+      return false;
+    } catch (e) {
+      // Extract user-friendly error message
+      String errorMessage = e.toString();
+      if (errorMessage.contains('Exception: ')) {
+        errorMessage = errorMessage.replaceFirst('Exception: ', '');
+      }
+      state = state.copyWith(
+        isLoading: false,
+        isGoogleSignInLoading: false,
         error: errorMessage,
       );
       return false;

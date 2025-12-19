@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../theme/app_colors.dart';
 
 class AppUtils {
   // Date formatting utilities
@@ -37,11 +38,11 @@ class AppUtils {
   }
 
   static void showErrorSnackBar(BuildContext context, String message) {
-    showSnackBar(context, message, color: Colors.red);
+    showSnackBar(context, message, color: AppColors.errorColor);
   }
 
   static void showSuccessSnackBar(BuildContext context, String message) {
-    showSnackBar(context, message, color: Colors.green);
+    showSnackBar(context, message, color: AppColors.successColor);
   }
 
   static void showTopSnackBar(BuildContext context, String message,
@@ -49,7 +50,7 @@ class AppUtils {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: backgroundColor ?? Colors.blue,
+        backgroundColor: backgroundColor ?? AppColors.infoColor,
         duration: const Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.only(
@@ -71,5 +72,19 @@ class AppUtils {
   static String truncateText(String text, int maxLength) {
     if (text.length <= maxLength) return text;
     return '${text.substring(0, maxLength)}...';
+  }
+
+  /// Precaches an asset image for smooth loading
+  static Future<void> precacheAssetImage(
+      BuildContext context, String assetPath) {
+    return precacheImage(AssetImage(assetPath), context);
+  }
+
+  /// Precaches multiple asset images in parallel
+  static Future<void> precacheAssetImages(
+      BuildContext context, List<String> assetPaths) {
+    return Future.wait(
+      assetPaths.map((path) => precacheImage(AssetImage(path), context)),
+    );
   }
 }

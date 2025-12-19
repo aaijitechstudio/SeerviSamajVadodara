@@ -12,7 +12,20 @@
           "package_name": "org.seervi.samaj.vadodara"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "848209580988-k5cha0umg2efucis8q6pdo5gb2vcnugc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.seervi.samaj.vadodara",
+            "certificate_hash": "1edf2c5615931e44a770a1c76ccb30f31571c76a"
+          }
+        },
+        {
+          "client_id": "848209580988-6us9aee8t7l7cjoq6khtceocbf50dlj8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBGATckWDb9MEK4pLjdk89eSbJils1qxVc"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "848209580988-6us9aee8t7l7cjoq6khtceocbf50dlj8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "848209580988-cdcrksci27hg3avbf59bvfv5jkfiu4hi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.seervi.samaj.vadodara"
+              }
+            }
+          ]
         }
       }
     }

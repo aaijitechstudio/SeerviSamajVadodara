@@ -1,0 +1,47 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Posts images and videos
+    match /posts/images/{allPaths=**} {
+      // Allow read if authenticated
+      allow read: if isAuthenticated();
+
+      // Allow write (upload) if authenticated, size < 5MB, and is image
+      allow write: if isAuthenticated() &&
+                     request.resource.size < 5 * 1024 * 1024 && // 5MB max
+                     request.resource.contentType.matches('image/.*');
+    }
+
+    match /posts/videos/{allPaths=**} {
+      // Allow read if authenticated
+      allow read: if isAuthenticated();
+
+      // Allow write (upload) if authenticated, size < 50MB, and is video
+      allow write: if isAuthenticated() &&
+                     request.resource.size < 50 * 1024 * 1024 && // 50MB max
+                     request.resource.contentType.matches('video/.*');
+    }
+
+    // User profile images
+    match /users/{userId}/{allPaths=**} {
+      // Allow read if authenticated
+      allow read: if isAuthenticated();
+
+      // Allow write if user is uploading their own profile image
+      allow write: if isAuthenticated() &&
+                     request.auth.uid == userId &&
+                     request.resource.size < 5 * 1024 * 1024 && // 5MB max
+                     request.resource.contentType.matches('image/.*');
+    }
+
+    // Default: deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

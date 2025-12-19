@@ -1,4 +1,5 @@
 import '../../../../shared/models/post_model.dart';
+import '../../../../shared/models/comment_model.dart';
 import '../../../../core/errors/failure.dart';
 
 /// Post repository interface
@@ -32,5 +33,36 @@ abstract class PostRepository {
   /// Get posts by author
   Future<({Failure? failure, List<PostModel>? data})> getPostsByAuthor(
     String authorId,
+  );
+
+  /// Get posts by category
+  Future<({Failure? failure, List<PostModel>? data})> getPostsByCategory(
+    PostCategory category, {
+    String? lastDocumentId,
+    int limit = 20,
+  });
+
+  /// Get comments for a post
+  Future<({Failure? failure, List<CommentModel>? data})> getComments(
+    String postId, {
+    String? lastDocumentId,
+    int limit = 50,
+  });
+
+  /// Add a comment to a post
+  Future<({Failure? failure, CommentModel? data})> addComment(
+    CommentModel comment,
+  );
+
+  /// Delete a comment
+  Future<({Failure? failure, bool? success})> deleteComment(
+    String postId,
+    String commentId,
+  );
+
+  /// Update post comment count
+  Future<({Failure? failure, bool? success})> updatePostCommentCount(
+    String postId,
+    int commentsCount,
   );
 }
