@@ -83,139 +83,146 @@ class ProfileScreen extends ConsumerWidget {
           end: Alignment.bottomCenter,
         ),
       ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(DesignTokens.spacingM),
-        child: Column(
-          children: [
-            _buildProfileHeader(context, user, l10n),
-            const SizedBox(height: DesignTokens.spacingM),
-            _buildQuickInfoRow(context, user, l10n),
-            const SizedBox(height: DesignTokens.spacingM),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          // Refresh user data
+          await ref.read(authControllerProvider.notifier).refreshUserData();
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(DesignTokens.spacingM),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              _buildProfileHeader(context, user, l10n),
+              const SizedBox(height: DesignTokens.spacingM),
+              _buildQuickInfoRow(context, user, l10n),
+              const SizedBox(height: DesignTokens.spacingM),
 
-            // Personal Information Section
-            _buildSection(
-              context,
-              title: l10n.personalInformation,
-              icon: Icons.person_outline,
-              showEditButton: true,
-              onEdit: () => _showEditProfileDialog(context, user),
-              children: [
-                _buildInfoRow(
-                  context,
-                  icon: Icons.person,
-                  label: l10n.fullName,
-                  value: user.name,
-                ),
-                if (gotra != null && gotra.isNotEmpty)
-                  _buildInfoRow(
-                    context,
-                    icon: Icons.family_restroom,
-                    label: l10n.gotra,
-                    value: gotra,
-                  ),
-                _buildInfoRow(
-                  context,
-                  icon: Icons.email_outlined,
-                  label: l10n.email,
-                  value: user.email,
-                ),
-                _buildInfoRow(
-                  context,
-                  icon: Icons.phone_outlined,
-                  label: l10n.phoneNumber,
-                  value: user.phone,
-                ),
-                if (user.area != null && (user.area as String).isNotEmpty)
-                  _buildInfoRow(
-                    context,
-                    icon: Icons.location_on_outlined,
-                    label: l10n.area,
-                    value: user.area!,
-                  ),
-                if (user.profession != null &&
-                    (user.profession as String).isNotEmpty)
-                  _buildInfoRow(
-                    context,
-                    icon: Icons.work_outline,
-                    label: l10n.profession,
-                    value: user.profession!,
-                  ),
-              ],
-            ),
-
-            // Address Information Section
-            if ((vadodaraAddress != null && vadodaraAddress.isNotEmpty) ||
-                (nativeAddress != null && nativeAddress.isNotEmpty))
+              // Personal Information Section
               _buildSection(
                 context,
-                title: l10n.addressInformation,
-                icon: Icons.location_city_outlined,
-                showEditButton: true,
-                onEdit: () => _showEditProfileDialog(context, user),
-                children: [
-                  if (vadodaraAddress != null && vadodaraAddress.isNotEmpty)
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.location_on,
-                      label: l10n.vadodaraAddress,
-                      value: vadodaraAddress,
-                      isMultiline: true,
-                    ),
-                  if (nativeAddress != null && nativeAddress.isNotEmpty)
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.home_outlined,
-                      label: l10n.nativeAddress,
-                      value: nativeAddress,
-                      isMultiline: true,
-                    ),
-                ],
-              ),
-
-            // Business Information Section
-            if (pratisthanName != null && pratisthanName.isNotEmpty)
-              _buildSection(
-                context,
-                title: l10n.businessInformation,
-                icon: Icons.business_outlined,
+                title: l10n.personalInformation,
+                icon: Icons.person_outline,
                 showEditButton: true,
                 onEdit: () => _showEditProfileDialog(context, user),
                 children: [
                   _buildInfoRow(
                     context,
-                    icon: Icons.business,
-                    label: l10n.pratisthanName,
-                    value: pratisthanName,
+                    icon: Icons.person,
+                    label: l10n.fullName,
+                    value: user.name,
                   ),
+                  if (gotra != null && gotra.isNotEmpty)
+                    _buildInfoRow(
+                      context,
+                      icon: Icons.family_restroom,
+                      label: l10n.gotra,
+                      value: gotra,
+                    ),
+                  _buildInfoRow(
+                    context,
+                    icon: Icons.email_outlined,
+                    label: l10n.email,
+                    value: user.email,
+                  ),
+                  _buildInfoRow(
+                    context,
+                    icon: Icons.phone_outlined,
+                    label: l10n.phoneNumber,
+                    value: user.phone,
+                  ),
+                  if (user.area != null && (user.area as String).isNotEmpty)
+                    _buildInfoRow(
+                      context,
+                      icon: Icons.location_on_outlined,
+                      label: l10n.area,
+                      value: user.area!,
+                    ),
+                  if (user.profession != null &&
+                      (user.profession as String).isNotEmpty)
+                    _buildInfoRow(
+                      context,
+                      icon: Icons.work_outline,
+                      label: l10n.profession,
+                      value: user.profession!,
+                    ),
                 ],
               ),
 
-            // Account Status Section
-            _buildSection(
-              context,
-              title: l10n.accountStatus,
-              icon: Icons.verified_user_outlined,
-              showEditButton: false,
-              children: [
-                _buildStatusRow(
+              // Address Information Section
+              if ((vadodaraAddress != null && vadodaraAddress.isNotEmpty) ||
+                  (nativeAddress != null && nativeAddress.isNotEmpty))
+                _buildSection(
                   context,
-                  icon: Icons.verified,
-                  label: l10n.verificationStatus,
-                  value: user.isVerified
-                      ? l10n.verifiedMember
-                      : l10n.pendingVerification,
-                  isPositive: user.isVerified,
+                  title: l10n.addressInformation,
+                  icon: Icons.location_city_outlined,
+                  showEditButton: true,
+                  onEdit: () => _showEditProfileDialog(context, user),
+                  children: [
+                    if (vadodaraAddress != null && vadodaraAddress.isNotEmpty)
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.location_on,
+                        label: l10n.vadodaraAddress,
+                        value: vadodaraAddress,
+                        isMultiline: true,
+                      ),
+                    if (nativeAddress != null && nativeAddress.isNotEmpty)
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.home_outlined,
+                        label: l10n.nativeAddress,
+                        value: nativeAddress,
+                        isMultiline: true,
+                      ),
+                  ],
                 ),
-                _buildStatusRow(
+
+              // Business Information Section
+              if (pratisthanName != null && pratisthanName.isNotEmpty)
+                _buildSection(
                   context,
-                  icon: Icons.account_circle_outlined,
-                  label: l10n.memberType,
-                  value: user.isAdmin ? l10n.admin : l10n.members,
-                  isPositive: user.isAdmin,
+                  title: l10n.businessInformation,
+                  icon: Icons.business_outlined,
+                  showEditButton: true,
+                  onEdit: () => _showEditProfileDialog(context, user),
+                  children: [
+                    _buildInfoRow(
+                      context,
+                      icon: Icons.business,
+                      label: l10n.pratisthanName,
+                      value: pratisthanName,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
+
+              // Account Status Section
+              _buildSection(
+                context,
+                title: l10n.accountStatus,
+                icon: Icons.verified_user_outlined,
+                showEditButton: false,
+                children: [
+                  _buildStatusRow(
+                    context,
+                    icon: Icons.verified,
+                    label: l10n.verificationStatus,
+                    value: user.isVerified
+                        ? l10n.verifiedMember
+                        : l10n.pendingVerification,
+                    isPositive: user.isVerified,
+                  ),
+                  _buildStatusRow(
+                    context,
+                    icon: Icons.account_circle_outlined,
+                    label: l10n.memberType,
+                    value: user.isAdmin ? l10n.admin : l10n.members,
+                    isPositive: user.isAdmin,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -407,15 +414,6 @@ class ProfileScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: DesignTokens.spacingM),
-        Expanded(
-          child: _buildInfoCard(
-            context,
-            icon: Icons.home,
-            label: l10n.houseId,
-            value: user.houseId ?? l10n.notAssigned,
-            color: DesignTokens.featureBlue,
-          ),
-        ),
       ],
     );
   }

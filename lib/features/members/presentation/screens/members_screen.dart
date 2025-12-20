@@ -21,6 +21,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   final TextEditingController _searchController = TextEditingController();
   String? _selectedArea;
   String? _selectedProfession;
+  bool _isSearchActive = false;
 
   @override
   void initState() {
@@ -34,6 +35,15 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      _isSearchActive = !_isSearchActive;
+      if (!_isSearchActive) {
+        _searchController.clear();
+      }
+    });
   }
 
   @override
@@ -52,7 +62,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       final query = _searchController.text.toLowerCase();
       filteredMembers = filteredMembers.where((member) {
         return member.name.toLowerCase().contains(query) ||
-            (member.houseId?.toLowerCase().contains(query) ?? false) ||
+            (member.samajId?.toLowerCase().contains(query) ?? false) ||
             (member.area?.toLowerCase().contains(query) ?? false) ||
             (member.profession?.toLowerCase().contains(query) ?? false) ||
             member.phone.contains(query);
@@ -75,33 +85,42 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       appBar: CustomAppBar(
         title: l10n.memberDirectory,
         showLogo: false,
+        actions: [
+          IconButton(
+            icon: Icon(_isSearchActive ? Icons.close : Icons.search),
+            tooltip: _isSearchActive ? 'Close search' : 'Search',
+            onPressed: _toggleSearch,
+          ),
+        ],
       ),
       body: Column(
         children: [
           // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search by name, house ID, area, profession...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {});
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+          if (_isSearchActive)
+            Padding(
+              padding: const EdgeInsets.all(DesignTokens.spacingM),
+              child: TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Search by name, samaj ID, area, profession...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() {});
+                          },
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(DesignTokens.radiusM),
+                  ),
                 ),
+                onChanged: (_) => setState(() {}),
               ),
-              onChanged: (_) => setState(() {}),
             ),
-          ),
 
           // Active Filters
           if (_selectedArea != null || _selectedProfession != null)
@@ -192,7 +211,6 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                             final member = filteredMembers[index];
                             return MembershipCard(
                               name: member.name,
-                              registrationNumber: member.houseId,
                               samajId: member.samajId,
                               role: l10n.members,
                               location: member.area ?? member.address,

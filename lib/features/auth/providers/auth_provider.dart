@@ -448,4 +448,19 @@ class AuthController extends Notifier<AuthState> {
   void clearError() {
     state = state.copyWith(error: null);
   }
+
+  // Refresh user data
+  Future<void> refreshUserData() async {
+    if (state.user == null) return;
+
+    try {
+      final userData = await FirebaseService.getUserData(state.user!.id);
+      if (userData != null) {
+        state = state.copyWith(user: userData);
+      }
+    } catch (e) {
+      // Silently fail - user data refresh is not critical
+      AppLogger.debug('Failed to refresh user data: $e');
+    }
+  }
 }

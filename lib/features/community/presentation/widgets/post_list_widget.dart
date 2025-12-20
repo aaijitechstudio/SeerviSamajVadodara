@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../shared/models/post_model.dart';
 import '../../../../core/constants/design_tokens.dart';
-import '../../../../core/widgets/loading_overlay.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../../core/repositories/repository_providers.dart';
-import '../../../home/data/repositories/post_repository.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../members/domain/models/user_model.dart';
+import '../../../../shared/data/firebase_service.dart';
 import '../screens/post_composer_screen.dart';
 import 'post_item_widget.dart';
 
+enum PostFilterType { all, admin, members }
+
 class PostListWidget extends ConsumerStatefulWidget {
-  final PostCategory category;
+  final PostCategory? category;
 
   const PostListWidget({
     super.key,
-    required this.category,
+    this.category,
   });
 
   @override
@@ -28,6 +30,9 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
   bool _isLoading = false;
   bool _hasMore = true;
   String? _lastDocumentId;
+  PostFilterType _selectedFilter = PostFilterType.all;
+  Map<String, UserModel> _userCache =
+      {}; // Cache for user data to check admin status
 
   @override
   void initState() {
@@ -60,10 +65,14 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
 
     try {
       final postRepository = ref.read(postRepositoryProvider);
-      final result = await postRepository.getPostsByCategory(
-        widget.category,
-        limit: 20,
-      );
+      final result = widget.category != null
+          ? await postRepository.getPostsByCategory(
+              widget.category!,
+              limit: 20,
+            )
+          : await postRepository.getPostsPaginated(
+              limit: 20,
+            );
 
       if (result.failure != null) {
         if (mounted) {
@@ -82,6 +91,8 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
             _lastDocumentId = result.data!.last.id;
           }
         });
+        // Load user data for filtering
+        _loadUserDataForPosts();
       }
     } catch (e) {
       if (mounted) {
@@ -107,11 +118,16 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
 
     try {
       final postRepository = ref.read(postRepositoryProvider);
-      final result = await postRepository.getPostsByCategory(
-        widget.category,
-        lastDocumentId: _lastDocumentId,
-        limit: 20,
-      );
+      final result = widget.category != null
+          ? await postRepository.getPostsByCategory(
+              widget.category!,
+              lastDocumentId: _lastDocumentId,
+              limit: 20,
+            )
+          : await postRepository.getPostsPaginated(
+              lastDocumentId: _lastDocumentId,
+              limit: 20,
+            );
 
       if (result.failure != null) {
         if (mounted) {
@@ -132,6 +148,8 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
             _hasMore = false;
           }
         });
+        // Load user data for new posts
+        _loadUserDataForPosts();
       }
     } catch (e) {
       if (mounted) {
@@ -153,8 +171,153 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
       _posts = [];
       _lastDocumentId = null;
       _hasMore = true;
+      _userCache.clear();
     });
     await _loadPosts();
+  }
+
+  Future<void> _loadUserDataForPosts() async {
+    // Pre-load user data for all posts to enable filtering
+    final postsToCheck =
+        _posts.where((post) => !_userCache.containsKey(post.authorId)).toList();
+
+    for (final post in postsToCheck) {
+      try {
+        final user = await FirebaseService.getUserData(post.authorId);
+        if (user != null) {
+          _userCache[post.authorId] = user;
+        }
+      } catch (e) {
+        // Ignore errors, will use fallback
+      }
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  List<PostModel> _getFilteredPosts() {
+    List<PostModel> filtered = _posts;
+
+    // Apply filter
+    if (_selectedFilter != PostFilterType.all) {
+      filtered = _posts.where((post) {
+        final isAdmin =
+            _userCache[post.authorId]?.isAdmin ?? post.isAnnouncement;
+        if (_selectedFilter == PostFilterType.admin) {
+          return isAdmin;
+        } else if (_selectedFilter == PostFilterType.members) {
+          return !isAdmin;
+        }
+        return true;
+      }).toList();
+    }
+
+    // Sort: Pinned admin posts first, then by date
+    filtered.sort((a, b) {
+      final aIsAdmin = _userCache[a.authorId]?.isAdmin ?? a.isAnnouncement;
+      final bIsAdmin = _userCache[b.authorId]?.isAdmin ?? b.isAnnouncement;
+
+      // Pinned admin posts first
+      if (a.isPinned && aIsAdmin && !(b.isPinned && bIsAdmin)) return -1;
+      if (b.isPinned && bIsAdmin && !(a.isPinned && aIsAdmin)) return 1;
+
+      // Then by date (newest first)
+      return b.createdAt.compareTo(a.createdAt);
+    });
+
+    return filtered;
+  }
+
+  Widget _buildFilterButtons() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: DesignTokens.spacingM,
+        vertical: DesignTokens.spacingS,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundWhite,
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.borderLight,
+            width: 1,
+          ),
+        ),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            _buildFilterChip(
+              label: 'All Posts',
+              isSelected: _selectedFilter == PostFilterType.all,
+              onTap: () {
+                setState(() {
+                  _selectedFilter = PostFilterType.all;
+                });
+              },
+            ),
+            const SizedBox(width: DesignTokens.spacingS),
+            _buildFilterChip(
+              label: 'Admin Posts',
+              isSelected: _selectedFilter == PostFilterType.admin,
+              onTap: () {
+                setState(() {
+                  _selectedFilter = PostFilterType.admin;
+                });
+              },
+            ),
+            const SizedBox(width: DesignTokens.spacingS),
+            _buildFilterChip(
+              label: 'Members Posts',
+              isSelected: _selectedFilter == PostFilterType.members,
+              onTap: () {
+                setState(() {
+                  _selectedFilter = PostFilterType.members;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterChip({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(
+          horizontal: DesignTokens.spacingL,
+          vertical: DesignTokens.spacingS,
+        ),
+        decoration: BoxDecoration(
+          color:
+              isSelected ? AppColors.primaryOrange : AppColors.backgroundWhite,
+          borderRadius: BorderRadius.circular(DesignTokens.radiusXL),
+          border: Border.all(
+            color: isSelected ? AppColors.primaryOrange : AppColors.borderLight,
+            width: 1.5,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: DesignTokens.fontSizeM,
+            fontWeight: isSelected
+                ? DesignTokens.fontWeightBold
+                : DesignTokens.fontWeightSemiBold,
+            color: isSelected ? AppColors.textOnPrimary : AppColors.textPrimary,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -201,7 +364,8 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => PostComposerScreen(
-                        initialCategory: widget.category,
+                        initialCategory:
+                            widget.category ?? PostCategory.discussion,
                       ),
                     ),
                   );
@@ -221,30 +385,88 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: _refreshPosts,
-      child: ListView.builder(
-        controller: _scrollController,
-        padding: const EdgeInsets.all(DesignTokens.spacingM),
-        itemCount: _posts.length + (_hasMore ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index == _posts.length) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
+    return Column(
+      children: [
+        _buildFilterButtons(),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: _refreshPosts,
+            child: Builder(
+              builder: (context) {
+                final filteredPosts = _getFilteredPosts();
 
-          return PostItemWidget(
-            post: _posts[index],
-            onPostUpdated: () {
-              _refreshPosts();
-            },
-          );
-        },
-      ),
+                if (filteredPosts.isEmpty && !_isLoading) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.post_add_outlined,
+                            size: 80,
+                            color: DesignTokens.grey400,
+                          ),
+                          const SizedBox(height: 24),
+                          Text(
+                            'No posts found',
+                            style: TextStyle(
+                              fontSize: DesignTokens.fontSizeXL,
+                              fontWeight: DesignTokens.fontWeightBold,
+                              color: DesignTokens.grey700,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            _selectedFilter == PostFilterType.all
+                                ? 'Be the first to post in this category!'
+                                : _selectedFilter == PostFilterType.admin
+                                    ? 'No admin posts found in this category'
+                                    : 'No member posts found in this category',
+                            style: TextStyle(
+                              fontSize: DesignTokens.fontSizeM,
+                              color: DesignTokens.grey500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.all(DesignTokens.spacingM),
+                  itemCount: filteredPosts.length + (_hasMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == filteredPosts.length) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+
+                    final post = filteredPosts[index];
+                    final isAdmin = _userCache[post.authorId]?.isAdmin ??
+                        post.isAnnouncement;
+
+                    return PostItemWidget(
+                      post: post,
+                      isAdminPost: isAdmin,
+                      onPostUpdated: () {
+                        _refreshPosts();
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

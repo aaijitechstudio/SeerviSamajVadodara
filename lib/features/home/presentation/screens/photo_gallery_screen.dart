@@ -143,7 +143,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(DesignTokens.radiusL),
+          borderRadius: BorderRadius.circular(DesignTokens.radiusS),
           boxShadow: [
             BoxShadow(
               color: AppColors.shadowLight,
@@ -153,7 +153,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(DesignTokens.radiusL),
+          borderRadius: BorderRadius.circular(DesignTokens.radiusS),
           child: Image.asset(
             imagePath,
             fit: BoxFit.cover,

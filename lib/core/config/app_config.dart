@@ -31,6 +31,18 @@ class AppConfig {
     return key.isNotEmpty && key != 'your_api_key_here';
   }
 
+  /// Get Weather API key from environment
+  /// Returns the API key or a default value if not set
+  static String get weatherApiKey {
+    return dotenv.env['WEATHER_API_KEY'] ?? '';
+  }
+
+  /// Check if Weather API key is configured
+  static bool get isWeatherApiKeyConfigured {
+    final key = weatherApiKey;
+    return key.isNotEmpty && key != 'your_api_key_here';
+  }
+
   /// Get any environment variable by key
   /// Returns null if key doesn't exist
   static String? getEnv(String key) {

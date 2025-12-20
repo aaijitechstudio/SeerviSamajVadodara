@@ -3,20 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../shared/models/post_model.dart';
 import '../../../../core/utils/app_utils.dart';
-import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../auth/providers/auth_provider.dart';
-import '../../../home/data/repositories/post_repository.dart';
+import '../../../../shared/data/firebase_service.dart';
 import '../../../../core/repositories/repository_providers.dart';
 import 'comments_sheet.dart';
 
 class PostItemWidget extends ConsumerStatefulWidget {
   final PostModel post;
   final VoidCallback? onPostUpdated;
+  final bool?
+      isAdminPost; // Optional: if provided, use this instead of checking
 
   const PostItemWidget({
     super.key,
     required this.post,
     this.onPostUpdated,
+    this.isAdminPost,
   });
 
   @override
@@ -26,11 +29,43 @@ class PostItemWidget extends ConsumerStatefulWidget {
 class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
   late PostModel _post;
   bool _isLiking = false;
+  bool? _isAdmin;
+  bool _isLoadingAdminStatus = false;
 
   @override
   void initState() {
     super.initState();
     _post = widget.post;
+    if (widget.isAdminPost != null) {
+      _isAdmin = widget.isAdminPost;
+    } else {
+      _checkAdminStatus();
+    }
+  }
+
+  Future<void> _checkAdminStatus() async {
+    if (_isLoadingAdminStatus) return;
+
+    setState(() {
+      _isLoadingAdminStatus = true;
+    });
+
+    try {
+      final user = await FirebaseService.getUserData(_post.authorId);
+      if (mounted) {
+        setState(() {
+          _isAdmin = user?.isAdmin ?? _post.isAnnouncement;
+          _isLoadingAdminStatus = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isAdmin = _post.isAnnouncement; // Fallback to isAnnouncement
+          _isLoadingAdminStatus = false;
+        });
+      }
+    }
   }
 
   Future<void> _toggleLike() async {
@@ -112,6 +147,10 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
     );
   }
 
+  bool get _isAdminPost {
+    return _isAdmin ?? _post.isAnnouncement;
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
@@ -119,139 +158,251 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
     final isLiked =
         currentUserId != null && _post.likedBy.contains(currentUserId);
     final isAuthor = currentUserId == _post.authorId;
+    final isAdminPost = _isAdminPost;
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
+      decoration: BoxDecoration(
+        color:
+            isAdminPost ? AppColors.backgroundCream : AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
+        border: isAdminPost
+            ? Border(
+                left: BorderSide(
+                  color: AppColors.primaryOrange,
+                  width: 4,
+                ),
+              )
+            : null,
+        boxShadow: isAdminPost
+            ? [
+                BoxShadow(
+                  color: AppColors.primaryOrange.withValues(alpha: 0.15),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: _post.authorProfileImage != null
-                      ? CachedNetworkImageProvider(_post.authorProfileImage!)
-                      : null,
-                  child: _post.authorProfileImage == null
-                      ? const Icon(Icons.person)
-                      : null,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _post.authorName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        AppUtils.formatDateTime(_post.createdAt),
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+      child: Card(
+        margin: EdgeInsets.zero,
+        elevation: 0,
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: _post.authorProfileImage != null
+                        ? CachedNetworkImageProvider(_post.authorProfileImage!)
+                        : null,
+                    child: _post.authorProfileImage == null
+                        ? const Icon(Icons.person)
+                        : null,
                   ),
-                ),
-                if (_post.isAnnouncement || _post.isPinned)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: _post.isPinned
-                          ? Colors.blue[100]
-                          : Colors.orange[100],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      _post.isPinned ? '📌 Pinned' : '📢 Announcement',
-                      style: TextStyle(
-                        color: _post.isPinned
-                            ? Colors.blue[800]
-                            : Colors.orange[800],
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                if (isAuthor)
-                  PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'delete') {
-                        _showDeleteDialog(context);
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      const PopupMenuItem(
-                        value: 'delete',
-                        child: Row(
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            Icon(Icons.delete, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text('Delete', style: TextStyle(color: Colors.red)),
+                            Flexible(
+                              child: Text(
+                                _post.authorName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: isAdminPost
+                                      ? AppColors.textPrimary
+                                      : AppColors.textPrimary,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (isAdminPost) ...[
+                              const SizedBox(width: 6),
+                              _buildOfficialBadge(),
+                            ],
+                            if (_post.isPinned) ...[
+                              const SizedBox(width: 6),
+                              _buildPinnedBadge(),
+                            ],
                           ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 2),
+                        Text(
+                          AppUtils.formatDateTime(_post.createdAt),
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            // Content
-            Text(
-              _post.content,
-              style: const TextStyle(fontSize: 16),
-            ),
-
-            // Media
-            if (_post.hasImages) ...[
+                  if (isAuthor)
+                    PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'delete') {
+                          _showDeleteDialog(context);
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Row(
+                            children: [
+                              Icon(Icons.delete, color: Colors.red),
+                              SizedBox(width: 8),
+                              Text('Delete',
+                                  style: TextStyle(color: Colors.red)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
               const SizedBox(height: 12),
-              _buildImages(),
-            ],
 
-            const SizedBox(height: 12),
+              // Content
+              Text(
+                _post.content,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textPrimary,
+                  height: 1.5,
+                ),
+              ),
 
-            // Actions
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    isLiked ? Icons.favorite : Icons.favorite_border,
-                    color: isLiked ? Colors.red : null,
-                  ),
-                  onPressed: _isLiking ? null : _toggleLike,
-                ),
-                Text('${_post.likesCount}'),
-                const SizedBox(width: 16),
-                IconButton(
-                  icon: const Icon(Icons.comment_outlined),
-                  onPressed: _showComments,
-                ),
-                Text('${_post.commentsCount}'),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.share_outlined),
-                  onPressed: () {
-                    // TODO: Implement share
-                  },
-                ),
+              // Media
+              if (_post.hasImages) ...[
+                const SizedBox(height: 12),
+                _buildImages(),
               ],
-            ),
-          ],
+
+              const SizedBox(height: 12),
+
+              // Actions
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: isLiked ? Colors.red : AppColors.textSecondary,
+                    ),
+                    onPressed: _isLiking ? null : _toggleLike,
+                  ),
+                  Text(
+                    '${_post.likesCount}',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  IconButton(
+                    icon: Icon(
+                      Icons.comment_outlined,
+                      color: AppColors.textSecondary,
+                    ),
+                    onPressed: _showComments,
+                  ),
+                  Text(
+                    '${_post.commentsCount}',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(
+                      Icons.share_outlined,
+                      color: AppColors.textSecondary,
+                    ),
+                    onPressed: () {
+                      // TODO: Implement share
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildOfficialBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.primaryOrange,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.verified,
+            size: 14,
+            color: AppColors.textOnPrimary,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            'Official',
+            style: TextStyle(
+              color: AppColors.textOnPrimary,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPinnedBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.blue[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.push_pin,
+            size: 14,
+            color: Colors.blue[800],
+          ),
+          const SizedBox(width: 4),
+          Text(
+            'Pinned',
+            style: TextStyle(
+              color: Colors.blue[800],
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

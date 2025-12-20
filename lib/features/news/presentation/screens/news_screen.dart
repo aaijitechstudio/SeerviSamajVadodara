@@ -22,25 +22,46 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
   late TabController _tabController;
   List<VadodaraNews> _vadodaraNews = [];
   List<VadodaraNews> _businessNews = [];
+  List<VadodaraNews> _rajasthanNews = [];
   bool _isLoadingNews = false;
   bool _isLoadingBusinessNews = false;
+  bool _isLoadingRajasthanNews = false;
   bool _isLoadingMoreNews = false;
   bool _isLoadingMoreBusinessNews = false;
+  bool _isLoadingMoreRajasthanNews = false;
   String? _newsError;
   String? _businessNewsError;
+  String? _rajasthanNewsError;
   String? _vadodaraNextPage;
   String? _businessNextPage;
+  String? _rajasthanNextPage;
   bool _hasMoreVadodaraNews = true;
   bool _hasMoreBusinessNews = true;
+  bool _hasMoreRajasthanNews = true;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this, initialIndex: 0);
     // Only load news when tab is actually viewed - lazy loading
     _tabController.addListener(_onTabChanged);
     // Load initial tab data
     _loadInitialData();
+  }
+
+  @override
+  void didUpdateWidget(NewsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Recreate TabController if length changed (for hot reload)
+    if (_tabController.length != 4) {
+      _tabController.removeListener(_onTabChanged);
+      _tabController.dispose();
+      _tabController = TabController(
+          length: 4,
+          vsync: this,
+          initialIndex: _tabController.index.clamp(0, 3));
+      _tabController.addListener(_onTabChanged);
+    }
   }
 
   void _onTabChanged() {
@@ -55,6 +76,10 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
     if (currentIndex == 1 && _vadodaraNews.isEmpty && !_isLoadingNews) {
       _loadVadodaraNews();
     } else if (currentIndex == 2 &&
+        _rajasthanNews.isEmpty &&
+        !_isLoadingRajasthanNews) {
+      _loadRajasthanNews();
+    } else if (currentIndex == 3 &&
         _businessNews.isEmpty &&
         !_isLoadingBusinessNews) {
       _loadBusinessNews();
@@ -123,6 +148,54 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
     }
   }
 
+  Future<void> _loadRajasthanNews({bool loadMore = false}) async {
+    if (!mounted) return;
+    if (loadMore && (!_hasMoreRajasthanNews || _isLoadingMoreRajasthanNews))
+      return;
+
+    setState(() {
+      if (loadMore) {
+        _isLoadingMoreRajasthanNews = true;
+      } else {
+        _isLoadingRajasthanNews = true;
+        _rajasthanNewsError = null;
+        _rajasthanNews = [];
+        _rajasthanNextPage = null;
+        _hasMoreRajasthanNews = true;
+      }
+    });
+
+    try {
+      final response = await VadodaraNewsService.fetchRajasthanNews(
+        nextPage: loadMore ? _rajasthanNextPage : null,
+      );
+      if (!mounted) return;
+
+      setState(() {
+        if (loadMore) {
+          _rajasthanNews.addAll(response.news);
+          _isLoadingMoreRajasthanNews = false;
+        } else {
+          _rajasthanNews = response.news;
+          _isLoadingRajasthanNews = false;
+        }
+        _rajasthanNextPage = response.nextPage;
+        _hasMoreRajasthanNews = response.nextPage != null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        if (loadMore) {
+          _isLoadingMoreRajasthanNews = false;
+        } else {
+          _rajasthanNewsError = e.toString();
+          _isLoadingRajasthanNews = false;
+        }
+      });
+    }
+  }
+
   Future<void> _loadBusinessNews({bool loadMore = false}) async {
     if (!mounted) return;
     if (loadMore && (!_hasMoreBusinessNews || _isLoadingMoreBusinessNews))
@@ -175,9 +248,24 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    // Safety check: Ensure TabController has correct length (for hot reload)
+    if (_tabController.length != 4) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _tabController.removeListener(_onTabChanged);
+          _tabController.dispose();
+          _tabController =
+              TabController(length: 4, vsync: this, initialIndex: 0);
+          _tabController.addListener(_onTabChanged);
+          setState(() {});
+        }
+      });
+    }
+
     return Scaffold(
       backgroundColor: DesignTokens.backgroundWhite,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(l10n.newsAnnouncements),
         centerTitle: true,
         backgroundColor: DesignTokens.backgroundWhite,
@@ -196,7 +284,8 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
           indicatorColor: DesignTokens.primaryOrange,
           tabs: [
             Tab(text: l10n.social),
-            Tab(text: l10n.vadodaraNews),
+            Tab(text: l10n.gujaratNews),
+            Tab(text: l10n.rajasthanNews),
             Tab(text: l10n.businessNews),
           ],
         ),
@@ -207,6 +296,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
         children: [
           _buildSocialSamajNews(l10n),
           _buildVadodaraNews(l10n),
+          _buildRajasthanNews(l10n),
           _buildBusinessNews(l10n),
         ],
       ),
@@ -341,6 +431,101 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
               );
             }
             return _buildVadodaraNewsCard(context, _vadodaraNews[index], l10n);
+          },
+        ),
+      ),
+    );
+  }
+
+  // Rajasthan News Tab
+  Widget _buildRajasthanNews(AppLocalizations l10n) {
+    if (_isLoadingRajasthanNews) {
+      return FullScreenLoader(message: l10n.loading);
+    }
+
+    if (_rajasthanNewsError != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: DesignTokens.errorColor,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _rajasthanNewsError!.contains('API key')
+                  ? l10n.apiKeyNotSet
+                  : l10n.failedToLoadNews,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: DesignTokens.errorColor),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _loadRajasthanNews,
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n.refresh),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (_rajasthanNews.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.newspaper_outlined,
+              size: 64,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.noNewsAvailable,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () => _loadRajasthanNews(loadMore: false),
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n.refresh),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => _loadRajasthanNews(loadMore: false),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo is ScrollEndNotification) {
+            final metrics = scrollInfo.metrics;
+            if (!_isLoadingMoreRajasthanNews &&
+                _hasMoreRajasthanNews &&
+                metrics.pixels >= metrics.maxScrollExtent - 200) {
+              _loadRajasthanNews(loadMore: true);
+            }
+          }
+          return false;
+        },
+        child: ListView.builder(
+          padding: const EdgeInsets.all(DesignTokens.spacingM),
+          itemCount: _rajasthanNews.length + (_hasMoreRajasthanNews ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index == _rajasthanNews.length) {
+              return const Padding(
+                padding: EdgeInsets.all(DesignTokens.spacingM),
+                child: Center(child: InlineLoader()),
+              );
+            }
+            return _buildVadodaraNewsCard(context, _rajasthanNews[index], l10n);
           },
         ),
       ),
@@ -521,11 +706,15 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                           color: DesignTokens.textSecondary,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          news.source!,
-                          style: TextStyle(
-                            fontSize: DesignTokens.fontSizeS,
-                            color: DesignTokens.textSecondary,
+                        Flexible(
+                          child: Text(
+                            news.source!,
+                            style: TextStyle(
+                              fontSize: DesignTokens.fontSizeS,
+                              color: DesignTokens.textSecondary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                         const SizedBox(width: DesignTokens.spacingM),
@@ -537,11 +726,15 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                           color: DesignTokens.textSecondary,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          '${l10n.publishedOn}: ${dateFormat.format(news.pubDate!)}',
-                          style: TextStyle(
-                            fontSize: DesignTokens.fontSizeS,
-                            color: DesignTokens.textSecondary,
+                        Flexible(
+                          child: Text(
+                            '${l10n.publishedOn}: ${dateFormat.format(news.pubDate!)}',
+                            style: TextStyle(
+                              fontSize: DesignTokens.fontSizeS,
+                              color: DesignTokens.textSecondary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ],

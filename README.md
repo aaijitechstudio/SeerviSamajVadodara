@@ -11,6 +11,7 @@ A Flutter mobile application for the Seervi Kshatriya Samaj community in Vadodar
 - **News**: Vadodara/Gujarat news integration
 - **Announcements**: Community announcements (admin)
 - **Committee**: Committee member directory and information
+- **Weather**: Today's weather based on location (falls back to Vadodara)
 - **Multi-language**: Support for Hindi, English, and Gujarati
 - **Dark Mode**: Light and dark theme support
 
@@ -48,9 +49,13 @@ Edit `.env` and add your API keys:
 
 ```env
 NEWSDATA_API_KEY=your_newsdata_api_key_here
+WEATHER_API_KEY=your_weather_api_key_here
 ```
 
-**Note:** Get your NewsData.io API key from: https://newsdata.io/
+**Note:**
+
+- Get your NewsData.io API key from: https://newsdata.io/
+- Get your OpenWeatherMap API key from: https://openweathermap.org/api (free tier available)
 
 ### 4. Configure Firebase
 

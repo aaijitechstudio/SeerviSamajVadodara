@@ -7,7 +7,6 @@ import '../../../news/presentation/screens/news_screen.dart';
 import '../../../committee/presentation/screens/committee_screen.dart';
 import '../../../auth/presentation/screens/profile_screen.dart';
 import '../../../auth/providers/auth_provider.dart';
-import '../../../community/presentation/screens/community_board_screen.dart';
 import '../../../community/presentation/screens/post_composer_screen.dart';
 import '../../../../shared/models/post_model.dart';
 import '../widgets/app_drawer.dart';
@@ -25,35 +24,30 @@ class MainNavigationScreen extends ConsumerStatefulWidget {
 }
 
 class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
-  late final List<Widget> _screens;
-
   @override
   void initState() {
     super.initState();
-    // Initialize screens list - NewsScreen without const to avoid hot reload issues
-    _screens = [
+    // Ensure initial index is valid
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentIndex = ref.read(navigationIndexProvider);
+      if (currentIndex < 0 || currentIndex >= 5) {
+        ref.read(navigationIndexProvider.notifier).state = 0;
+      }
+    });
+  }
+
+  List<Widget> _buildScreens() {
+    return [
       const HomeScreen(),
-      const CommunityBoardScreen(),
       const NewsScreen(),
       const CommitteeScreen(),
       const MembersScreen(),
       const ProfileScreen(),
     ];
-    // Ensure initial index is valid
-    final currentIndex = ref.read(navigationIndexProvider);
-    if (currentIndex < 0 || currentIndex >= _screens.length) {
-      ref.read(navigationIndexProvider.notifier).state = 0;
-    }
-    // Listen to navigation index changes
-    ref.read(navigationIndexProvider.notifier).addListener((state) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
   }
 
   void setSelectedIndex(int index) {
-    if (index >= 0 && index < _screens.length) {
+    if (index >= 0 && index < 5) {
       ref.read(navigationIndexProvider.notifier).state = index;
     }
   }
@@ -66,8 +60,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     final user = authState.user;
     final isAdmin = user?.isAdmin ?? false;
 
+    final screens = _buildScreens();
     // Ensure selectedIndex is within valid range
-    final safeIndex = selectedIndex >= 0 && selectedIndex < _screens.length
+    final safeIndex = selectedIndex >= 0 && selectedIndex < screens.length
         ? selectedIndex
         : 0;
 
@@ -78,9 +73,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       ),
       body: IndexedStack(
         index: safeIndex,
-        children: _screens,
+        children: screens,
       ),
-      floatingActionButton: safeIndex == 1 && user != null
+      floatingActionButton: safeIndex == 0 && user != null
           ? FloatingActionButton(
               onPressed: () {
                 // Navigate to post composer - default to discussion category
@@ -122,33 +117,27 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 ),
                 _buildNavItem(
                   context,
-                  icon: Icons.forum_rounded,
-                  label: 'Community',
-                  index: 1,
-                ),
-                _buildNavItem(
-                  context,
                   icon: Icons.newspaper_rounded,
                   label: l10n.news,
-                  index: 2,
+                  index: 1,
                 ),
                 _buildNavItem(
                   context,
                   icon: Icons.groups_rounded,
                   label: l10n.committee,
-                  index: 3,
+                  index: 2,
                 ),
                 _buildNavItem(
                   context,
                   icon: Icons.people_rounded,
                   label: l10n.members,
-                  index: 4,
+                  index: 3,
                 ),
                 _buildNavItem(
                   context,
                   icon: Icons.person_rounded,
                   label: l10n.profile,
-                  index: 5,
+                  index: 4,
                 ),
               ],
             ),
@@ -165,9 +154,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     required int index,
   }) {
     final selectedIndex = ref.watch(navigationIndexProvider);
-    final safeIndex = selectedIndex >= 0 && selectedIndex < _screens.length
-        ? selectedIndex
-        : 0;
+    final safeIndex =
+        selectedIndex >= 0 && selectedIndex < 5 ? selectedIndex : 0;
     final isSelected = safeIndex == index;
     final selectedColor = DesignTokens.primaryOrange;
     final unselectedColor = DesignTokens.grey500;

@@ -14,7 +14,6 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _houseIdController = TextEditingController();
   final _areaController = TextEditingController();
   final _professionController = TextEditingController();
   final _addressController = TextEditingController();
@@ -26,7 +25,6 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _houseIdController.dispose();
     _areaController.dispose();
     _professionController.dispose();
     _addressController.dispose();
@@ -76,14 +74,6 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                 keyboardType: TextInputType.phone,
                 validator: (value) =>
                     value?.isEmpty ?? true ? 'Please enter phone' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _houseIdController,
-                decoration: const InputDecoration(
-                  labelText: 'House ID',
-                  prefixIcon: Icon(Icons.home),
-                ),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -169,8 +159,6 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         'name': _nameController.text,
         'email': _emailController.text,
         'phone': _phoneController.text,
-        'houseId':
-            _houseIdController.text.isEmpty ? null : _houseIdController.text,
         'area': _areaController.text.isEmpty ? null : _areaController.text,
         'profession': _professionController.text.isEmpty
             ? null

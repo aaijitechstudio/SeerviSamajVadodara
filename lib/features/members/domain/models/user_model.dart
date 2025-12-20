@@ -9,7 +9,6 @@ class UserModel {
   final String phone;
   final String? profileImageUrl;
   final String? samajId;
-  final String? houseId;
   final String? area;
   final String? profession;
   final String? address;
@@ -30,7 +29,6 @@ class UserModel {
     required this.phone,
     this.profileImageUrl,
     this.samajId,
-    this.houseId,
     this.area,
     this.profession,
     this.address,
@@ -64,7 +62,6 @@ class UserModel {
       phone: map['phone'] ?? '',
       profileImageUrl: map['profileImageUrl'],
       samajId: map['samajId'],
-      houseId: map['houseId'],
       area: map['area'],
       profession: map['profession'],
       address: map['address'],
@@ -90,7 +87,6 @@ class UserModel {
       'phone': phone,
       'profileImageUrl': profileImageUrl,
       'samajId': samajId,
-      'houseId': houseId,
       'area': area,
       'profession': profession,
       'address': address,
@@ -112,7 +108,6 @@ class UserModel {
     String? phone,
     String? profileImageUrl,
     String? samajId,
-    String? houseId,
     String? area,
     String? profession,
     String? address,
@@ -132,7 +127,6 @@ class UserModel {
       phone: phone ?? this.phone,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       samajId: samajId ?? this.samajId,
-      houseId: houseId ?? this.houseId,
       area: area ?? this.area,
       profession: profession ?? this.profession,
       address: address ?? this.address,

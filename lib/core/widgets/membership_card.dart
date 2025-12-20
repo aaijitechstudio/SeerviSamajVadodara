@@ -9,7 +9,6 @@ import '../../l10n/app_localizations.dart';
 /// Adapts to app theme colors (primaryOrange, etc.)
 class MembershipCard extends StatelessWidget {
   final String name;
-  final String? registrationNumber; // Registration number or ID
   final String? samajId; // Samaj ID
   final String? role; // Role/Position (e.g., "सदस्य", "प्रचारक", "President")
   final String? location; // Location/Address
@@ -22,7 +21,6 @@ class MembershipCard extends StatelessWidget {
   const MembershipCard({
     super.key,
     required this.name,
-    this.registrationNumber,
     this.samajId,
     this.role,
     this.location,
@@ -307,22 +305,6 @@ class MembershipCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Registration Number
-        if (registrationNumber != null && registrationNumber!.isNotEmpty)
-          Text(
-            l10n != null
-                ? '${l10n.houseId}: $registrationNumber'
-                : 'Reg. No.: $registrationNumber',
-            style: TextStyle(
-              fontSize: DesignTokens.fontSizeM,
-              fontWeight: DesignTokens.fontWeightSemiBold,
-              color:
-                  isDark ? AppColors.darkTextSecondary : AppColors.textPrimary,
-            ),
-          ),
-        if (registrationNumber != null && registrationNumber!.isNotEmpty)
-          const SizedBox(height: DesignTokens.spacingXS),
-
         // Samaj ID
         if (samajId != null && samajId!.isNotEmpty) ...[
           Text(

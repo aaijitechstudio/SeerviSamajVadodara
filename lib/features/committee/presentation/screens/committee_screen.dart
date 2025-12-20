@@ -6,25 +6,115 @@ import '../../../../../core/constants/design_tokens.dart';
 import '../../../../../core/widgets/custom_app_bar.dart';
 import '../../../../../core/widgets/membership_card.dart';
 import '../../data/committee_data.dart';
+import '../../domain/models/committee_model.dart';
 
-class CommitteeScreen extends ConsumerWidget {
+class CommitteeScreen extends ConsumerStatefulWidget {
   const CommitteeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CommitteeScreen> createState() => _CommitteeScreenState();
+}
+
+class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearchActive = false;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      _isSearchActive = !_isSearchActive;
+      if (!_isSearchActive) {
+        _searchController.clear();
+      }
+    });
+  }
+
+  List<CommitteeModel> _filterMembers(
+    List<CommitteeModel> members,
+    String query,
+  ) {
+    if (query.isEmpty) return members;
+
+    final lowerQuery = query.toLowerCase();
+    return members.where((member) {
+      return member.name.toLowerCase().contains(lowerQuery) ||
+          (member.position.toLowerCase().contains(lowerQuery)) ||
+          (member.positionEn.toLowerCase().contains(lowerQuery)) ||
+          (member.location?.toLowerCase().contains(lowerQuery) ?? false) ||
+          (member.area?.toLowerCase().contains(lowerQuery) ?? false) ||
+          (member.gotra?.toLowerCase().contains(lowerQuery) ?? false) ||
+          (member.fatherName?.toLowerCase().contains(lowerQuery) ?? false) ||
+          member.phone.contains(lowerQuery);
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: CustomAppBar(
         title: l10n.committeeMembers,
         showLogo: false,
+        actions: [
+          IconButton(
+            icon: Icon(_isSearchActive ? Icons.close : Icons.search),
+            tooltip: _isSearchActive ? 'Close search' : 'Search',
+            onPressed: _toggleSearch,
+          ),
+        ],
       ),
-      body: _buildCommitteeList(context, l10n),
+      body: Column(
+        children: [
+          // Search Bar
+          if (_isSearchActive)
+            Padding(
+              padding: const EdgeInsets.all(DesignTokens.spacingM),
+              child: TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Search by name, position, location, gotra...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() {});
+                          },
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(DesignTokens.radiusM),
+                  ),
+                ),
+                onChanged: (_) => setState(() {}),
+              ),
+            ),
+          // Committee List
+          Expanded(
+            child: _buildCommitteeList(context, l10n),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildCommitteeList(BuildContext context, AppLocalizations l10n) {
     final allMembers = CommitteeData.allMembers;
+    final searchQuery = _searchController.text;
+
+    // Apply search filter if active
+    List<CommitteeModel> filteredMembers = allMembers;
+    if (_isSearchActive && searchQuery.isNotEmpty) {
+      filteredMembers = _filterMembers(allMembers, searchQuery);
+    }
 
     if (allMembers.isEmpty) {
       return Center(
@@ -49,59 +139,127 @@ class CommitteeScreen extends ConsumerWidget {
       );
     }
 
-    // Separate executive committee and executive members
+    // If search is active, show filtered results without sections
+    if (_isSearchActive && searchQuery.isNotEmpty) {
+      if (filteredMembers.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.search_off,
+                size: DesignTokens.iconSizeXL,
+                color: DesignTokens.grey400,
+              ),
+              const SizedBox(height: DesignTokens.spacingM),
+              Text(
+                'No members found',
+                style: TextStyle(
+                  fontSize: DesignTokens.fontSizeXL,
+                  color: DesignTokens.grey600,
+                ),
+              ),
+              const SizedBox(height: DesignTokens.spacingS),
+              Text(
+                'Try a different search term',
+                style: TextStyle(
+                  fontSize: DesignTokens.fontSizeM,
+                  color: DesignTokens.grey500,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+
+      return RefreshIndicator(
+        onRefresh: () async {
+          // Refresh committee data (for future dynamic data)
+          setState(() {});
+        },
+        child: ListView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: DesignTokens.spacingM,
+            vertical: DesignTokens.spacingM,
+          ),
+          children: filteredMembers.map((member) {
+            return MembershipCard(
+              name: member.name,
+              samajId: null,
+              role: member.position,
+              location: member.location ?? member.area,
+              profileImageUrl: member.imageUrl,
+              gotra: member.gotra,
+              isVerified: true,
+              isCommitteeMember: true,
+              onTap: member.phone.isNotEmpty
+                  ? () => _makePhoneCall(member.phone)
+                  : null,
+            );
+          }).toList(),
+        ),
+      );
+    }
+
+    // Normal view with sections when search is not active or search is empty
     final executiveCommittee = CommitteeData.executiveCommittee;
     final executiveMembers = CommitteeData.executiveMembers;
 
-    return ListView(
-      padding: const EdgeInsets.symmetric(
-        horizontal: DesignTokens.spacingM,
-        vertical: DesignTokens.spacingM,
-      ),
-      children: [
-        // Executive Committee Section
-        if (executiveCommittee.isNotEmpty) ...[
-          _buildSectionHeader('कार्यकारणी कमीटी', 'Executive Committee'),
-          const SizedBox(height: DesignTokens.spacingM),
-          ...executiveCommittee.map((member) {
-            return MembershipCard(
-              name: member.name,
-              registrationNumber: member.id,
-              role: member.position,
-              location: member.location ?? member.area,
-              profileImageUrl: member.imageUrl,
-              gotra: member.gotra,
-              isVerified: true,
-              isCommitteeMember: true,
-              onTap: member.phone.isNotEmpty
-                  ? () => _makePhoneCall(member.phone)
-                  : null,
-            );
-          }),
-          const SizedBox(height: DesignTokens.spacingL),
-        ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Refresh committee data (for future dynamic data)
+        setState(() {});
+      },
+      child: ListView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: DesignTokens.spacingM,
+          vertical: DesignTokens.spacingM,
+        ),
+        children: [
+          // Executive Committee Section
+          if (executiveCommittee.isNotEmpty) ...[
+            _buildSectionHeader('कार्यकारणी कमीटी', 'Executive Committee'),
+            const SizedBox(height: DesignTokens.spacingM),
+            ...executiveCommittee.map((member) {
+              return MembershipCard(
+                name: member.name,
+                samajId: null,
+                role: member.position,
+                location: member.location ?? member.area,
+                profileImageUrl: member.imageUrl,
+                gotra: member.gotra,
+                isVerified: true,
+                isCommitteeMember: true,
+                onTap: member.phone.isNotEmpty
+                    ? () => _makePhoneCall(member.phone)
+                    : null,
+              );
+            }),
+            const SizedBox(height: DesignTokens.spacingL),
+          ],
 
-        // Executive Members Section
-        if (executiveMembers.isNotEmpty) ...[
-          _buildSectionHeader('कार्यकारणी सदस्य', 'Executive Members'),
-          const SizedBox(height: DesignTokens.spacingM),
-          ...executiveMembers.map((member) {
-            return MembershipCard(
-              name: member.name,
-              registrationNumber: member.id,
-              role: member.position,
-              location: member.location ?? member.area,
-              profileImageUrl: member.imageUrl,
-              gotra: member.gotra,
-              isVerified: true,
-              isCommitteeMember: true,
-              onTap: member.phone.isNotEmpty
-                  ? () => _makePhoneCall(member.phone)
-                  : null,
-            );
-          }),
+          // Executive Members Section
+          if (executiveMembers.isNotEmpty) ...[
+            _buildSectionHeader('कार्यकारणी सदस्य', 'Executive Members'),
+            const SizedBox(height: DesignTokens.spacingM),
+            ...executiveMembers.map((member) {
+              return MembershipCard(
+                name: member.name,
+                samajId: null,
+                role: member.position,
+                location: member.location ?? member.area,
+                profileImageUrl: member.imageUrl,
+                gotra: member.gotra,
+                isVerified: true,
+                isCommitteeMember: true,
+                onTap: member.phone.isNotEmpty
+                    ? () => _makePhoneCall(member.phone)
+                    : null,
+              );
+            }),
+          ],
         ],
-      ],
+      ),
     );
   }
 
