@@ -1,29 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../members/domain/models/user_model.dart';
 import '../../../shared/data/firebase_service.dart';
 import '../../../core/utils/app_logger.dart';
+import '../../../core/providers/firebase_provider.dart';
 
-// Firebase Auth instance provider
-// Lazy initialization to ensure Firebase is initialized first
-final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
-  if (Firebase.apps.isEmpty) {
-    throw Exception(
-        'Firebase not initialized. Call Firebase.initializeApp() first.');
-  }
-  return FirebaseAuth.instance;
-});
+// Re-export Firebase Auth provider from centralized location
+// This provider now returns nullable FirebaseAuth to handle uninitialized state gracefully
 
 // Current user stream provider
 // Lazy initialization - only starts when accessed after Firebase is initialized
 final authStateProvider = StreamProvider<User?>((ref) {
-  try {
-    final auth = ref.watch(firebaseAuthProvider);
-    return auth.authStateChanges();
-  } catch (e) {
+  final auth = ref.watch(firebaseAuthProvider);
+
+  if (auth == null) {
     // If Firebase not initialized, return empty stream
     // This will be retried once Firebase is ready
+    return Stream<User?>.value(null);
+  }
+
+  try {
+    return auth.authStateChanges();
+  } catch (e) {
+    // If error occurs, return empty stream
     return Stream<User?>.value(null);
   }
 });
@@ -111,11 +110,12 @@ class AuthController extends Notifier<AuthState> {
   // Initialize from Firebase Auth
   Future<void> _initializeFromFirebase() async {
     try {
-      // Check if Firebase is initialized
-      if (Firebase.apps.isEmpty) {
+      final auth = ref.read(firebaseAuthProvider);
+
+      if (auth == null) {
         return; // Firebase not ready yet
       }
-      final auth = ref.read(firebaseAuthProvider);
+
       final currentUser = auth.currentUser;
       if (currentUser != null) {
         final userData = await FirebaseService.getUserData(currentUser.uid);
@@ -142,6 +142,16 @@ class AuthController extends Notifier<AuthState> {
     String? profileImageUrl,
   }) async {
     state = state.copyWith(isLoading: true, error: null);
+
+    // Check if Firebase is initialized before attempting sign up
+    final auth = ref.read(firebaseAuthProvider);
+    if (auth == null) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Firebase is not initialized. Please restart the app or check your internet connection.',
+      );
+      return false;
+    }
 
     try {
       final credential = await FirebaseService.signUpWithEmail(
@@ -170,9 +180,15 @@ class AuthController extends Notifier<AuthState> {
     } catch (e) {
       // Extract user-friendly error message
       String errorMessage = e.toString();
-      if (errorMessage.contains('Exception: ')) {
+
+      // Check for Firebase initialization errors
+      if (errorMessage.contains('Firebase not initialized') ||
+          errorMessage.contains('not been correctly initialized')) {
+        errorMessage = 'Firebase is not initialized. Please restart the app or check your internet connection.';
+      } else if (errorMessage.contains('Exception: ')) {
         errorMessage = errorMessage.replaceFirst('Exception: ', '');
       }
+
       state = state.copyWith(
         isLoading: false,
         error: errorMessage,
@@ -183,10 +199,20 @@ class AuthController extends Notifier<AuthState> {
 
   // Sign in with email and password
   Future<bool> signIn({
-    required String email,
+required String email,
     required String password,
   }) async {
     state = state.copyWith(isLoading: true, error: null);
+
+    // Check if Firebase is initialized before attempting sign in
+    final auth = ref.read(firebaseAuthProvider);
+    if (auth == null) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Firebase is not initialized. Please restart the app or check your internet connection.',
+      );
+      return false;
+    }
 
     try {
       final credential = await FirebaseService.signInWithEmail(
@@ -228,9 +254,15 @@ class AuthController extends Notifier<AuthState> {
     } catch (e) {
       // Extract user-friendly error message
       String errorMessage = e.toString();
-      if (errorMessage.contains('Exception: ')) {
+
+      // Check for Firebase initialization errors
+      if (errorMessage.contains('Firebase not initialized') ||
+          errorMessage.contains('not been correctly initialized')) {
+        errorMessage = 'Firebase is not initialized. Please restart the app or check your internet connection.';
+      } else if (errorMessage.contains('Exception: ')) {
         errorMessage = errorMessage.replaceFirst('Exception: ', '');
       }
+
       state = state.copyWith(
         isLoading: false,
         error: errorMessage,
@@ -251,6 +283,15 @@ class AuthController extends Notifier<AuthState> {
 
     try {
       final auth = ref.read(firebaseAuthProvider);
+
+      if (auth == null) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Firebase is not initialized. Please restart the app.',
+        );
+        return;
+      }
+
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: verificationCompleted,
@@ -275,6 +316,15 @@ class AuthController extends Notifier<AuthState> {
 
     try {
       final auth = ref.read(firebaseAuthProvider);
+
+      if (auth == null) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Firebase is not initialized. Please restart the app.',
+        );
+        return false;
+      }
+
       final credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: otp,
@@ -369,6 +419,15 @@ class AuthController extends Notifier<AuthState> {
 
     try {
       final auth = ref.read(firebaseAuthProvider);
+
+      if (auth == null) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Firebase is not initialized. Please restart the app.',
+        );
+        return false;
+      }
+
       await auth.sendPasswordResetEmail(email: email);
       state = state.copyWith(isLoading: false);
       return true;
@@ -393,6 +452,17 @@ class AuthController extends Notifier<AuthState> {
       isGoogleSignInLoading: true,
       error: null,
     );
+
+    // Check if Firebase is initialized before attempting sign in
+    final auth = ref.read(firebaseAuthProvider);
+    if (auth == null) {
+      state = state.copyWith(
+        isLoading: false,
+        isGoogleSignInLoading: false,
+        error: 'Firebase is not initialized. Please restart the app or check your internet connection.',
+      );
+      return false;
+    }
 
     try {
       final credential = await FirebaseService.signInWithGoogle();
@@ -432,9 +502,15 @@ class AuthController extends Notifier<AuthState> {
     } catch (e) {
       // Extract user-friendly error message
       String errorMessage = e.toString();
-      if (errorMessage.contains('Exception: ')) {
+
+      // Check for Firebase initialization errors
+      if (errorMessage.contains('Firebase not initialized') ||
+          errorMessage.contains('not been correctly initialized')) {
+        errorMessage = 'Firebase is not initialized. Please restart the app or check your internet connection.';
+      } else if (errorMessage.contains('Exception: ')) {
         errorMessage = errorMessage.replaceFirst('Exception: ', '');
       }
+
       state = state.copyWith(
         isLoading: false,
         isGoogleSignInLoading: false,

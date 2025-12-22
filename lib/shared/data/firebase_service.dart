@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../features/members/domain/models/user_model.dart';
 import '../models/post_model.dart';
+import '../../core/utils/network_helper.dart';
+import '../../core/utils/app_logger.dart';
 
 class FirebaseService {
   // Lazy initialization to ensure Firebase is initialized first
@@ -45,6 +47,9 @@ class FirebaseService {
     String? pratisthanName,
     String? profileImageUrl,
   }) async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -156,6 +161,9 @@ class FirebaseService {
     required String email,
     required String password,
   }) async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
     try {
       return await _auth.signInWithEmailAndPassword(
         email: email,
@@ -202,7 +210,12 @@ class FirebaseService {
 
   // Sign in with Google
   static Future<UserCredential?> signInWithGoogle() async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
     try {
+      // For iOS, GoogleSignIn automatically reads CLIENT_ID from GoogleService-Info.plist
+      // serverClientId is optional and only needed for server-side token verification
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email', 'profile'],
       );
@@ -219,6 +232,17 @@ class FirebaseService {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
+      // Validate that we have the required tokens
+      if (googleAuth.idToken == null) {
+        throw Exception(
+            'Google Sign In failed: ID token is missing. Please try again.');
+      }
+
+      if (googleAuth.accessToken == null) {
+        throw Exception(
+            'Google Sign In failed: Access token is missing. Please try again.');
+      }
+
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -226,13 +250,11 @@ class FirebaseService {
       );
 
       // Sign in to Firebase with the Google credential
-      final userCredential =
-          await _auth.signInWithCredential(credential);
+      final userCredential = await _auth.signInWithCredential(credential);
 
       // Check if user exists in Firestore, if not create
       if (userCredential.user != null) {
-        final userData =
-            await getUserData(userCredential.user!.uid);
+        final userData = await getUserData(userCredential.user!.uid);
         if (userData == null) {
           // Create user document in Firestore
           final user = userCredential.user!;
@@ -254,20 +276,32 @@ class FirebaseService {
               'An account already exists with a different sign-in method.';
           break;
         case 'invalid-credential':
-          errorMessage = 'Invalid Google Sign In credentials.';
+        case 'invalid-argument':
+          errorMessage =
+              'Invalid Google Sign In credentials. Please try again or check your Google account settings.';
           break;
         case 'operation-not-allowed':
-          errorMessage = 'Google Sign In is not enabled.';
+          errorMessage = 'Google Sign In is not enabled. Please contact support.';
           break;
         case 'user-disabled':
           errorMessage = 'This account has been disabled.';
           break;
         default:
-          errorMessage = 'Google Sign In failed: ${e.message ?? e.code}';
+          errorMessage = 'Sign in failed: ${e.message ?? e.code}';
       }
+      AppLogger.error('Google Sign In FirebaseAuthException', e);
       throw Exception(errorMessage);
     } catch (e) {
-      throw Exception('Google Sign In failed: ${e.toString()}');
+      AppLogger.error('Google Sign In error', e);
+      // Provide more helpful error messages
+      final errorString = e.toString().toLowerCase();
+      if (errorString.contains('malformed') ||
+          errorString.contains('expired') ||
+          errorString.contains('invalid')) {
+        throw Exception(
+            'Sign in failed: The authentication credentials are invalid. Please try signing in again.');
+      }
+      throw Exception('Sign in failed: ${e.toString()}');
     }
   }
 
@@ -304,6 +338,9 @@ class FirebaseService {
 
   // User methods
   static Future<UserModel?> getUserData(String uid) async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
     try {
       final doc = await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
@@ -317,6 +354,9 @@ class FirebaseService {
 
   static Future<void> updateUserData(
       String uid, Map<String, dynamic> data) async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
     try {
       await _firestore.collection('users').doc(uid).update(data);
     } catch (e) {
@@ -325,6 +365,9 @@ class FirebaseService {
   }
 
   static Future<List<UserModel>> getAllMembers() async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
     try {
       final snapshot = await _firestore.collection('users').get();
       return snapshot.docs
@@ -383,6 +426,9 @@ class FirebaseService {
 
   // Post methods
   static Future<void> createPost(PostModel post) async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
     try {
       await _firestore.collection('posts').add(post.toMap());
     } catch (e) {
@@ -404,6 +450,9 @@ class FirebaseService {
     String? lastDocumentId,
     int limit = 20,
   }) async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
     try {
       Query query = _firestore
           .collection('posts')

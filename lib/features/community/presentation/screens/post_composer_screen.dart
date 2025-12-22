@@ -236,6 +236,18 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
 
       final postRepository = ref.read(postRepositoryProvider);
 
+      if (postRepository == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Firebase is not initialized. Please restart the app.'),
+            ),
+          );
+        }
+        return;
+      }
+
       // Debug: Print post data before creating
       debugPrint('Creating post with data: ${post.toMap()}');
       debugPrint('User ID: ${user.id}');

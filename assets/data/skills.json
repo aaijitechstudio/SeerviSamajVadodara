@@ -1,0 +1,135 @@
+{
+  "skills": [
+    {
+      "id": "computer_basics",
+      "title": "Computer Basics",
+      "description": "Learn fundamental computer skills including MS Office, internet usage, and basic troubleshooting.",
+      "category": "computer",
+      "whoShouldLearn": [
+        "Students preparing for jobs",
+        "Job seekers",
+        "Anyone wanting to use computers",
+        "Senior citizens"
+      ],
+      "freeResources": [
+        "YouTube - Computer Basics Tutorials",
+        "GCF Learn Free - Free Computer Courses",
+        "Microsoft Learn - Free Office Training",
+        "Google Digital Garage - Free Courses",
+        "Coursera - Free Computer Courses"
+      ],
+      "careerOutcomes": [
+        "Data Entry Operator",
+        "Office Assistant",
+        "Computer Operator",
+        "Basic IT Support"
+      ],
+      "duration": "2-3 months"
+    },
+    {
+      "id": "spoken_english",
+      "title": "Spoken English",
+      "description": "Improve English speaking, listening, and communication skills for better career opportunities.",
+      "category": "language",
+      "whoShouldLearn": [
+        "Students preparing for interviews",
+        "Job seekers",
+        "Working professionals",
+        "Anyone wanting to improve English"
+      ],
+      "freeResources": [
+        "YouTube - English Speaking Practice",
+        "Duolingo - Free English Learning",
+        "BBC Learning English - Free Courses",
+        "British Council - Free Resources",
+        "Coursera - Free English Courses"
+      ],
+      "careerOutcomes": [
+        "Customer Service Executive",
+        "Call Center Agent",
+        "English Teacher",
+        "Content Writer"
+      ],
+      "duration": "3-6 months"
+    },
+    {
+      "id": "digital_marketing",
+      "title": "Digital Marketing",
+      "description": "Learn social media marketing, SEO, content creation, and online advertising skills.",
+      "category": "digital",
+      "whoShouldLearn": [
+        "Business owners",
+        "Marketing professionals",
+        "Entrepreneurs",
+        "Students interested in marketing"
+      ],
+      "freeResources": [
+        "Google Digital Garage - Free Certification",
+        "HubSpot Academy - Free Courses",
+        "Facebook Blueprint - Free Training",
+        "YouTube - Digital Marketing Tutorials",
+        "Coursera - Free Marketing Courses"
+      ],
+      "careerOutcomes": [
+        "Digital Marketing Executive",
+        "Social Media Manager",
+        "SEO Specialist",
+        "Content Creator"
+      ],
+      "duration": "2-4 months"
+    },
+    {
+      "id": "programming",
+      "title": "Programming & Coding",
+      "description": "Learn programming languages like Python, Java, JavaScript, and web development.",
+      "category": "computer",
+      "whoShouldLearn": [
+        "Engineering students",
+        "IT job seekers",
+        "Career changers",
+        "Anyone interested in technology"
+      ],
+      "freeResources": [
+        "freeCodeCamp - Free Coding Bootcamp",
+        "Codecademy - Free Courses",
+        "GeeksforGeeks - Free Programming",
+        "YouTube - Coding Tutorials",
+        "GitHub - Free Projects"
+      ],
+      "careerOutcomes": [
+        "Software Developer",
+        "Web Developer",
+        "App Developer",
+        "Data Analyst"
+      ],
+      "duration": "6-12 months"
+    },
+    {
+      "id": "vocational_skills",
+      "title": "Vocational Skills",
+      "description": "Learn practical skills like electrician, plumber, mechanic, tailoring, and other trades.",
+      "category": "vocational",
+      "whoShouldLearn": [
+        "School dropouts",
+        "Job seekers",
+        "Entrepreneurs",
+        "Anyone wanting practical skills"
+      ],
+      "freeResources": [
+        "PMKVY - Free Skill Training",
+        "YouTube - Vocational Training",
+        "NSDC - Skill Development",
+        "Government ITI Courses",
+        "Free Online Trade Courses"
+      ],
+      "careerOutcomes": [
+        "Skilled Worker",
+        "Self-employed Professional",
+        "Service Technician",
+        "Small Business Owner"
+      ],
+      "duration": "3-12 months"
+    }
+  ]
+}
+

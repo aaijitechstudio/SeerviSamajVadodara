@@ -1,0 +1,45 @@
+{
+  "stories": [
+    {
+      "id": "story1",
+      "name": "Dr. Rajesh Seervi",
+      "field": "Medical",
+      "journey": "Started from a small village in Gujarat, completed MBBS through hard work and determination. Now serving as a doctor in Vadodara.",
+      "message": "Education is the key to success. Never give up on your dreams, no matter how difficult the path seems.",
+      "currentPosition": "Senior Doctor, Vadodara Hospital"
+    },
+    {
+      "id": "story2",
+      "name": "Priya Seervi",
+      "field": "Engineering",
+      "journey": "Cleared JEE and got admission in IIT. Worked hard during college and now working as a Software Engineer in a top tech company.",
+      "message": "Hard work and consistency always pay off. Believe in yourself and keep moving forward.",
+      "currentPosition": "Software Engineer, Tech Company"
+    },
+    {
+      "id": "story3",
+      "name": "Amit Seervi",
+      "field": "Civil Services",
+      "journey": "Cleared UPSC after 3 attempts. Never lost hope and kept studying. Now serving as an IAS officer.",
+      "message": "Failure is not the end, it's just a stepping stone. Keep trying and you will succeed.",
+      "currentPosition": "IAS Officer, Gujarat Cadre"
+    },
+    {
+      "id": "story4",
+      "name": "Kavita Seervi",
+      "field": "Business",
+      "journey": "Started a small business after graduation. Faced many challenges but never gave up. Now running a successful business.",
+      "message": "Entrepreneurship requires courage and persistence. Start small, dream big, and work hard.",
+      "currentPosition": "Business Owner, Vadodara"
+    },
+    {
+      "id": "story5",
+      "name": "Rahul Seervi",
+      "field": "Teaching",
+      "journey": "Became a teacher after completing B.Ed. Now teaching in a reputed school and helping students achieve their dreams.",
+      "message": "Teaching is a noble profession. If you have the passion to help others, teaching is the best career.",
+      "currentPosition": "Senior Teacher, Vadodara School"
+    }
+  ]
+}
+

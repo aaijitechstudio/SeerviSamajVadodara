@@ -65,6 +65,22 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
 
     try {
       final postRepository = ref.read(postRepositoryProvider);
+
+      if (postRepository == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Firebase is not initialized. Please restart the app.'),
+            ),
+          );
+        }
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
       final result = widget.category != null
           ? await postRepository.getPostsByCategory(
               widget.category!,
@@ -118,6 +134,22 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
 
     try {
       final postRepository = ref.read(postRepositoryProvider);
+
+      if (postRepository == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Firebase is not initialized. Please restart the app.'),
+            ),
+          );
+        }
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
       final result = widget.category != null
           ? await postRepository.getPostsByCategory(
               widget.category!,

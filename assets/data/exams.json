@@ -1,0 +1,133 @@
+{
+  "exams": [
+    {
+      "id": "upsc",
+      "title": "UPSC Civil Services",
+      "description": "Union Public Service Commission exam for IAS, IPS, IFS, and other civil services.",
+      "category": "upsc",
+      "eligibility": "Graduation in any stream, Age 21-32 years (relaxation for reserved categories)",
+      "freeResources": [
+        "UPSC Official Website - Free Syllabus",
+        "YouTube - Free UPSC Preparation",
+        "NCERT Books - Free PDFs",
+        "ClearIAS - Free Study Material",
+        "Unacademy Free Classes"
+      ],
+      "examFrequency": "Once a year (Prelims in May/June, Mains in September, Interview in March-April)",
+      "officialWebsite": "https://www.upsc.gov.in"
+    },
+    {
+      "id": "gpsc",
+      "title": "GPSC (Gujarat Public Service Commission)",
+      "description": "State-level civil services exam for various government posts in Gujarat.",
+      "category": "upsc",
+      "eligibility": "Graduation, Age 20-35 years (varies by post), Gujarat domicile",
+      "freeResources": [
+        "GPSC Official Website - Free Syllabus",
+        "YouTube - Free GPSC Preparation",
+        "Gujarat Government Study Material",
+        "Free GPSC Mock Tests",
+        "Unacademy Free Classes"
+      ],
+      "examFrequency": "Multiple times a year (varies by post)",
+      "officialWebsite": "https://gpsc.gujarat.gov.in"
+    },
+    {
+      "id": "banking",
+      "title": "Banking Exams (IBPS, SBI)",
+      "description": "Exams for bank jobs including PO, Clerk, and Specialist Officer posts.",
+      "category": "banking",
+      "eligibility": "Graduation, Age 20-30 years (varies by post)",
+      "freeResources": [
+        "IBPS Official Website - Free Syllabus",
+        "YouTube - Free Banking Preparation",
+        "Bankersadda - Free Study Material",
+        "Gradeup - Free Mock Tests",
+        "Free Banking Apps"
+      ],
+      "examFrequency": "Multiple times a year",
+      "officialWebsite": "https://www.ibps.in"
+    },
+    {
+      "id": "ssc",
+      "title": "SSC (Staff Selection Commission)",
+      "description": "Exams for various government posts like CGL, CHSL, MTS, and more.",
+      "category": "government",
+      "eligibility": "10th/12th/Graduation (varies by post), Age 18-32 years",
+      "freeResources": [
+        "SSC Official Website - Free Syllabus",
+        "YouTube - Free SSC Preparation",
+        "SSC Adda - Free Study Material",
+        "Free SSC Mock Tests",
+        "Unacademy Free Classes"
+      ],
+      "examFrequency": "Multiple times a year",
+      "officialWebsite": "https://ssc.nic.in"
+    },
+    {
+      "id": "neet",
+      "title": "NEET (National Eligibility cum Entrance Test)",
+      "description": "Medical entrance exam for MBBS, BDS, and other medical courses.",
+      "category": "medical",
+      "eligibility": "12th with Physics, Chemistry, Biology, Age 17-25 years",
+      "freeResources": [
+        "NEET Official Website - Free Syllabus",
+        "YouTube - Free NEET Preparation",
+        "NCERT Books - Free PDFs",
+        "Unacademy Free Classes",
+        "BYJU'S Free Classes"
+      ],
+      "examFrequency": "Once a year (usually in May)",
+      "officialWebsite": "https://neet.nta.nic.in"
+    },
+    {
+      "id": "jee",
+      "title": "JEE (Joint Entrance Examination)",
+      "description": "Engineering entrance exam for IITs, NITs, and other engineering colleges.",
+      "category": "engineering",
+      "eligibility": "12th with Physics, Chemistry, Mathematics, Age limit varies",
+      "freeResources": [
+        "JEE Official Website - Free Syllabus",
+        "YouTube - Free JEE Preparation",
+        "NCERT Books - Free PDFs",
+        "Unacademy Free Classes",
+        "BYJU'S Free Classes"
+      ],
+      "examFrequency": "JEE Main: Twice a year, JEE Advanced: Once a year",
+      "officialWebsite": "https://jeemain.nta.nic.in"
+    },
+    {
+      "id": "teaching",
+      "title": "Teaching Exams (CTET, TET)",
+      "description": "Exams for teaching jobs in schools (Primary and Upper Primary).",
+      "category": "teaching",
+      "eligibility": "Graduation + B.Ed, Age 18-35 years",
+      "freeResources": [
+        "CTET Official Website - Free Syllabus",
+        "YouTube - Free Teaching Exam Preparation",
+        "NCERT Books - Free PDFs",
+        "Free Teaching Mock Tests",
+        "Unacademy Free Classes"
+      ],
+      "examFrequency": "Twice a year",
+      "officialWebsite": "https://ctet.nic.in"
+    },
+    {
+      "id": "defence",
+      "title": "Defence Exams (NDA, CDS)",
+      "description": "Exams for joining Indian Army, Navy, and Air Force as officers.",
+      "category": "defence",
+      "eligibility": "12th/Graduation, Age 16.5-19 years (NDA), 19-25 years (CDS)",
+      "freeResources": [
+        "UPSC Official Website - Free Syllabus",
+        "YouTube - Free Defence Preparation",
+        "Free Defence Study Material",
+        "Free Mock Tests",
+        "Unacademy Free Classes"
+      ],
+      "examFrequency": "Twice a year",
+      "officialWebsite": "https://www.upsc.gov.in"
+    }
+  ]
+}
+

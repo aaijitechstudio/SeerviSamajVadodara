@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../../core/config/app_config.dart';
 import '../../../../core/utils/app_logger.dart';
+import '../../../../core/utils/network_helper.dart';
 import '../domain/models/vadodara_news_model.dart';
 
 class NewsResponse {
@@ -32,6 +33,15 @@ class VadodaraNewsService {
   static const int pageSize = 10;
 
   static Future<NewsResponse> fetchVadodaraNews({String? nextPage}) async {
+    // Check network connectivity before making request
+    try {
+      await NetworkHelper.ensureNetworkConnectivity();
+    } catch (e) {
+      AppLogger.warning('No network connectivity: $e');
+      throw Exception(
+          'No internet connection. Please check your network and try again.');
+    }
+
     try {
       AppLogger.logApiCall('fetchVadodaraNews', method: 'GET');
 

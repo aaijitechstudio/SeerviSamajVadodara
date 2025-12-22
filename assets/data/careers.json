@@ -1,0 +1,229 @@
+{
+  "careers": [
+    {
+      "id": "after10_science",
+      "title": "After 10th - Science Stream",
+      "description": "Science stream opens doors to engineering, medical, and research careers. Choose between Medical (Biology) or Engineering (Maths) paths.",
+      "icon": "science",
+      "category": "after10",
+      "requiredSubjects": ["Physics", "Chemistry", "Mathematics/Biology", "English"],
+      "careerOptions": [
+        "Engineering (B.Tech) - JEE Main/Advanced",
+        "Medical (MBBS) - NEET",
+        "Pharmacy",
+        "Nursing",
+        "Agriculture",
+        "Veterinary Science",
+        "Biotechnology",
+        "Research & Development"
+      ],
+      "freeResources": [
+        "Khan Academy - Free science courses",
+        "NPTEL - Free engineering courses",
+        "BYJU'S Free Classes - YouTube",
+        "Unacademy Free Classes - YouTube",
+        "NCERT Books - Free PDFs"
+      ],
+      "commonMistakes": [
+        "Choosing science just because friends chose it",
+        "Not understanding the difference between Medical and Engineering",
+        "Ignoring Mathematics if weak in it",
+        "Not preparing for competitive exams early"
+      ],
+      "salaryRange": "₹3-15 Lakhs per annum (entry level)"
+    },
+    {
+      "id": "after10_commerce",
+      "title": "After 10th - Commerce Stream",
+      "description": "Commerce stream leads to careers in business, finance, accounting, and management. Perfect for those interested in numbers and business.",
+      "icon": "account_balance",
+      "category": "after10",
+      "requiredSubjects": ["Accountancy", "Business Studies", "Economics", "Mathematics/Statistics"],
+      "careerOptions": [
+        "Chartered Accountant (CA)",
+        "Company Secretary (CS)",
+        "Cost & Management Accountant (CMA)",
+        "B.Com / BBA",
+        "Banking & Finance",
+        "Business Administration",
+        "Stock Market & Trading",
+        "Entrepreneurship"
+      ],
+      "freeResources": [
+        "CA Foundation Free Classes - YouTube",
+        "Khan Academy - Economics & Finance",
+        "Coursera Free Courses - Business",
+        "edX Free Courses - Finance",
+        "NPTEL - Management Courses"
+      ],
+      "commonMistakes": [
+        "Thinking commerce is easier than science",
+        "Not understanding the importance of Mathematics",
+        "Not planning for professional courses early",
+        "Ignoring practical business skills"
+      ],
+      "salaryRange": "₹2-12 Lakhs per annum (entry level)"
+    },
+    {
+      "id": "after10_arts",
+      "title": "After 10th - Arts/Humanities Stream",
+      "description": "Arts stream offers diverse career options in law, civil services, journalism, design, and social sciences.",
+      "icon": "palette",
+      "category": "after10",
+      "requiredSubjects": ["History", "Political Science", "Geography", "Economics", "Psychology"],
+      "careerOptions": [
+        "Law (LLB) - CLAT",
+        "Civil Services (UPSC/GPSC)",
+        "Journalism & Mass Communication",
+        "Design (Fashion, Interior, Graphic)",
+        "Psychology",
+        "Social Work",
+        "Teaching",
+        "Public Administration"
+      ],
+      "freeResources": [
+        "UPSC Free Study Material - Official Website",
+        "Khan Academy - History & Social Sciences",
+        "Coursera - Free Design Courses",
+        "YouTube - Law & UPSC Preparation",
+        "NCERT Books - Free PDFs"
+      ],
+      "commonMistakes": [
+        "Thinking arts has no career scope",
+        "Not planning for competitive exams",
+        "Ignoring language skills",
+        "Not exploring creative fields"
+      ],
+      "salaryRange": "₹2-10 Lakhs per annum (entry level)"
+    },
+    {
+      "id": "after12_engineering",
+      "title": "After 12th - Engineering",
+      "description": "Engineering offers various specializations like Computer Science, Mechanical, Civil, Electrical, and more.",
+      "icon": "engineering",
+      "category": "after12",
+      "requiredSubjects": ["Physics", "Chemistry", "Mathematics"],
+      "careerOptions": [
+        "Software Engineer",
+        "Mechanical Engineer",
+        "Civil Engineer",
+        "Electrical Engineer",
+        "Electronics Engineer",
+        "Aerospace Engineer",
+        "Data Scientist",
+        "AI/ML Engineer"
+      ],
+      "freeResources": [
+        "NPTEL - Free Engineering Courses",
+        "Coursera - Free Tech Courses",
+        "edX - MIT & Harvard Free Courses",
+        "YouTube - Free Coding Tutorials",
+        "GeeksforGeeks - Free Programming"
+      ],
+      "commonMistakes": [
+        "Choosing branch without interest",
+        "Not learning programming early",
+        "Ignoring internships",
+        "Not building projects"
+      ],
+      "salaryRange": "₹4-20 Lakhs per annum (entry level)"
+    },
+    {
+      "id": "after12_medical",
+      "title": "After 12th - Medical",
+      "description": "Medical field offers careers as doctors, nurses, pharmacists, and healthcare professionals.",
+      "icon": "medical_services",
+      "category": "after12",
+      "requiredSubjects": ["Physics", "Chemistry", "Biology"],
+      "careerOptions": [
+        "MBBS (Doctor)",
+        "BDS (Dentist)",
+        "B.Pharm (Pharmacist)",
+        "B.Sc Nursing",
+        "Physiotherapy",
+        "Veterinary Science",
+        "Ayurveda",
+        "Homeopathy"
+      ],
+      "freeResources": [
+        "NEET Preparation - Free YouTube Channels",
+        "Khan Academy - Biology & Chemistry",
+        "Unacademy Free NEET Classes",
+        "NCERT Books - Free PDFs",
+        "Medical Study Material - Free Online"
+      ],
+      "commonMistakes": [
+        "Not preparing for NEET seriously",
+        "Ignoring Biology basics",
+        "Not understanding medical field reality",
+        "Not exploring alternative medical courses"
+      ],
+      "salaryRange": "₹5-25 Lakhs per annum (after MBBS)"
+    },
+    {
+      "id": "college_business",
+      "title": "College - Business & Management",
+      "description": "Business and management courses prepare you for leadership roles in companies and entrepreneurship.",
+      "icon": "business_center",
+      "category": "college",
+      "requiredSubjects": ["Any stream"],
+      "careerOptions": [
+        "MBA (Master of Business Administration)",
+        "BBA (Bachelor of Business Administration)",
+        "Business Analyst",
+        "Marketing Manager",
+        "HR Manager",
+        "Operations Manager",
+        "Entrepreneur",
+        "Startup Founder"
+      ],
+      "freeResources": [
+        "Coursera - Free Business Courses",
+        "edX - Harvard Business Courses",
+        "YouTube - Business & Entrepreneurship",
+        "Khan Academy - Economics",
+        "Free Business Plan Templates"
+      ],
+      "commonMistakes": [
+        "Not gaining practical experience",
+        "Ignoring networking",
+        "Not learning digital marketing",
+        "Not understanding market trends"
+      ],
+      "salaryRange": "₹3-15 Lakhs per annum (entry level)"
+    },
+    {
+      "id": "working_freelancing",
+      "title": "Working Youth - Freelancing",
+      "description": "Freelancing offers flexibility and independence. Learn skills like design, writing, programming, or digital marketing.",
+      "icon": "work",
+      "category": "working",
+      "requiredSubjects": ["Skills-based"],
+      "careerOptions": [
+        "Graphic Designer",
+        "Web Developer",
+        "Content Writer",
+        "Digital Marketer",
+        "Video Editor",
+        "Social Media Manager",
+        "Translator",
+        "Online Tutor"
+      ],
+      "freeResources": [
+        "YouTube - Free Skill Tutorials",
+        "Coursera - Free Courses",
+        "Udemy Free Courses",
+        "Canva - Free Design Tools",
+        "Fiverr Learning - Free Resources"
+      ],
+      "commonMistakes": [
+        "Not building portfolio",
+        "Underpricing services",
+        "Not learning continuously",
+        "Ignoring client communication"
+      ],
+      "salaryRange": "₹2-10 Lakhs per annum (varies)"
+    }
+  ]
+}
+

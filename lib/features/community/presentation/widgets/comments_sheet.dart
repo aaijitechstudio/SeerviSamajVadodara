@@ -53,6 +53,22 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
 
     try {
       final postRepository = ref.read(postRepositoryProvider);
+
+      if (postRepository == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Firebase is not initialized. Please restart the app.'),
+            ),
+          );
+        }
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
       final result = await postRepository.getComments(widget.post.id);
 
       if (result.failure != null) {
@@ -107,6 +123,22 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
 
     try {
       final postRepository = ref.read(postRepositoryProvider);
+
+      if (postRepository == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Firebase is not initialized. Please restart the app.'),
+            ),
+          );
+        }
+        setState(() {
+          _isPosting = false;
+        });
+        return;
+      }
+
       final comment = CommentModel(
         id: '',
         postId: widget.post.id,

@@ -71,6 +71,15 @@ class MembersController extends Notifier<MembersState> {
     try {
       // Use repository pattern for better testability
       final repository = ref.read(userRepositoryProvider);
+
+      if (repository == null) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Firebase is not initialized. Please restart the app.',
+        );
+        return;
+      }
+
       final result = await repository.getAllMembers();
 
       if (result.failure != null) {
@@ -103,6 +112,15 @@ class MembersController extends Notifier<MembersState> {
     try {
       // Use repository pattern for better testability
       final repository = ref.read(userRepositoryProvider);
+
+      if (repository == null) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Firebase is not initialized. Please restart the app.',
+        );
+        return;
+      }
+
       final result = await repository.getMembersPaginated(
         lastDocumentId: state.lastDocumentId,
         limit: 20,

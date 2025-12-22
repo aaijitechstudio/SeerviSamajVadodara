@@ -89,6 +89,19 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
 
     try {
       final postRepository = ref.read(postRepositoryProvider);
+
+      if (postRepository == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Firebase is not initialized. Please restart the app.'),
+            ),
+          );
+        }
+        return;
+      }
+
       final isLiked = _post.likedBy.contains(currentUserId);
       final newLikedBy = List<String>.from(_post.likedBy);
 
@@ -484,6 +497,19 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
             onPressed: () async {
               Navigator.of(context).pop();
               final postRepository = ref.read(postRepositoryProvider);
+
+              if (postRepository == null) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Firebase is not initialized. Please restart the app.'),
+                    ),
+                  );
+                }
+                return;
+              }
+
               final result = await postRepository.deletePost(_post.id);
               if (result.failure == null && result.success == true) {
                 widget.onPostUpdated?.call();

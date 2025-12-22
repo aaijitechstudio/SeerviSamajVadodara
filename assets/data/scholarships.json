@@ -1,0 +1,73 @@
+{
+  "scholarships": [
+    {
+      "id": "pm_scholarship",
+      "title": "PM Scholarship Scheme",
+      "description": "Central government scholarship for meritorious students from minority communities.",
+      "type": "government",
+      "eligibility": "Class 11-12 and Graduation students with minimum 50% marks, family income below ₹2.5 Lakhs",
+      "documents": [
+        "Income Certificate",
+        "Caste Certificate",
+        "Mark Sheets",
+        "Bank Account Details",
+        "Aadhaar Card"
+      ],
+      "officialWebsite": "https://www.minorityaffairs.gov.in",
+      "applicationProcess": "Apply online through National Scholarship Portal (NSP)",
+      "amount": "₹5,000 - ₹20,000 per year"
+    },
+    {
+      "id": "gujarat_scholarship",
+      "title": "Gujarat Government Scholarship",
+      "description": "State government scholarship for students studying in Gujarat.",
+      "type": "state",
+      "eligibility": "Gujarat domicile, studying in Gujarat, family income below ₹2 Lakhs",
+      "documents": [
+        "Domicile Certificate",
+        "Income Certificate",
+        "School/College Certificate",
+        "Bank Account Details",
+        "Aadhaar Card"
+      ],
+      "officialWebsite": "https://www.digitalgujarat.gov.in",
+      "applicationProcess": "Apply online through Digital Gujarat portal",
+      "amount": "₹1,000 - ₹10,000 per year"
+    },
+    {
+      "id": "merit_scholarship",
+      "title": "Merit Scholarship",
+      "description": "Scholarship for students with excellent academic performance.",
+      "type": "government",
+      "eligibility": "Minimum 80% marks in previous class, family income below ₹3 Lakhs",
+      "documents": [
+        "Mark Sheets",
+        "Income Certificate",
+        "School/College Certificate",
+        "Bank Account Details"
+      ],
+      "officialWebsite": "https://www.scholarships.gov.in",
+      "applicationProcess": "Apply through National Scholarship Portal",
+      "amount": "₹2,000 - ₹15,000 per year"
+    },
+    {
+      "id": "education_loan",
+      "title": "Education Loan Information",
+      "description": "Government and private bank education loans for higher studies.",
+      "type": "loan",
+      "eligibility": "Admission in recognized institution, Indian citizen, co-applicant required",
+      "documents": [
+        "Admission Letter",
+        "Fee Structure",
+        "Income Proof",
+        "Identity Proof",
+        "Address Proof",
+        "Co-applicant Documents"
+      ],
+      "officialWebsite": "https://www.vidyalakshmi.co.in",
+      "applicationProcess": "Apply through Vidya Lakshmi Portal or directly at banks",
+      "amount": "Up to ₹40 Lakhs (varies by bank)"
+    }
+  ]
+}
+

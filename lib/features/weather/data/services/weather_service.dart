@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/utils/app_logger.dart';
+import '../../../../core/utils/network_helper.dart';
 import '../../domain/models/weather_model.dart';
 
 class WeatherService {
@@ -66,6 +67,14 @@ class WeatherService {
     double longitude,
     String locationName,
   ) async {
+    // Check network connectivity before making request
+    try {
+      await NetworkHelper.ensureNetworkConnectivity();
+    } catch (e) {
+      AppLogger.warning('No network connectivity: $e');
+      return null;
+    }
+
     // Always try the API call - let it fail if key is invalid
     // This ensures fallback always attempts to get weather
     final apiKey = _apiKey;
@@ -100,6 +109,14 @@ class WeatherService {
 
   /// Get weather by city name
   Future<WeatherModel?> getWeatherByCityName(String cityName) async {
+    // Check network connectivity before making request
+    try {
+      await NetworkHelper.ensureNetworkConnectivity();
+    } catch (e) {
+      AppLogger.warning('No network connectivity: $e');
+      return null;
+    }
+
     // Always try the API call - let it fail if key is invalid
     // This ensures fallback always attempts to get weather
     final apiKey = _apiKey;
