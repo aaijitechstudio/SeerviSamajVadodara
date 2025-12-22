@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
-import '../../../members/presentation/screens/members_screen.dart';
+import '../../../members/presentation/screens/merged_members_screen.dart';
 import '../../../news/presentation/screens/news_screen.dart';
-import '../../../committee/presentation/screens/committee_screen.dart';
 import '../../../auth/presentation/screens/profile_screen.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../community/presentation/screens/post_composer_screen.dart';
+import '../../../education/presentation/screens/education_career_screen.dart';
 import '../../../../shared/models/post_model.dart';
 import '../widgets/app_drawer.dart';
 import 'home_screen.dart';
@@ -40,8 +40,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     return [
       const HomeScreen(),
       const NewsScreen(),
-      const CommitteeScreen(),
-      const MembersScreen(),
+      const MergedMembersScreen(),
+      const EducationCareerScreen(),
       const ProfileScreen(),
     ];
   }
@@ -123,14 +123,14 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 ),
                 _buildNavItem(
                   context,
-                  icon: Icons.groups_rounded,
-                  label: l10n.committee,
+                  icon: Icons.people_rounded,
+                  label: l10n.members,
                   index: 2,
                 ),
                 _buildNavItem(
                   context,
-                  icon: Icons.people_rounded,
-                  label: l10n.members,
+                  icon: Icons.school_rounded,
+                  label: 'Education',
                   index: 3,
                 ),
                 _buildNavItem(
