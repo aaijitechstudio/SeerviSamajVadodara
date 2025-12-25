@@ -182,16 +182,20 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
             horizontal: DesignTokens.spacingM,
             vertical: DesignTokens.spacingM,
           ),
-          children: filteredMembers.map((member) {
+          children: filteredMembers.asMap().entries.map((entry) {
+            final index = entry.key;
+            final member = entry.value;
+            final locale = Localizations.localeOf(context);
             return MembershipCard(
               name: member.name,
               samajId: null,
-              role: member.position,
+              role: member.getLocalizedPosition(locale),
               location: member.location ?? member.area,
               profileImageUrl: member.imageUrl,
               gotra: member.gotra,
               isVerified: true,
               isCommitteeMember: true,
+              index: index,
               onTap: member.phone.isNotEmpty
                   ? () => _makePhoneCall(member.phone)
                   : null,
@@ -218,18 +222,25 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
         children: [
           // Executive Committee Section
           if (executiveCommittee.isNotEmpty) ...[
-            _buildSectionHeader('कार्यकारणी कमीटी', 'Executive Committee'),
+            _buildSectionHeader(
+              l10n.executiveCommittee,
+              l10n.executiveCommittee,
+            ),
             const SizedBox(height: DesignTokens.spacingM),
-            ...executiveCommittee.map((member) {
+            ...executiveCommittee.asMap().entries.map((entry) {
+              final index = entry.key;
+              final member = entry.value;
+              final locale = Localizations.localeOf(context);
               return MembershipCard(
                 name: member.name,
                 samajId: null,
-                role: member.position,
+                role: member.getLocalizedPosition(locale),
                 location: member.location ?? member.area,
                 profileImageUrl: member.imageUrl,
                 gotra: member.gotra,
                 isVerified: true,
                 isCommitteeMember: true,
+                index: index,
                 onTap: member.phone.isNotEmpty
                     ? () => _makePhoneCall(member.phone)
                     : null,
@@ -240,18 +251,25 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
 
           // Executive Members Section
           if (executiveMembers.isNotEmpty) ...[
-            _buildSectionHeader('कार्यकारणी सदस्य', 'Executive Members'),
+            _buildSectionHeader(
+              l10n.executiveMembers,
+              l10n.executiveMembers,
+            ),
             const SizedBox(height: DesignTokens.spacingM),
-            ...executiveMembers.map((member) {
+            ...executiveMembers.asMap().entries.map((entry) {
+              final index = entry.key;
+              final member = entry.value;
+              final locale = Localizations.localeOf(context);
               return MembershipCard(
                 name: member.name,
                 samajId: null,
-                role: member.position,
+                role: member.getLocalizedPosition(locale),
                 location: member.location ?? member.area,
                 profileImageUrl: member.imageUrl,
                 gotra: member.gotra,
                 isVerified: true,
                 isCommitteeMember: true,
+                index: index,
                 onTap: member.phone.isNotEmpty
                     ? () => _makePhoneCall(member.phone)
                     : null,
@@ -264,6 +282,22 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
   }
 
   Widget _buildSectionHeader(String titleHi, String titleEn) {
+    final locale = Localizations.localeOf(context);
+
+    // Get localized title based on current locale
+    String getLocalizedTitle() {
+      switch (locale.languageCode) {
+        case 'hi':
+          return titleHi;
+        case 'gu':
+          // For Gujarati, use Hindi for now (can be extended later)
+          return titleHi;
+        case 'en':
+        default:
+          return titleEn;
+      }
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: DesignTokens.spacingM,
@@ -291,25 +325,13 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
           ),
           const SizedBox(width: DesignTokens.spacingS),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  titleHi,
-                  style: TextStyle(
-                    fontSize: DesignTokens.fontSizeL,
-                    fontWeight: DesignTokens.fontWeightBold,
-                    color: DesignTokens.textPrimary,
-                  ),
-                ),
-                Text(
-                  titleEn,
-                  style: TextStyle(
-                    fontSize: DesignTokens.fontSizeS,
-                    color: DesignTokens.textSecondary,
-                  ),
-                ),
-              ],
+            child: Text(
+              getLocalizedTitle(),
+              style: TextStyle(
+                fontSize: DesignTokens.fontSizeL,
+                fontWeight: DesignTokens.fontWeightBold,
+                color: DesignTokens.textPrimary,
+              ),
             ),
           ),
         ],

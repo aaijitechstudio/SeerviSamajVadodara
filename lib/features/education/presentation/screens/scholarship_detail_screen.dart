@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../domain/models/scholarship_model.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../../../../core/screens/web_view_screen.dart';
 
 class ScholarshipDetailScreen extends StatelessWidget {
   final ScholarshipModel scholarship;
@@ -126,10 +126,29 @@ class ScholarshipDetailScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () async {
-                        final uri = Uri.parse(scholarship.officialWebsite!);
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      onPressed: () {
+                        final url = scholarship.officialWebsite!;
+                        if (_isValidUrl(url)) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GlobalWebViewScreen(
+                                url: url,
+                                title: scholarship.title,
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Invalid website URL: "$url"',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.orange[700],
+                              duration: const Duration(seconds: 4),
+                            ),
+                          );
                         }
                       },
                       icon: const Icon(Icons.open_in_new),
@@ -179,6 +198,15 @@ class ScholarshipDetailScreen extends StatelessWidget {
         fontWeight: FontWeight.bold,
       ),
     );
+  }
+
+  bool _isValidUrl(String url) {
+    try {
+      final uri = Uri.parse(url);
+      return uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    } catch (e) {
+      return false;
+    }
   }
 }
 

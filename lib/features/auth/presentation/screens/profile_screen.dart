@@ -24,6 +24,7 @@ class ProfileScreen extends ConsumerWidget {
       appBar: CustomAppBar(
         title: l10n.profile,
         showLogo: false,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),

@@ -13,6 +13,7 @@ import 'scholarship_detail_screen.dart';
 import 'skill_detail_screen.dart';
 import 'exam_detail_screen.dart';
 import 'success_story_detail_screen.dart';
+import 'vedic_siksha_screen.dart';
 
 /// Provider for Education Repository
 final educationRepositoryProvider = Provider<EducationRepository>((ref) {
@@ -67,6 +68,7 @@ class _EducationCareerScreenState
       appBar: CustomAppBar(
         title: 'Education & Career',
         showLogo: false,
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
@@ -206,6 +208,13 @@ class _EducationCareerScreenState
           _buildSectionHeader('Parent Guidance'),
           const SizedBox(height: 12),
           _buildParentGuidance(),
+
+          const SizedBox(height: 24),
+
+          // Vedic Siksha Section
+          _buildSectionHeader('वैदिक शिक्षा (Vedic Siksha)'),
+          const SizedBox(height: 12),
+          _buildVedicSikshaSection(),
         ],
       ),
     );
@@ -213,6 +222,7 @@ class _EducationCareerScreenState
 
   Widget _buildHeroBanner() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -231,21 +241,28 @@ class _EducationCareerScreenState
             color: AppColors.primaryOrange,
           ),
           const SizedBox(height: 12),
-          Text(
-            'शिक्षा ही सबसे बड़ा धन है',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryOrange,
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              'शिक्षा ही सबसे बड़ा धन है',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryOrange,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
-          Text(
-            'For Students & Parents',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              'For Students & Parents',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
         ],
@@ -713,6 +730,70 @@ class _EducationCareerScreenState
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildVedicSikshaSection() {
+    return Card(
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const VedicSikshaScreen(),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.primaryOrange.withOpacity(0.2),
+                      AppColors.primaryOrange.withOpacity(0.1),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.menu_book,
+                  color: AppColors.primaryOrange,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'वैदिक शिक्षा',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryOrange,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Vedic Knowledge & Wisdom in Hindi',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, size: 16),
+            ],
+          ),
+        ),
       ),
     );
   }

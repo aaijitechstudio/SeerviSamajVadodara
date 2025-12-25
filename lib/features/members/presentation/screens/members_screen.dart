@@ -218,6 +218,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                               gotra: member.additionalInfo?['gotra'] as String?,
                               isVerified: member.isVerified,
                               isCommitteeMember: false,
+                              index: index,
                               onTap: !isAuthenticated
                                   ? null
                                   : () {

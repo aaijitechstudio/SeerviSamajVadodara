@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
 class CommitteeModel {
   final String id;
   final String name;
-  final String position;
+  final String position; // Hindi position
   final String positionEn; // English position for localization
   final String phone;
   final String? email;
@@ -26,6 +28,22 @@ class CommitteeModel {
     this.gotra,
     this.order = 0,
   });
+
+  /// Get localized position based on current locale
+  String getLocalizedPosition(Locale? locale) {
+    if (locale == null) return positionEn;
+
+    switch (locale.languageCode) {
+      case 'hi':
+        return position; // Hindi
+      case 'gu':
+        // For Gujarati, we'll use Hindi for now (can be extended later)
+        return position;
+      case 'en':
+      default:
+        return positionEn; // English
+    }
+  }
 
   factory CommitteeModel.fromMap(Map<String, dynamic> map, String id) {
     return CommitteeModel(
