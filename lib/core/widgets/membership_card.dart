@@ -158,7 +158,7 @@ class _MembershipCardState extends State<MembershipCard>
                       // Header Section with Logo and Organization Name
                       _buildHeader(context, isDark),
 
-                      const SizedBox(height: DesignTokens.spacingM),
+                      const SizedBox(height: DesignTokens.spacingS),
 
                       // Main Content Section
                       Padding(
@@ -180,12 +180,12 @@ class _MembershipCardState extends State<MembershipCard>
                         ),
                       ),
 
-                      const SizedBox(height: DesignTokens.spacingM),
+                      const SizedBox(height: DesignTokens.spacingS),
 
                       // Footer Section
                       _buildFooter(context, isDark),
 
-                      const SizedBox(height: DesignTokens.spacingS),
+                      const SizedBox(height: DesignTokens.spacingXS),
                     ],
                   ),
                 );
@@ -205,7 +205,7 @@ class _MembershipCardState extends State<MembershipCard>
         return Container(
           padding: const EdgeInsets.symmetric(
             horizontal: DesignTokens.spacingM,
-            vertical: DesignTokens.spacingS,
+            vertical: DesignTokens.spacingXS,
           ),
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -299,8 +299,8 @@ class _MembershipCardState extends State<MembershipCard>
             children: [
               // Decorative Background Card with animated gradient
               Container(
-                width: 120,
-                height: 160,
+                width: 110,
+                height: 140,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../../data/vedic_siksha_data.dart';
+import 'vedic_siksha_detail_screen.dart';
 
 /// Vedic Siksha Screen - Vedic Knowledge & Wisdom in Hindi
 class VedicSikshaScreen extends StatelessWidget {
@@ -75,8 +77,10 @@ class VedicSikshaScreen extends StatelessWidget {
               context,
               title: 'ऋग्वेद',
               subtitle: 'Rigveda - Knowledge of Hymns',
-              description: 'प्राचीनतम वैदिक ग्रंथ, मंत्रों और स्तुतियों का संग्रह',
+              description:
+                  'प्राचीनतम वैदिक ग्रंथ, मंत्रों और स्तुतियों का संग्रह',
               icon: Icons.book,
+              sectionId: 'rigveda',
             ),
             _buildVedicScriptureCard(
               context,
@@ -84,6 +88,7 @@ class VedicSikshaScreen extends StatelessWidget {
               subtitle: 'Yajurveda - Knowledge of Rituals',
               description: 'यज्ञ और अनुष्ठानों से संबंधित ज्ञान',
               icon: Icons.auto_awesome,
+              sectionId: 'yajurveda',
             ),
             _buildVedicScriptureCard(
               context,
@@ -91,6 +96,7 @@ class VedicSikshaScreen extends StatelessWidget {
               subtitle: 'Samaveda - Knowledge of Melodies',
               description: 'संगीत और मंत्रों के सामवेदिक स्वर',
               icon: Icons.music_note,
+              sectionId: 'samaveda',
             ),
             _buildVedicScriptureCard(
               context,
@@ -98,6 +104,7 @@ class VedicSikshaScreen extends StatelessWidget {
               subtitle: 'Atharvaveda - Knowledge of Daily Life',
               description: 'दैनिक जीवन, चिकित्सा और जादू-टोना से संबंधित',
               icon: Icons.healing,
+              sectionId: 'atharvaveda',
             ),
 
             const SizedBox(height: 24),
@@ -111,6 +118,7 @@ class VedicSikshaScreen extends StatelessWidget {
               subtitle: 'Principal Upanishads',
               description: 'दार्शनिक ज्ञान और आत्म-साक्षात्कार के ग्रंथ',
               icon: Icons.self_improvement,
+              sectionId: 'upanishads',
             ),
 
             const SizedBox(height: 24),
@@ -124,6 +132,7 @@ class VedicSikshaScreen extends StatelessWidget {
               subtitle: 'Samkhya Philosophy',
               description: 'सृष्टि और चेतना के तत्वों का विश्लेषण',
               icon: Icons.psychology,
+              sectionId: 'samkhya',
             ),
             _buildVedicScriptureCard(
               context,
@@ -131,6 +140,7 @@ class VedicSikshaScreen extends StatelessWidget {
               subtitle: 'Yoga Philosophy',
               description: 'पतंजलि के योग सूत्र और आत्म-साक्षात्कार',
               icon: Icons.self_improvement,
+              sectionId: 'yoga',
             ),
             _buildVedicScriptureCard(
               context,
@@ -138,6 +148,7 @@ class VedicSikshaScreen extends StatelessWidget {
               subtitle: 'Vedanta Philosophy',
               description: 'ब्रह्म और आत्मा की एकता का ज्ञान',
               icon: Icons.lightbulb,
+              sectionId: 'vedanta',
             ),
 
             const SizedBox(height: 24),
@@ -149,21 +160,25 @@ class VedicSikshaScreen extends StatelessWidget {
               context,
               title: 'धर्म (Dharma)',
               description: 'धार्मिक कर्तव्य और नैतिकता',
+              sectionId: 'dharma',
             ),
             _buildValueCard(
               context,
               title: 'अर्थ (Artha)',
               description: 'धन और भौतिक समृद्धि',
+              sectionId: 'artha',
             ),
             _buildValueCard(
               context,
               title: 'काम (Kama)',
               description: 'इच्छाएं और सुख',
+              sectionId: 'kama',
             ),
             _buildValueCard(
               context,
               title: 'मोक्ष (Moksha)',
               description: 'मुक्ति और आत्म-साक्षात्कार',
+              sectionId: 'moksha',
             ),
 
             const SizedBox(height: 24),
@@ -220,6 +235,7 @@ class VedicSikshaScreen extends StatelessWidget {
     required String subtitle,
     required String description,
     required IconData icon,
+    required String sectionId,
   }) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -265,7 +281,15 @@ class VedicSikshaScreen extends StatelessWidget {
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () {
-          // Navigate to detail screen
+          final detail = VedicSikshaData.getDetailById(sectionId);
+          if (detail != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VedicSikshaDetailScreen(data: detail),
+              ),
+            );
+          }
         },
       ),
     );
@@ -275,54 +299,69 @@ class VedicSikshaScreen extends StatelessWidget {
     BuildContext context, {
     required String title,
     required String description,
+    required String sectionId,
   }) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.primaryOrange.withOpacity(0.2),
-                    AppColors.primaryOrange.withOpacity(0.1),
+      child: InkWell(
+        onTap: () {
+          final detail = VedicSikshaData.getDetailById(sectionId);
+          if (detail != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VedicSikshaDetailScreen(data: detail),
+              ),
+            );
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.primaryOrange.withOpacity(0.2),
+                      AppColors.primaryOrange.withOpacity(0.1),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.star,
+                  color: AppColors.primaryOrange,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[700],
+                      ),
+                    ),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                Icons.star,
-                color: AppColors.primaryOrange,
-                size: 24,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+              const Icon(Icons.arrow_forward_ios, size: 16),
+            ],
+          ),
         ),
       ),
     );
@@ -379,4 +418,3 @@ class VedicSikshaScreen extends StatelessWidget {
     );
   }
 }
-

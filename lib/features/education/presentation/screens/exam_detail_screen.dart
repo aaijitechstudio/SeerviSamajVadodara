@@ -106,7 +106,11 @@ class ExamDetailScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Icon(
-                                      _isVideoUrl(resource) ? Icons.play_circle_outline : Icons.link,
+                                      _isDirectVideoUrl(resource)
+                                          ? Icons.play_circle_outline
+                                          : _isVideoPlatformUrl(resource)
+                                              ? Icons.video_library
+                                              : Icons.link,
                                       size: 20,
                                       color: AppColors.primaryOrange,
                                     ),
@@ -218,13 +222,21 @@ class ExamDetailScreen extends StatelessWidget {
     }
   }
 
-  bool _isVideoUrl(String url) {
+  bool _isDirectVideoUrl(String url) {
     if (!_isValidUrl(url)) return false;
     final lowerUrl = url.toLowerCase();
+    // Only direct video file URLs, not YouTube/Vimeo (those need web view)
     return lowerUrl.contains('.mp4') ||
         lowerUrl.contains('.mov') ||
         lowerUrl.contains('.avi') ||
-        lowerUrl.contains('youtube.com') ||
+        lowerUrl.contains('.m3u8') ||
+        lowerUrl.contains('.webm');
+  }
+
+  bool _isVideoPlatformUrl(String url) {
+    if (!_isValidUrl(url)) return false;
+    final lowerUrl = url.toLowerCase();
+    return lowerUrl.contains('youtube.com') ||
         lowerUrl.contains('youtu.be') ||
         lowerUrl.contains('vimeo.com');
   }
@@ -251,7 +263,8 @@ class ExamDetailScreen extends StatelessWidget {
       return;
     }
 
-    if (_isVideoUrl(resource)) {
+    // Direct video files go to video player
+    if (_isDirectVideoUrl(resource)) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -262,12 +275,13 @@ class ExamDetailScreen extends StatelessWidget {
         ),
       );
     } else {
+      // YouTube, Vimeo, and other URLs go to web view
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => GlobalWebViewScreen(
             url: resource,
-            title: 'Resource',
+            title: _isVideoPlatformUrl(resource) ? 'Video' : 'Resource',
           ),
         ),
       );

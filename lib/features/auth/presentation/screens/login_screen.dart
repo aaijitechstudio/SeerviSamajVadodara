@@ -5,9 +5,10 @@ import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/language_switcher.dart';
-import '../../../../core/widgets/loading_overlay.dart';
 import '../../../../core/widgets/google_sign_in_button.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/animations/animated_button.dart';
+import '../../../../core/animations/animated_text_field.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
@@ -27,6 +28,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    // Check if user is already authenticated and redirect
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authState = ref.read(authControllerProvider);
+      if (authState.user != null && mounted) {
+        // User is already logged in, redirect to main screen
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+          );
+        }
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -36,7 +56,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
+    final authState = ref.watch(authControllerProvider);
+
+    // If user is already authenticated, show loading and redirect
+    if (authState.user != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          } else {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+            );
+          }
+        }
+      });
+      // Show loading while redirecting
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            color: DesignTokens.primaryOrange,
+          ),
+        ),
+      );
+    }
+
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        // Prevent back navigation if user is authenticated
+        final currentAuthState = ref.read(authControllerProvider);
+        if (currentAuthState.user != null) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+          );
+        } else {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       appBar: CustomAppBar(
         showLogo: false,
         title: l10n.login,
@@ -150,13 +209,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 48),
 
                   // Email Field
-                  TextFormField(
+                  AnimatedTextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: l10n.email,
-                      prefixIcon: const Icon(Icons.email_outlined),
-                    ),
+                    labelText: l10n.email,
+                    prefixIcon: Icons.email_outlined,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return l10n.pleaseEnterEmail;
@@ -171,24 +228,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 16),
 
                   // Password Field
-                  TextFormField(
+                  AnimatedTextField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      labelText: l10n.password,
-                      prefixIcon: const Icon(Icons.lock_outlined),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                    labelText: l10n.password,
+                    prefixIcon: Icons.lock_outlined,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -230,11 +285,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Consumer(
                     builder: (context, ref, child) {
                       final authState = ref.watch(authControllerProvider);
-                      return ElevatedButton(
+                      return AnimatedButton(
                         onPressed: authState.isLoading ? null : _handleLogin,
-                        child: authState.isLoading
-                            ? const ButtonLoader()
-                            : Text(l10n.signIn),
+                        isLoading: authState.isLoading,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(l10n.signIn),
                       );
                     },
                   ),
@@ -389,6 +449,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

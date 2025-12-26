@@ -7,11 +7,11 @@
       "category": "upsc",
       "eligibility": "Graduation in any stream, Age 21-32 years (relaxation for reserved categories)",
       "freeResources": [
-        "UPSC Official Website - Free Syllabus",
-        "YouTube - Free UPSC Preparation",
-        "NCERT Books - Free PDFs",
-        "ClearIAS - Free Study Material",
-        "Unacademy Free Classes"
+        "https://www.upsc.gov.in/syllabus",
+        "https://www.youtube.com/results?search_query=UPSC+Preparation",
+        "https://ncert.nic.in/textbook.php",
+        "https://www.clearias.com",
+        "https://www.youtube.com/c/UnacademyUPSC"
       ],
       "examFrequency": "Once a year (Prelims in May/June, Mains in September, Interview in March-April)",
       "officialWebsite": "https://www.upsc.gov.in"
@@ -23,11 +23,11 @@
       "category": "upsc",
       "eligibility": "Graduation, Age 20-35 years (varies by post), Gujarat domicile",
       "freeResources": [
-        "GPSC Official Website - Free Syllabus",
-        "YouTube - Free GPSC Preparation",
-        "Gujarat Government Study Material",
-        "Free GPSC Mock Tests",
-        "Unacademy Free Classes"
+        "https://gpsc.gujarat.gov.in/syllabus",
+        "https://www.youtube.com/results?search_query=GPSC+Preparation",
+        "https://gujarat-education.gov.in",
+        "https://www.youtube.com/results?search_query=GPSC+Mock+Tests",
+        "https://www.youtube.com/c/Unacademy"
       ],
       "examFrequency": "Multiple times a year (varies by post)",
       "officialWebsite": "https://gpsc.gujarat.gov.in"
@@ -39,11 +39,11 @@
       "category": "banking",
       "eligibility": "Graduation, Age 20-30 years (varies by post)",
       "freeResources": [
-        "IBPS Official Website - Free Syllabus",
-        "YouTube - Free Banking Preparation",
-        "Bankersadda - Free Study Material",
-        "Gradeup - Free Mock Tests",
-        "Free Banking Apps"
+        "https://www.ibps.in/syllabus",
+        "https://www.youtube.com/results?search_query=Banking+Exam+Preparation",
+        "https://www.bankersadda.com",
+        "https://www.gradeup.co/banking",
+        "https://play.google.com/store/apps/details?id=com.bankersadda"
       ],
       "examFrequency": "Multiple times a year",
       "officialWebsite": "https://www.ibps.in"
@@ -55,11 +55,11 @@
       "category": "government",
       "eligibility": "10th/12th/Graduation (varies by post), Age 18-32 years",
       "freeResources": [
-        "SSC Official Website - Free Syllabus",
-        "YouTube - Free SSC Preparation",
-        "SSC Adda - Free Study Material",
-        "Free SSC Mock Tests",
-        "Unacademy Free Classes"
+        "https://ssc.nic.in/syllabus",
+        "https://www.youtube.com/results?search_query=SSC+Preparation",
+        "https://www.sscadda.com",
+        "https://www.youtube.com/results?search_query=SSC+Mock+Tests",
+        "https://www.youtube.com/c/Unacademy"
       ],
       "examFrequency": "Multiple times a year",
       "officialWebsite": "https://ssc.nic.in"
@@ -71,11 +71,11 @@
       "category": "medical",
       "eligibility": "12th with Physics, Chemistry, Biology, Age 17-25 years",
       "freeResources": [
-        "NEET Official Website - Free Syllabus",
-        "YouTube - Free NEET Preparation",
-        "NCERT Books - Free PDFs",
-        "Unacademy Free Classes",
-        "BYJU'S Free Classes"
+        "https://neet.nta.nic.in/syllabus",
+        "https://www.youtube.com/results?search_query=NEET+Preparation",
+        "https://ncert.nic.in/textbook.php",
+        "https://www.youtube.com/c/UnacademyNEET",
+        "https://www.youtube.com/c/ByjusClasses"
       ],
       "examFrequency": "Once a year (usually in May)",
       "officialWebsite": "https://neet.nta.nic.in"
@@ -87,11 +87,11 @@
       "category": "engineering",
       "eligibility": "12th with Physics, Chemistry, Mathematics, Age limit varies",
       "freeResources": [
-        "JEE Official Website - Free Syllabus",
-        "YouTube - Free JEE Preparation",
-        "NCERT Books - Free PDFs",
-        "Unacademy Free Classes",
-        "BYJU'S Free Classes"
+        "https://jeemain.nta.nic.in/syllabus",
+        "https://www.youtube.com/results?search_query=JEE+Preparation",
+        "https://ncert.nic.in/textbook.php",
+        "https://www.youtube.com/c/UnacademyJEE",
+        "https://www.youtube.com/c/ByjusClasses"
       ],
       "examFrequency": "JEE Main: Twice a year, JEE Advanced: Once a year",
       "officialWebsite": "https://jeemain.nta.nic.in"
@@ -103,11 +103,11 @@
       "category": "teaching",
       "eligibility": "Graduation + B.Ed, Age 18-35 years",
       "freeResources": [
-        "CTET Official Website - Free Syllabus",
-        "YouTube - Free Teaching Exam Preparation",
-        "NCERT Books - Free PDFs",
-        "Free Teaching Mock Tests",
-        "Unacademy Free Classes"
+        "https://ctet.nic.in/syllabus",
+        "https://www.youtube.com/results?search_query=CTET+Preparation",
+        "https://ncert.nic.in/textbook.php",
+        "https://www.youtube.com/results?search_query=CTET+Mock+Tests",
+        "https://www.youtube.com/c/Unacademy"
       ],
       "examFrequency": "Twice a year",
       "officialWebsite": "https://ctet.nic.in"
@@ -119,11 +119,11 @@
       "category": "defence",
       "eligibility": "12th/Graduation, Age 16.5-19 years (NDA), 19-25 years (CDS)",
       "freeResources": [
-        "UPSC Official Website - Free Syllabus",
-        "YouTube - Free Defence Preparation",
-        "Free Defence Study Material",
-        "Free Mock Tests",
-        "Unacademy Free Classes"
+        "https://www.upsc.gov.in/syllabus",
+        "https://www.youtube.com/results?search_query=NDA+CDS+Preparation",
+        "https://www.youtube.com/results?search_query=Defence+Exam+Study+Material",
+        "https://www.youtube.com/results?search_query=Defence+Mock+Tests",
+        "https://www.youtube.com/c/Unacademy"
       ],
       "examFrequency": "Twice a year",
       "officialWebsite": "https://www.upsc.gov.in"

@@ -18,11 +18,11 @@
         "Research & Development"
       ],
       "freeResources": [
-        "Khan Academy - Free science courses",
-        "NPTEL - Free engineering courses",
-        "BYJU'S Free Classes - YouTube",
-        "Unacademy Free Classes - YouTube",
-        "NCERT Books - Free PDFs"
+        "https://www.khanacademy.org/science",
+        "https://nptel.ac.in",
+        "https://www.youtube.com/c/ByjusClasses",
+        "https://www.youtube.com/c/Unacademy",
+        "https://ncert.nic.in/textbook.php"
       ],
       "commonMistakes": [
         "Choosing science just because friends chose it",
@@ -50,11 +50,11 @@
         "Entrepreneurship"
       ],
       "freeResources": [
-        "CA Foundation Free Classes - YouTube",
-        "Khan Academy - Economics & Finance",
-        "Coursera Free Courses - Business",
-        "edX Free Courses - Finance",
-        "NPTEL - Management Courses"
+        "https://www.youtube.com/results?search_query=CA+Foundation+Free+Classes",
+        "https://www.khanacademy.org/economics-finance-domain",
+        "https://www.coursera.org/browse/business",
+        "https://www.edx.org/course?subject=Finance",
+        "https://nptel.ac.in/courses/management"
       ],
       "commonMistakes": [
         "Thinking commerce is easier than science",
@@ -82,11 +82,11 @@
         "Public Administration"
       ],
       "freeResources": [
-        "UPSC Free Study Material - Official Website",
-        "Khan Academy - History & Social Sciences",
-        "Coursera - Free Design Courses",
-        "YouTube - Law & UPSC Preparation",
-        "NCERT Books - Free PDFs"
+        "https://www.upsc.gov.in",
+        "https://www.khanacademy.org/humanities",
+        "https://www.coursera.org/browse/arts-and-humanities/design",
+        "https://www.youtube.com/results?search_query=UPSC+Preparation",
+        "https://ncert.nic.in/textbook.php"
       ],
       "commonMistakes": [
         "Thinking arts has no career scope",
@@ -114,11 +114,11 @@
         "AI/ML Engineer"
       ],
       "freeResources": [
-        "NPTEL - Free Engineering Courses",
-        "Coursera - Free Tech Courses",
-        "edX - MIT & Harvard Free Courses",
-        "YouTube - Free Coding Tutorials",
-        "GeeksforGeeks - Free Programming"
+        "https://nptel.ac.in/courses/engineering",
+        "https://www.coursera.org/browse/computer-science",
+        "https://www.edx.org/course?subject=Computer+Science",
+        "https://www.youtube.com/results?search_query=free+coding+tutorials",
+        "https://www.geeksforgeeks.org"
       ],
       "commonMistakes": [
         "Choosing branch without interest",
@@ -146,11 +146,11 @@
         "Homeopathy"
       ],
       "freeResources": [
-        "NEET Preparation - Free YouTube Channels",
-        "Khan Academy - Biology & Chemistry",
-        "Unacademy Free NEET Classes",
-        "NCERT Books - Free PDFs",
-        "Medical Study Material - Free Online"
+        "https://www.youtube.com/results?search_query=NEET+Preparation",
+        "https://www.khanacademy.org/science/biology",
+        "https://www.youtube.com/c/UnacademyNEET",
+        "https://ncert.nic.in/textbook.php",
+        "https://www.nta.ac.in/neet"
       ],
       "commonMistakes": [
         "Not preparing for NEET seriously",
@@ -178,11 +178,11 @@
         "Startup Founder"
       ],
       "freeResources": [
-        "Coursera - Free Business Courses",
-        "edX - Harvard Business Courses",
-        "YouTube - Business & Entrepreneurship",
-        "Khan Academy - Economics",
-        "Free Business Plan Templates"
+        "https://www.coursera.org/browse/business",
+        "https://www.edx.org/course?subject=Business+%26+Management",
+        "https://www.youtube.com/results?search_query=Business+Entrepreneurship",
+        "https://www.khanacademy.org/economics-finance-domain",
+        "https://www.sba.gov/business-guide/plan-your-business/write-your-business-plan"
       ],
       "commonMistakes": [
         "Not gaining practical experience",
@@ -210,11 +210,11 @@
         "Online Tutor"
       ],
       "freeResources": [
-        "YouTube - Free Skill Tutorials",
-        "Coursera - Free Courses",
-        "Udemy Free Courses",
-        "Canva - Free Design Tools",
-        "Fiverr Learning - Free Resources"
+        "https://www.youtube.com/results?search_query=free+skill+tutorials",
+        "https://www.coursera.org",
+        "https://www.udemy.com",
+        "https://www.canva.com",
+        "https://learn.fiverr.com"
       ],
       "commonMistakes": [
         "Not building portfolio",

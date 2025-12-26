@@ -12,11 +12,11 @@
         "Senior citizens"
       ],
       "freeResources": [
-        "YouTube - Computer Basics Tutorials",
-        "GCF Learn Free - Free Computer Courses",
-        "Microsoft Learn - Free Office Training",
-        "Google Digital Garage - Free Courses",
-        "Coursera - Free Computer Courses"
+        "https://www.youtube.com/results?search_query=Computer+Basics+Tutorial",
+        "https://edu.gcfglobal.org/en/computerbasics",
+        "https://learn.microsoft.com/en-us/training/",
+        "https://learndigital.withgoogle.com/digitalgarage",
+        "https://www.coursera.org/browse/computer-science"
       ],
       "careerOutcomes": [
         "Data Entry Operator",
@@ -38,11 +38,11 @@
         "Anyone wanting to improve English"
       ],
       "freeResources": [
-        "YouTube - English Speaking Practice",
-        "Duolingo - Free English Learning",
-        "BBC Learning English - Free Courses",
-        "British Council - Free Resources",
-        "Coursera - Free English Courses"
+        "https://www.youtube.com/results?search_query=English+Speaking+Practice",
+        "https://www.duolingo.com/course/en/hi/Learn-English",
+        "https://www.bbc.co.uk/learningenglish",
+        "https://www.britishcouncil.in/english/learn-online",
+        "https://www.coursera.org/browse/language-learning/english"
       ],
       "careerOutcomes": [
         "Customer Service Executive",
@@ -64,11 +64,11 @@
         "Students interested in marketing"
       ],
       "freeResources": [
-        "Google Digital Garage - Free Certification",
-        "HubSpot Academy - Free Courses",
-        "Facebook Blueprint - Free Training",
-        "YouTube - Digital Marketing Tutorials",
-        "Coursera - Free Marketing Courses"
+        "https://learndigital.withgoogle.com/digitalgarage",
+        "https://academy.hubspot.com",
+        "https://www.facebook.com/blueprint",
+        "https://www.youtube.com/results?search_query=Digital+Marketing+Tutorial",
+        "https://www.coursera.org/browse/business/marketing"
       ],
       "careerOutcomes": [
         "Digital Marketing Executive",
@@ -90,11 +90,11 @@
         "Anyone interested in technology"
       ],
       "freeResources": [
-        "freeCodeCamp - Free Coding Bootcamp",
-        "Codecademy - Free Courses",
-        "GeeksforGeeks - Free Programming",
-        "YouTube - Coding Tutorials",
-        "GitHub - Free Projects"
+        "https://www.freecodecamp.org",
+        "https://www.codecademy.com",
+        "https://www.geeksforgeeks.org",
+        "https://www.youtube.com/results?search_query=Coding+Tutorial",
+        "https://github.com"
       ],
       "careerOutcomes": [
         "Software Developer",
@@ -116,11 +116,11 @@
         "Anyone wanting practical skills"
       ],
       "freeResources": [
-        "PMKVY - Free Skill Training",
-        "YouTube - Vocational Training",
-        "NSDC - Skill Development",
-        "Government ITI Courses",
-        "Free Online Trade Courses"
+        "https://www.pmkvyofficial.org",
+        "https://www.youtube.com/results?search_query=Vocational+Training",
+        "https://www.nsdcindia.org",
+        "https://www.ncvtmis.gov.in",
+        "https://www.youtube.com/results?search_query=Trade+Courses"
       ],
       "careerOutcomes": [
         "Skilled Worker",

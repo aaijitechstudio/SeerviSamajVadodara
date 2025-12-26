@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/animations/animation_constants.dart';
 import '../../../members/presentation/screens/merged_members_screen.dart';
 import '../../../news/presentation/screens/news_screen.dart';
 import '../../../auth/presentation/screens/profile_screen.dart';
@@ -159,6 +160,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     final isSelected = safeIndex == index;
     final selectedColor = DesignTokens.primaryOrange;
     final unselectedColor = DesignTokens.grey500;
+    final shouldReduceMotion = AnimationPreferences.shouldReduceMotion(context);
+    final animationDuration = shouldReduceMotion ? Duration.zero : AnimationDurations.fast;
 
     return Expanded(
       child: Material(
@@ -183,24 +186,26 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                AnimatedScale(
-                  scale: isSelected ? 1.1 : 1.0,
-                  duration: DesignTokens.durationMedium,
-                  curve: Curves.easeInOutCubic,
-                  child: AnimatedContainer(
-                    duration: DesignTokens.durationMedium,
-                    curve: Curves.easeInOutCubic,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? DesignTokens.primaryOrange.withValues(alpha: 0.15)
-                          : Colors.transparent,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      icon,
-                      color: isSelected ? selectedColor : unselectedColor,
-                      size: 24,
+                RepaintBoundary(
+                  child: AnimatedScale(
+                    scale: isSelected ? 1.1 : 1.0,
+                    duration: animationDuration,
+                    curve: AnimationCurves.easeOut,
+                    child: AnimatedContainer(
+                      duration: animationDuration,
+                      curve: AnimationCurves.easeOut,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? DesignTokens.primaryOrange.withValues(alpha: 0.15)
+                            : Colors.transparent,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        icon,
+                        color: isSelected ? selectedColor : unselectedColor,
+                        size: 24,
+                      ),
                     ),
                   ),
                 ),

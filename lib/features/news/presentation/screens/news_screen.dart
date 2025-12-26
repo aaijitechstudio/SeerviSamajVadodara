@@ -5,8 +5,10 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/widgets/page_transitions.dart';
 import '../../../../core/widgets/loading_overlay.dart';
+import '../../../../core/animations/staggered_list_animation.dart';
 import '../../domain/models/vadodara_news_model.dart';
 import '../../data/vadodara_news_service.dart';
+import '../../../auth/providers/auth_provider.dart';
 import 'enewspapers_screen.dart';
 import 'webview_screen.dart';
 
@@ -262,7 +264,19 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
       });
     }
 
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        // Prevent navigation to login screen if user is authenticated
+        // If user tries to go back and is authenticated, ensure we don't navigate to login
+        final currentAuthState = ref.read(authControllerProvider);
+        if (currentAuthState.user != null && Navigator.of(context).canPop()) {
+          // User is authenticated, allow normal back navigation
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       backgroundColor: DesignTokens.backgroundWhite,
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -299,6 +313,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
           _buildRajasthanNews(l10n),
           _buildBusinessNews(l10n),
         ],
+      ),
       ),
     );
   }
@@ -430,7 +445,10 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                 child: Center(child: InlineLoader()),
               );
             }
-            return _buildVadodaraNewsCard(context, _vadodaraNews[index], l10n);
+            return StaggeredListAnimation(
+              index: index,
+              child: _buildVadodaraNewsCard(context, _vadodaraNews[index], l10n),
+            );
           },
         ),
       ),
@@ -525,7 +543,10 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                 child: Center(child: InlineLoader()),
               );
             }
-            return _buildVadodaraNewsCard(context, _rajasthanNews[index], l10n);
+            return StaggeredListAnimation(
+              index: index,
+              child: _buildVadodaraNewsCard(context, _rajasthanNews[index], l10n),
+            );
           },
         ),
       ),
@@ -620,7 +641,10 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                 child: Center(child: InlineLoader()),
               );
             }
-            return _buildVadodaraNewsCard(context, _businessNews[index], l10n);
+            return StaggeredListAnimation(
+              index: index,
+              child: _buildVadodaraNewsCard(context, _businessNews[index], l10n),
+            );
           },
         ),
       ),

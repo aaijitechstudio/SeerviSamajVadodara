@@ -8,6 +8,7 @@ import '../../domain/models/exam_model.dart';
 import '../../domain/models/success_story_model.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../../../../core/animations/staggered_list_animation.dart';
 import 'career_detail_screen.dart';
 import 'scholarship_detail_screen.dart';
 import 'skill_detail_screen.dart';

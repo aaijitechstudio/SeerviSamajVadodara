@@ -124,30 +124,38 @@ class CareerDetailScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(
-                                  _isVideoUrl(resource) ? Icons.play_circle_outline : Icons.link,
+                                  _isDirectVideoUrl(resource)
+                                      ? Icons.play_circle_outline
+                                      : _isVideoPlatformUrl(resource)
+                                          ? Icons.video_library
+                                          : Icons.link,
                                   size: 20,
                                   color: AppColors.primaryOrange,
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
-                                  child: Text(
-                                    resource,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: AppColors.primaryOrange,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 16,
+                              child: Text(
+                                resource,
+                                style: TextStyle(
+                                  fontSize: 14,
                                   color: AppColors.primaryOrange,
+                                  decoration: TextDecoration.underline,
                                 ),
-                              ],
+                              ),
                             ),
-                          )
-                        : Row(
+                            Icon(
+                              _isDirectVideoUrl(resource)
+                                  ? Icons.play_circle_outline
+                                  : _isVideoPlatformUrl(resource)
+                                      ? Icons.video_library
+                                      : Icons.link,
+                              size: 16,
+                              color: AppColors.primaryOrange,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(
@@ -209,11 +217,15 @@ class CareerDetailScreen extends StatelessWidget {
                       color: AppColors.primaryOrange,
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      'Salary Range: ${career.salaryRange}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryOrange,
+                    Expanded(
+                      child: Text(
+                        'Salary Range: ${career.salaryRange}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryOrange,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -245,13 +257,21 @@ class CareerDetailScreen extends StatelessWidget {
     }
   }
 
-  bool _isVideoUrl(String url) {
+  bool _isDirectVideoUrl(String url) {
     if (!_isValidUrl(url)) return false;
     final lowerUrl = url.toLowerCase();
+    // Only direct video file URLs, not YouTube/Vimeo (those need web view)
     return lowerUrl.contains('.mp4') ||
         lowerUrl.contains('.mov') ||
         lowerUrl.contains('.avi') ||
-        lowerUrl.contains('youtube.com') ||
+        lowerUrl.contains('.m3u8') ||
+        lowerUrl.contains('.webm');
+  }
+
+  bool _isVideoPlatformUrl(String url) {
+    if (!_isValidUrl(url)) return false;
+    final lowerUrl = url.toLowerCase();
+    return lowerUrl.contains('youtube.com') ||
         lowerUrl.contains('youtu.be') ||
         lowerUrl.contains('vimeo.com');
   }
@@ -278,7 +298,8 @@ class CareerDetailScreen extends StatelessWidget {
       return;
     }
 
-    if (_isVideoUrl(resource)) {
+    // Direct video files go to video player
+    if (_isDirectVideoUrl(resource)) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -289,12 +310,13 @@ class CareerDetailScreen extends StatelessWidget {
         ),
       );
     } else {
+      // YouTube, Vimeo, and other URLs go to web view
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => GlobalWebViewScreen(
             url: resource,
-            title: 'Resource',
+            title: _isVideoPlatformUrl(resource) ? 'Video' : 'Resource',
           ),
         ),
       );
