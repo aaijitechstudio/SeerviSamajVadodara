@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -362,37 +363,13 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
             ),
           ],
         ),
-        child: ClipRRect(
+        child: AppNetworkImage(
+          url: imageUrl,
+          fit: BoxFit.cover,
           borderRadius: BorderRadius.circular(DesignTokens.radiusM),
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                color: AppColors.grey200,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                    color: AppColors.primaryOrange,
-                  ),
-                ),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: AppColors.grey200,
-                child: Icon(
-                  Icons.broken_image,
-                  color: AppColors.grey500,
-                  size: DesignTokens.iconSizeXL,
-                ),
-              );
-            },
-          ),
+          // Optimize memory: limit cache to display size (assuming grid item ~200px)
+          cacheWidth: 400, // 2x for retina displays
+          cacheHeight: 400,
         ),
       ),
     );
@@ -428,24 +405,12 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
                         );
                       },
                     )
-                  : Image.network(
-                      imagePath,
+                  : AppNetworkImage(
+                      url: imagePath,
                       fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          padding: const EdgeInsets.all(DesignTokens.spacingL),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            borderRadius:
-                                BorderRadius.circular(DesignTokens.radiusM),
-                          ),
-                          child: Icon(
-                            Icons.broken_image,
-                            size: DesignTokens.iconSizeXL,
-                            color: AppColors.grey500,
-                          ),
-                        );
-                      },
+                      // For full-screen dialog, use higher resolution but still limit memory
+                      cacheWidth: 1200, // Optimized for full-screen viewing
+                      cacheHeight: 1200,
                     ),
             ),
             Positioned(

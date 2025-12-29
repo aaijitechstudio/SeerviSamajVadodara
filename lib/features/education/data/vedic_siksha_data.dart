@@ -1,4 +1,4 @@
-import '../domain/models/vedic_sikhsa_model.dart';
+import '../domain/models/vedic_siksha_model.dart';
 
 /// Vedic Siksha Data Provider
 /// Contains detailed information about all Vedic scriptures, philosophy, and values

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/animations/animation_constants.dart';
 import '../../../members/presentation/screens/merged_members_screen.dart';
 import '../../../news/presentation/screens/news_screen.dart';
@@ -93,10 +94,10 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
           : null,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: DesignTokens.backgroundWhite,
+          color: AppColors.backgroundWhite,
           boxShadow: [
             BoxShadow(
-              color: DesignTokens.shadowLight,
+              color: AppColors.shadowLight,
               blurRadius: DesignTokens.elevationMedium,
               offset: const Offset(0, -2),
             ),
@@ -158,10 +159,11 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     final safeIndex =
         selectedIndex >= 0 && selectedIndex < 5 ? selectedIndex : 0;
     final isSelected = safeIndex == index;
-    final selectedColor = DesignTokens.primaryOrange;
-    final unselectedColor = DesignTokens.grey500;
+    final selectedColor = AppColors.primaryOrange;
+    final unselectedColor = AppColors.grey500;
     final shouldReduceMotion = AnimationPreferences.shouldReduceMotion(context);
-    final animationDuration = shouldReduceMotion ? Duration.zero : AnimationDurations.fast;
+    final animationDuration =
+        shouldReduceMotion ? Duration.zero : AnimationDurations.fast;
 
     return Expanded(
       child: Material(
@@ -177,7 +179,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             decoration: BoxDecoration(
               color: isSelected
-                  ? DesignTokens.primaryOrange.withValues(alpha: 0.1)
+                  ? AppColors.primaryOrange.withValues(alpha: 0.1)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(DesignTokens.radiusM),
             ),
@@ -197,7 +199,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? DesignTokens.primaryOrange.withValues(alpha: 0.15)
+                            ? AppColors.primaryOrange.withValues(alpha: 0.15)
                             : Colors.transparent,
                         shape: BoxShape.circle,
                       ),

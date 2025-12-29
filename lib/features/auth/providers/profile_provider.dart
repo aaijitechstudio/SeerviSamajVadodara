@@ -9,8 +9,8 @@ final profileControllerProvider =
   return ProfileController();
 });
 
-// Members list provider
-final membersProvider = FutureProvider<List<UserModel>>((ref) async {
+// Members list provider (auto-disposing for better memory management)
+final membersProvider = FutureProvider.autoDispose<List<UserModel>>((ref) async {
   return await FirebaseService.getAllMembers();
 });
 

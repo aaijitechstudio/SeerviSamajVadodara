@@ -47,7 +47,8 @@ class _GlobalWebViewScreenState extends State<GlobalWebViewScreen> {
     if (!_isValidUrl(widget.url)) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Invalid URL: "${widget.url}"\n\nThis appears to be a description rather than a web address. Please check the resource link.';
+        _errorMessage =
+            'Invalid URL: "${widget.url}"\n\nThis appears to be a description rather than a web address. Please check the resource link.';
       });
       return;
     }
@@ -124,7 +125,7 @@ class _GlobalWebViewScreenState extends State<GlobalWebViewScreen> {
           WebViewWidget(controller: _controller),
           if (_isLoading)
             Container(
-              color: DesignTokens.backgroundWhite,
+              color: AppColors.backgroundWhite,
               child: const Center(
                 child: CircularProgressIndicator(
                   color: AppColors.primaryOrange,
@@ -133,10 +134,10 @@ class _GlobalWebViewScreenState extends State<GlobalWebViewScreen> {
             ),
           if (_errorMessage != null && !_isLoading)
             Container(
-              color: DesignTokens.backgroundWhite,
+              color: AppColors.backgroundWhite,
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.all(DesignTokens.spacingL),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -145,16 +146,16 @@ class _GlobalWebViewScreenState extends State<GlobalWebViewScreen> {
                         size: 64,
                         color: Colors.red[300],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: DesignTokens.spacingM),
                       Text(
                         _errorMessage!,
                         style: const TextStyle(
-                          color: DesignTokens.textPrimary,
+                          color: AppColors.textPrimary,
                           fontSize: 16,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: DesignTokens.spacingL),
                       ElevatedButton(
                         onPressed: () {
                           _controller.reload();
@@ -175,4 +176,3 @@ class _GlobalWebViewScreenState extends State<GlobalWebViewScreen> {
     );
   }
 }
-

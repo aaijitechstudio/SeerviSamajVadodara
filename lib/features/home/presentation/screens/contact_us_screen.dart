@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});
@@ -31,15 +32,15 @@ class ContactUsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    DesignTokens.primaryOrange.withValues(alpha: 0.1),
-                    DesignTokens.primaryOrange.withValues(alpha: 0.05),
+                    AppColors.primaryOrange.withValues(alpha: 0.1),
+                    AppColors.primaryOrange.withValues(alpha: 0.05),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(DesignTokens.radiusL),
                 border: Border.all(
-                  color: DesignTokens.primaryOrange.withValues(alpha: 0.2),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.2),
                 ),
               ),
               child: Row(
@@ -47,7 +48,7 @@ class ContactUsScreen extends StatelessWidget {
                   Icon(
                     Icons.contact_support,
                     size: DesignTokens.iconSizeXL,
-                    color: DesignTokens.primaryOrange,
+                    color: AppColors.primaryOrange,
                   ),
                   const SizedBox(width: DesignTokens.spacingM),
                   Expanded(
@@ -56,7 +57,7 @@ class ContactUsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: DesignTokens.fontSizeXL,
                         fontWeight: DesignTokens.fontWeightBold,
-                        color: DesignTokens.primaryOrange,
+                        color: AppColors.primaryOrange,
                       ),
                     ),
                   ),
@@ -70,7 +71,7 @@ class ContactUsScreen extends StatelessWidget {
               icon: Icons.location_on,
               title: l10n.officeAddress,
               content: l10n.officeAddressDetails,
-              color: DesignTokens.featureBlue,
+              color: AppColors.featureBlue,
             ),
             const SizedBox(height: DesignTokens.spacingM),
             // Phone
@@ -79,7 +80,7 @@ class ContactUsScreen extends StatelessWidget {
               icon: Icons.phone,
               title: l10n.phoneNumber,
               content: l10n.phoneNumberDetails,
-              color: DesignTokens.featureGreen,
+              color: AppColors.featureGreen,
               onTap: () => _makePhoneCall(l10n.phoneNumberDetails),
             ),
             const SizedBox(height: DesignTokens.spacingM),
@@ -89,7 +90,7 @@ class ContactUsScreen extends StatelessWidget {
               icon: Icons.email,
               title: l10n.emailAddress,
               content: l10n.emailAddressDetails,
-              color: DesignTokens.featurePurple,
+              color: AppColors.featurePurple,
               onTap: () => _sendEmail(l10n.emailAddressDetails),
             ),
             const SizedBox(height: DesignTokens.spacingM),
@@ -99,7 +100,7 @@ class ContactUsScreen extends StatelessWidget {
               icon: Icons.language,
               title: l10n.website,
               content: l10n.websiteDetails,
-              color: DesignTokens.featureTeal,
+              color: AppColors.featureTeal,
               onTap: () => _openWebsite(l10n.websiteDetails),
             ),
           ],
@@ -149,7 +150,7 @@ class ContactUsScreen extends StatelessWidget {
                       title,
                       style: TextStyle(
                         fontSize: DesignTokens.fontSizeS,
-                        color: DesignTokens.textSecondary,
+                        color: AppColors.textSecondary,
                         fontWeight: DesignTokens.fontWeightMedium,
                       ),
                     ),
@@ -159,7 +160,7 @@ class ContactUsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: DesignTokens.fontSizeM,
                         fontWeight: DesignTokens.fontWeightSemiBold,
-                        color: DesignTokens.textPrimary,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ],
@@ -169,7 +170,7 @@ class ContactUsScreen extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_ios,
                   size: DesignTokens.iconSizeS,
-                  color: DesignTokens.grey500,
+                  color: AppColors.grey500,
                 ),
             ],
           ),

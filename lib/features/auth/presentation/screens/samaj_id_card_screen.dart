@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:screenshot/screenshot.dart';
 import 'dart:io';
 import '../../providers/auth_provider.dart';
+import '../../../../core/constants/design_tokens.dart';
 import '../../../../shared/data/samaj_id_generator.dart';
 
 class SamajIdCardScreen extends ConsumerStatefulWidget {
@@ -49,7 +50,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
           final samajId = user.samajId ?? SamajIdGenerator.generateSamajId();
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(DesignTokens.spacingM),
             child: Column(
               children: [
                 // ID Card with Screenshot capability
@@ -57,15 +58,15 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
                   controller: _screenshotController,
                   child: _buildIdCard(context, user, samajId),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: DesignTokens.spacingL),
 
                 // QR Code
                 _buildQRCode(context, user, samajId),
-                const SizedBox(height: 24),
+                SizedBox(height: DesignTokens.spacingL),
 
                 // Actions
                 _buildActions(context, user, samajId),
-                const SizedBox(height: 24),
+                SizedBox(height: DesignTokens.spacingL),
 
                 // Information
                 _buildInformation(context),
@@ -99,7 +100,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(DesignTokens.spacingL),
         child: Column(
           children: [
             // Header
@@ -116,7 +117,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(DesignTokens.spacingS),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
@@ -176,7 +177,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
                           letterSpacing: 1,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: DesignTokens.spacingS),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
@@ -206,7 +207,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
 
             // ID Section
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(DesignTokens.spacingM),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -222,7 +223,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
                       letterSpacing: 1,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: DesignTokens.spacingS),
                   Text(
                     samajId,
                     style: const TextStyle(
@@ -236,7 +237,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
               ),
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: DesignTokens.spacingM),
 
             // Footer
             Row(
@@ -278,7 +279,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: DesignTokens.spacingM),
             Row(
               children: [
                 Expanded(
@@ -303,7 +304,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
               ],
             ),
             if (!user.isVerified) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: DesignTokens.spacingM * 0.75),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -351,7 +352,7 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
                 _buildInfoItem('• Voting rights in community decisions'),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: DesignTokens.spacingM),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -400,14 +401,14 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: DesignTokens.spacingM),
             QrImageView(
               data: 'samaj_id:$samajId:${user.id}',
               version: QrVersions.auto,
               size: 200.0,
               backgroundColor: Colors.white,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: DesignTokens.spacingM),
             Text(
               'Scan this QR code to verify membership',
               style: TextStyle(

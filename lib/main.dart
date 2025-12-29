@@ -9,6 +9,7 @@ import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/config/app_config.dart';
 import 'core/utils/app_logger.dart';
+import 'core/utils/navigation_logger.dart';
 import 'features/home/presentation/screens/splash_screen.dart';
 
 void main() async {
@@ -16,6 +17,9 @@ void main() async {
 
   // Load environment variables
   await AppConfig.load();
+
+  // Log app information (version, platform)
+  await AppInfoLogger.logAppInfo();
 
   // Initialize Firebase - with robust error handling and retry logic
   // Firebase.initializeApp() will auto-detect config from google-services.json
@@ -188,6 +192,9 @@ class MyApp extends ConsumerWidget {
       themeMode: themeMode,
       locale: locale,
       home: const SplashScreen(),
+      navigatorObservers: [
+        NavigationLogger(),
+      ],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

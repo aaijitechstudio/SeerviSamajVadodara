@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/post_provider.dart';
 import '../../../../shared/widgets/post_item.dart';
+import '../../../../shared/models/post_model.dart';
 import '../../../../core/widgets/loading_overlay.dart';
 import '../../../../l10n/app_localizations.dart';
-import 'post_composer_screen.dart';
+import '../../../community/presentation/screens/post_composer_screen.dart';
 import '../../../auth/presentation/screens/profile_screen.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
@@ -65,7 +66,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const PostComposerScreen(),
+                    builder: (context) => const PostComposerScreen(
+                      initialCategory: PostCategory.discussion,
+                    ),
                   ),
                 );
               },

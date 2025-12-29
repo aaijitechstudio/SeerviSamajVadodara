@@ -3,13 +3,14 @@ import '../../../shared/models/post_model.dart';
 import '../../../shared/data/firebase_service.dart';
 import '../../auth/providers/auth_provider.dart';
 
-// Posts stream provider
-final postsStreamProvider = StreamProvider<List<PostModel>>((ref) {
+// Posts stream provider (auto-disposing for better memory management)
+final postsStreamProvider = StreamProvider.autoDispose<List<PostModel>>((ref) {
   return FirebaseService.getPosts();
 });
 
-// Post controller provider
-final postControllerProvider = NotifierProvider<PostController, PostState>(() {
+// Post controller provider (auto-disposing for better memory management)
+final postControllerProvider =
+    NotifierProvider.autoDispose<PostController, PostState>(() {
   return PostController();
 });
 
@@ -47,7 +48,7 @@ class PostState {
 }
 
 // Post controller
-class PostController extends Notifier<PostState> {
+class PostController extends AutoDisposeNotifier<PostState> {
   @override
   PostState build() {
     return const PostState();

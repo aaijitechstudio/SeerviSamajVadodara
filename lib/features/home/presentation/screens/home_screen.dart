@@ -102,8 +102,7 @@ class _DynamicAppBarState extends State<_DynamicAppBar> {
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: DesignTokens.spacingM),
+          padding: const EdgeInsets.symmetric(horizontal: DesignTokens.spacingM),
           child: Row(
             children: [
               // Animated Menu Button
@@ -125,8 +124,7 @@ class _DynamicAppBarState extends State<_DynamicAppBar> {
                         color: isDark
                             ? Colors.grey[800]
                             : AppColors.backgroundWhite,
-                        borderRadius:
-                            BorderRadius.circular(DesignTokens.radiusM),
+                        borderRadius: BorderRadius.circular(DesignTokens.radiusM),
                         boxShadow: [
                           BoxShadow(
                             color: isDark
@@ -165,14 +163,15 @@ class _DynamicAppBarState extends State<_DynamicAppBar> {
                             style: TextStyle(
                               fontSize: DesignTokens.fontSizeL,
                               fontWeight: DesignTokens.fontWeightBold,
-                              color:
-                                  isDark ? Colors.white : AppColors.textPrimary,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppColors.textPrimary,
                               letterSpacing: 0.5,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.visible,
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: DesignTokens.spacingXS / 2),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -183,7 +182,7 @@ class _DynamicAppBarState extends State<_DynamicAppBar> {
                                     ? AppColors.primaryOrangeLight
                                     : AppColors.primaryOrange,
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: DesignTokens.spacingXS),
                               Flexible(
                                 child: Text(
                                   widget.locationName,

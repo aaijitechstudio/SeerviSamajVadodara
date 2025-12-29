@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/design_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../features/members/domain/models/user_model.dart';
 
@@ -90,7 +91,7 @@ class HomeWelcomeSection extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundColor: DesignTokens.backgroundWhite,
+            backgroundColor: AppColors.backgroundWhite,
             child: user!.profileImageUrl != null
                 ? ClipOval(
                     child: CachedNetworkImage(
@@ -98,6 +99,8 @@ class HomeWelcomeSection extends StatelessWidget {
                       width: 60,
                       height: 60,
                       fit: BoxFit.cover,
+                      memCacheWidth: 120, // Limit memory usage
+                      memCacheHeight: 120,
                       placeholder: (context, url) => Center(
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
@@ -135,7 +138,7 @@ class HomeWelcomeSection extends StatelessWidget {
                 Text(
                   l10n.welcomeUser(user!.name.split(' ').first),
                   style: TextStyle(
-                    color: DesignTokens.textOnPrimary,
+                    color: AppColors.textOnPrimary,
                     fontSize: DesignTokens.fontSizeXXL,
                     fontWeight: DesignTokens.fontWeightBold,
                   ),
@@ -144,7 +147,7 @@ class HomeWelcomeSection extends StatelessWidget {
                   Text(
                     user!.area!,
                     style: TextStyle(
-                      color: DesignTokens.textOnPrimary.withValues(alpha: 0.9),
+                      color: AppColors.textOnPrimary.withValues(alpha: 0.9),
                       fontSize: DesignTokens.fontSizeM,
                     ),
                   ),

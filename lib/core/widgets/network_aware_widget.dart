@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/connectivity_provider.dart';
-import '../utils/network_helper.dart';
 
 /// Network-aware widget that shows connectivity status
 class NetworkAwareWidget extends ConsumerWidget {

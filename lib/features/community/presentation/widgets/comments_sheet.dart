@@ -4,10 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../shared/models/post_model.dart';
 import '../../../../shared/models/comment_model.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../../core/repositories/repository_providers.dart';
-import '../../../home/data/repositories/post_repository.dart';
 import '../../../auth/providers/auth_provider.dart';
 
 class CommentsSheet extends ConsumerStatefulWidget {
@@ -247,14 +247,14 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                                 Icon(
                                   Icons.comment_outlined,
                                   size: 64,
-                                  color: DesignTokens.grey400,
+                                  color: AppColors.grey400,
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
                                   'No comments yet',
                                   style: TextStyle(
                                     fontSize: DesignTokens.fontSizeL,
-                                    color: DesignTokens.grey600,
+                                    color: AppColors.grey600,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -262,7 +262,7 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                                   'Be the first to comment!',
                                   style: TextStyle(
                                     fontSize: DesignTokens.fontSizeM,
-                                    color: DesignTokens.grey500,
+                                    color: AppColors.grey500,
                                   ),
                                 ),
                               ],
@@ -333,7 +333,7 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                   padding: const EdgeInsets.all(16),
                   child: Text(
                     'Please login to comment',
-                    style: TextStyle(color: DesignTokens.grey600),
+                    style: TextStyle(color: AppColors.grey600),
                     textAlign: TextAlign.center,
                   ),
                 ),

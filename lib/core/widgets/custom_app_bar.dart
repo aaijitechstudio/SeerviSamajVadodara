@@ -32,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         bottom: BorderSide(
           color: isDark
               ? Colors.white.withValues(alpha: 0.1)
-              : DesignTokens.borderLight,
+              : AppColors.borderLight,
           width: 1,
         ),
       ),
@@ -46,13 +46,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.black : DesignTokens.backgroundWhite,
+                    color: isDark ? Colors.black : AppColors.backgroundWhite,
                     borderRadius: BorderRadius.circular(DesignTokens.radiusS),
                     boxShadow: [
                       BoxShadow(
                         color: isDark
                             ? Colors.white.withValues(alpha: 0.1)
-                            : DesignTokens.shadowLight,
+                            : AppColors.shadowLight,
                         blurRadius: DesignTokens.elevationLow,
                         offset: const Offset(0, 1),
                       ),
@@ -68,8 +68,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           Icons.people,
                           size: DesignTokens.iconSizeM,
                           color: isDark
-                              ? DesignTokens.accentGold
-                              : DesignTokens.primaryOrange,
+                              ? AppColors.accentGold
+                              : AppColors.primaryOrange,
                         );
                       },
                     ),

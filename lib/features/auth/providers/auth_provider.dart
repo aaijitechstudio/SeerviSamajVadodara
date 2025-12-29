@@ -42,8 +42,8 @@ final currentUserProvider = FutureProvider<UserModel?>((ref) async {
   );
 });
 
-// Auth controller provider
-final authControllerProvider = NotifierProvider<AuthController, AuthState>(() {
+// Auth controller provider (auto-disposing for better memory management)
+final authControllerProvider = NotifierProvider.autoDispose<AuthController, AuthState>(() {
   return AuthController();
 });
 
@@ -80,7 +80,7 @@ class AuthState {
 }
 
 // Auth controller
-class AuthController extends Notifier<AuthState> {
+class AuthController extends AutoDisposeNotifier<AuthState> {
   @override
   AuthState build() {
     // Initialize from Firebase Auth state
@@ -167,6 +167,14 @@ class AuthController extends Notifier<AuthState> {
       );
 
       if (credential?.user != null) {
+        // Send verification email automatically (non-blocking)
+        try {
+          await sendEmailVerification();
+        } catch (e) {
+          // Don't fail signup if email sending fails
+          AppLogger.debug('Failed to send verification email: $e');
+        }
+
         final userData =
             await FirebaseService.getUserData(credential!.user!.uid);
         state = state.copyWith(
@@ -237,11 +245,15 @@ required String email,
           return false;
         }
 
+        // Check email verification status (non-blocking)
+        final firebaseUser = credential.user;
+        final isEmailVerified = firebaseUser?.emailVerified ?? false;
+
         // Update state with user data
         state = state.copyWith(
           isLoading: false,
           user: userData,
-          error: null,
+          error: isEmailVerified ? null : 'Please verify your email address. Check your inbox for the verification link.',
         );
 
         // Force refresh auth state listener
@@ -413,6 +425,47 @@ required String email,
     }
   }
 
+  // Send email verification
+  Future<bool> sendEmailVerification() async {
+    try {
+      final auth = ref.read(firebaseAuthProvider);
+      if (auth == null || auth.currentUser == null) {
+        return false;
+      }
+
+      await auth.currentUser!.sendEmailVerification();
+      return true;
+    } catch (e) {
+      AppLogger.error('Failed to send email verification', e);
+      return false;
+    }
+  }
+
+  // Check if email is verified
+  bool get isEmailVerified {
+    final auth = ref.read(firebaseAuthProvider);
+    return auth?.currentUser?.emailVerified ?? false;
+  }
+
+  // Reload user to check verification status
+  Future<void> reloadUser() async {
+    try {
+      final auth = ref.read(firebaseAuthProvider);
+      if (auth?.currentUser != null) {
+        await auth!.currentUser!.reload();
+        // Refresh user data
+        if (state.user != null) {
+          final userData = await FirebaseService.getUserData(state.user!.id);
+          if (userData != null) {
+            state = state.copyWith(user: userData);
+          }
+        }
+      }
+    } catch (e) {
+      AppLogger.error('Failed to reload user', e);
+    }
+  }
+
   // Send password reset email
   Future<bool> sendPasswordResetEmail(String email) async {
     state = state.copyWith(isLoading: true, error: null);
@@ -537,6 +590,25 @@ required String email,
     } catch (e) {
       // Silently fail - user data refresh is not critical
       AppLogger.debug('Failed to refresh user data: $e');
+    }
+  }
+
+  // Delete account
+  Future<bool> deleteAccount() async {
+    if (state.user == null) return false;
+
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      await FirebaseService.deleteUserAccount(state.user!.id);
+      state = const AuthState();
+      return true;
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+      return false;
     }
   }
 }

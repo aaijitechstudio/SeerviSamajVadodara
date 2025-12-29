@@ -61,10 +61,10 @@ class AppButton extends StatelessWidget {
         return ElevatedButton(
           onPressed: isEnabled ? onPressed : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: DesignTokens.primaryOrange,
-            foregroundColor: DesignTokens.textOnPrimary,
-            disabledBackgroundColor: DesignTokens.grey300,
-            disabledForegroundColor: DesignTokens.grey500,
+            backgroundColor: AppColors.primaryOrange,
+            foregroundColor: AppColors.textOnPrimary,
+            disabledBackgroundColor: AppColors.grey300,
+            disabledForegroundColor: AppColors.grey500,
             elevation: DesignTokens.elevationLow,
             padding: const EdgeInsets.symmetric(
               horizontal: DesignTokens.spacingL,
@@ -85,11 +85,11 @@ class AppButton extends StatelessWidget {
         return OutlinedButton(
           onPressed: isEnabled ? onPressed : null,
           style: OutlinedButton.styleFrom(
-            foregroundColor: DesignTokens.primaryOrange,
-            disabledForegroundColor: DesignTokens.grey500,
+            foregroundColor: AppColors.primaryOrange,
+            disabledForegroundColor: AppColors.grey500,
             side: BorderSide(
               color:
-                  isEnabled ? DesignTokens.primaryOrange : DesignTokens.grey300,
+                  isEnabled ? AppColors.primaryOrange : AppColors.grey300,
               width: 2,
             ),
             padding: const EdgeInsets.symmetric(
@@ -111,8 +111,8 @@ class AppButton extends StatelessWidget {
         return TextButton(
           onPressed: isEnabled ? onPressed : null,
           style: TextButton.styleFrom(
-            foregroundColor: DesignTokens.primaryOrange,
-            disabledForegroundColor: DesignTokens.grey500,
+            foregroundColor: AppColors.primaryOrange,
+            disabledForegroundColor: AppColors.grey500,
             padding: const EdgeInsets.symmetric(
               horizontal: DesignTokens.spacingL,
               vertical: DesignTokens.spacingM,
@@ -153,10 +153,10 @@ class AppButton extends StatelessWidget {
         return ElevatedButton(
           onPressed: isEnabled ? onPressed : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: DesignTokens.successColor,
-            foregroundColor: DesignTokens.backgroundWhite,
-            disabledBackgroundColor: DesignTokens.grey300,
-            disabledForegroundColor: DesignTokens.grey500,
+            backgroundColor: AppColors.successColor,
+            foregroundColor: AppColors.backgroundWhite,
+            disabledBackgroundColor: AppColors.grey300,
+            disabledForegroundColor: AppColors.grey500,
             elevation: DesignTokens.elevationLow,
             padding: const EdgeInsets.symmetric(
               horizontal: DesignTokens.spacingL,
@@ -181,8 +181,8 @@ class AppButton extends StatelessWidget {
         color: type == AppButtonType.primary ||
                 type == AppButtonType.danger ||
                 type == AppButtonType.success
-            ? DesignTokens.textOnPrimary
-            : DesignTokens.primaryOrange,
+            ? AppColors.textOnPrimary
+            : AppColors.primaryOrange,
       );
     }
 

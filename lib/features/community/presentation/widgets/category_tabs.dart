@@ -49,21 +49,6 @@ class _CategoryTabsState extends State<CategoryTabs> {
     }
   }
 
-  Color _getCategoryColor(PostCategory category, bool isSelected) {
-    if (isSelected) {
-      switch (category) {
-        case PostCategory.announcement:
-          return AppColors.primaryOrange;
-        case PostCategory.discussion:
-          return AppColors.primaryOrange;
-        case PostCategory.events:
-          return AppColors.primaryOrange;
-        case PostCategory.gallery:
-          return AppColors.primaryOrange;
-      }
-    }
-    return AppColors.textSecondary;
-  }
 
   @override
   Widget build(BuildContext context) {

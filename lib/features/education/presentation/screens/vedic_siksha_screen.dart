@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../data/vedic_siksha_data.dart';
 import 'vedic_siksha_detail_screen.dart';
@@ -24,7 +25,7 @@ class VedicSikshaScreen extends StatelessWidget {
             // Hero Section
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(DesignTokens.spacingL - 4),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -45,7 +46,7 @@ class VedicSikshaScreen extends StatelessWidget {
                     size: 56,
                     color: AppColors.primaryOrange,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: DesignTokens.spacingM * 0.75),
                   Text(
                     'वैदिक ज्ञान और बुद्धिमत्ता',
                     style: TextStyle(
@@ -55,7 +56,7 @@ class VedicSikshaScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: DesignTokens.spacingS),
                   Text(
                     'Vedic Knowledge & Wisdom',
                     style: TextStyle(
@@ -68,7 +69,7 @@ class VedicSikshaScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: DesignTokens.spacingL),
 
             // Vedic Scriptures Section
             _buildSectionHeader('वैदिक ग्रंथ (Vedic Scriptures)'),
@@ -107,7 +108,7 @@ class VedicSikshaScreen extends StatelessWidget {
               sectionId: 'atharvaveda',
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: DesignTokens.spacingL),
 
             // Upanishads Section
             _buildSectionHeader('उपनिषद (Upanishads)'),
@@ -121,7 +122,7 @@ class VedicSikshaScreen extends StatelessWidget {
               sectionId: 'upanishads',
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: DesignTokens.spacingL),
 
             // Vedic Philosophy Section
             _buildSectionHeader('वैदिक दर्शन (Vedic Philosophy)'),
@@ -151,7 +152,7 @@ class VedicSikshaScreen extends StatelessWidget {
               sectionId: 'vedanta',
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: DesignTokens.spacingL),
 
             // Vedic Values Section
             _buildSectionHeader('वैदिक मूल्य (Vedic Values)'),
@@ -181,7 +182,7 @@ class VedicSikshaScreen extends StatelessWidget {
               sectionId: 'moksha',
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: DesignTokens.spacingL),
 
             // Learning Resources
             _buildSectionHeader('शिक्षा संसाधन (Learning Resources)'),

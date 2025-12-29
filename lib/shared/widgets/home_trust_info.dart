@@ -13,10 +13,10 @@ class HomeTrustInfo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(DesignTokens.spacingM),
       decoration: BoxDecoration(
-        color: DesignTokens.primaryOrange.withValues(alpha: 0.05),
+        color: AppColors.primaryOrange.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(DesignTokens.radiusM),
         border: Border.all(
-          color: DesignTokens.primaryOrange.withValues(alpha: 0.2),
+          color: AppColors.primaryOrange.withValues(alpha: 0.2),
         ),
       ),
       child: Column(

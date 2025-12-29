@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/providers/locale_provider.dart';
 import '../../../../core/providers/theme_provider.dart';
+import '../../../../core/utils/data_export.dart';
+import '../../../../core/utils/auth_preferences.dart';
+import '../../../../core/utils/localization_helper.dart';
+import '../../providers/auth_provider.dart';
+import '../../../../core/utils/app_utils.dart';
 import 'notifications_settings_screen.dart';
 import 'terms_and_conditions_screen.dart';
 import 'privacy_policy_screen.dart';
+import 'login_history_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -21,7 +28,7 @@ class SettingsScreen extends ConsumerWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? Colors.black : DesignTokens.grey100,
+      backgroundColor: isDark ? Colors.black : AppColors.grey100,
       appBar: CustomAppBar(
         title: l10n.settings,
         showLogo: false,
@@ -91,6 +98,48 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   );
                 },
+              ),
+              _buildSettingsTile(
+                context,
+                icon: Icons.history,
+                title: LocalizationFallbacks.loginHistory(l10n),
+                subtitle: LocalizationFallbacks.viewLoginHistory(l10n),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginHistoryScreen(),
+                    ),
+                  );
+                },
+              ),
+              _buildSettingsTile(
+                context,
+                icon: Icons.download_outlined,
+                title: LocalizationFallbacks.exportData(l10n),
+                subtitle: LocalizationFallbacks.exportDataDescription(l10n),
+                onTap: () {
+                  _handleDataExport(context, ref, l10n);
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: DesignTokens.spacingM),
+
+          // Danger Zone
+          _buildSettingsSection(
+            context,
+            title: LocalizationFallbacks.dangerZone(l10n),
+            icon: Icons.warning_outlined,
+            children: [
+              _buildSettingsTile(
+                context,
+                icon: Icons.delete_forever_outlined,
+                title: LocalizationFallbacks.deleteAccount(l10n),
+                subtitle: LocalizationFallbacks.deleteAccountDescription(l10n),
+                onTap: () {
+                  _showDeleteAccountDialog(context, ref, l10n);
+                },
+                isDanger: true,
               ),
             ],
           ),
@@ -169,7 +218,7 @@ class SettingsScreen extends ConsumerWidget {
                           .bodySmall
                           ?.color
                           ?.withValues(alpha: 0.6) ??
-                      DesignTokens.textSecondary,
+                      AppColors.textSecondary,
                   fontWeight: DesignTokens.fontWeightRegular,
                 ),
                 textAlign: TextAlign.center,
@@ -192,7 +241,7 @@ class SettingsScreen extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? Colors.black : DesignTokens.backgroundWhite,
+        color: isDark ? Colors.black : AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(DesignTokens.radiusL),
         border: isDark
             ? Border.all(color: Colors.white.withValues(alpha: 0.1))
@@ -201,7 +250,7 @@ class SettingsScreen extends ConsumerWidget {
           BoxShadow(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.05)
-                : DesignTokens.shadowLight,
+                : AppColors.shadowLight,
             blurRadius: DesignTokens.elevationMedium,
             offset: const Offset(0, 2),
           ),
@@ -217,8 +266,8 @@ class SettingsScreen extends ConsumerWidget {
                 Icon(
                   icon,
                   color: isDark
-                      ? DesignTokens.accentGold
-                      : DesignTokens.primaryOrange,
+                      ? AppColors.accentGold
+                      : AppColors.primaryOrange,
                   size: 24,
                 ),
                 const SizedBox(width: DesignTokens.spacingS),
@@ -227,7 +276,7 @@ class SettingsScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: DesignTokens.fontSizeXL,
                     fontWeight: DesignTokens.fontWeightBold,
-                    color: isDark ? Colors.white : DesignTokens.textPrimary,
+                    color: isDark ? Colors.white : AppColors.textPrimary,
                   ),
                 ),
               ],
@@ -246,17 +295,23 @@ class SettingsScreen extends ConsumerWidget {
     required String title,
     String? subtitle,
     required VoidCallback? onTap,
+    bool isDanger = false,
   }) {
+    final iconColor = isDanger ? AppColors.errorColor : AppColors.primaryOrange;
+    final backgroundColor = isDanger
+        ? AppColors.errorColor.withValues(alpha: 0.1)
+        : AppColors.primaryOrange.withValues(alpha: 0.1);
+
     return ListTile(
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: DesignTokens.primaryOrange.withValues(alpha: 0.1),
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(DesignTokens.radiusS),
         ),
         child: Icon(
           icon,
-          color: DesignTokens.primaryOrange,
+          color: iconColor,
           size: 20,
         ),
       ),
@@ -266,7 +321,7 @@ class SettingsScreen extends ConsumerWidget {
           fontSize: DesignTokens.fontSizeM,
           fontWeight: DesignTokens.fontWeightMedium,
           color: Theme.of(context).textTheme.bodyLarge?.color ??
-              DesignTokens.textPrimary,
+              AppColors.textPrimary,
         ),
       ),
       subtitle: subtitle != null
@@ -275,14 +330,14 @@ class SettingsScreen extends ConsumerWidget {
               style: TextStyle(
                 fontSize: DesignTokens.fontSizeS,
                 color: Theme.of(context).textTheme.bodySmall?.color ??
-                    DesignTokens.textSecondary,
+                    AppColors.textSecondary,
               ),
             )
           : null,
       trailing: onTap != null
           ? Icon(
               Icons.chevron_right,
-              color: DesignTokens.textTertiary,
+              color: AppColors.textTertiary,
             )
           : null,
       onTap: onTap,
@@ -303,15 +358,15 @@ class SettingsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: isSelected
-              ? DesignTokens.primaryOrange.withValues(alpha: 0.15)
-              : DesignTokens.grey100,
+              ? AppColors.primaryOrange.withValues(alpha: 0.15)
+              : AppColors.grey100,
           borderRadius: BorderRadius.circular(DesignTokens.radiusS),
         ),
         child: Icon(
           Icons.language,
           color: isSelected
-              ? DesignTokens.primaryOrange
-              : DesignTokens.textSecondary,
+              ? AppColors.primaryOrange
+              : AppColors.textSecondary,
           size: 20,
         ),
       ),
@@ -323,14 +378,14 @@ class SettingsScreen extends ConsumerWidget {
               ? DesignTokens.fontWeightSemiBold
               : DesignTokens.fontWeightRegular,
           color: isSelected
-              ? DesignTokens.primaryOrange
-              : DesignTokens.textPrimary,
+              ? AppColors.primaryOrange
+              : AppColors.textPrimary,
         ),
       ),
       trailing: isSelected
           ? Icon(
               Icons.check_circle,
-              color: DesignTokens.primaryOrange,
+              color: AppColors.primaryOrange,
             )
           : null,
       onTap: () {
@@ -358,7 +413,7 @@ class SettingsScreen extends ConsumerWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: DesignTokens.primaryOrange.withValues(alpha: 0.1),
+          color: AppColors.primaryOrange.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(DesignTokens.radiusS),
         ),
         child: Icon(
@@ -367,7 +422,7 @@ class SettingsScreen extends ConsumerWidget {
               : themeMode == ThemeMode.light
                   ? Icons.light_mode
                   : Icons.brightness_6_outlined,
-          color: DesignTokens.primaryOrange,
+          color: AppColors.primaryOrange,
           size: 20,
         ),
       ),
@@ -377,7 +432,7 @@ class SettingsScreen extends ConsumerWidget {
           fontSize: DesignTokens.fontSizeM,
           fontWeight: DesignTokens.fontWeightMedium,
           color: Theme.of(context).textTheme.bodyLarge?.color ??
-              DesignTokens.textPrimary,
+              AppColors.textPrimary,
         ),
       ),
       subtitle: Text(
@@ -385,12 +440,12 @@ class SettingsScreen extends ConsumerWidget {
         style: TextStyle(
           fontSize: DesignTokens.fontSizeS,
           color: Theme.of(context).textTheme.bodySmall?.color ??
-              DesignTokens.textSecondary,
+              AppColors.textSecondary,
         ),
       ),
       trailing: Icon(
         Icons.chevron_right,
-        color: DesignTokens.textTertiary,
+        color: AppColors.textTertiary,
       ),
       onTap: () {
         _showThemeDialog(context, ref, l10n);
@@ -407,7 +462,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         title: Row(
           children: [
-            Icon(Icons.lock_outline, color: DesignTokens.primaryOrange),
+            Icon(Icons.lock_outline, color: AppColors.primaryOrange),
             const SizedBox(width: DesignTokens.spacingS),
             Text(l10n.changePassword),
           ],
@@ -436,7 +491,7 @@ class SettingsScreen extends ConsumerWidget {
         title: Row(
           children: [
             Icon(Icons.brightness_6_outlined,
-                color: DesignTokens.primaryOrange),
+                color: AppColors.primaryOrange),
             const SizedBox(width: DesignTokens.spacingS),
             Text(l10n.themeMode),
           ],
@@ -494,8 +549,8 @@ class SettingsScreen extends ConsumerWidget {
       leading: Icon(
         icon,
         color: isSelected
-            ? DesignTokens.primaryOrange
-            : DesignTokens.textSecondary,
+            ? AppColors.primaryOrange
+            : AppColors.textSecondary,
       ),
       title: Text(
         title,
@@ -504,14 +559,14 @@ class SettingsScreen extends ConsumerWidget {
               ? DesignTokens.fontWeightSemiBold
               : DesignTokens.fontWeightRegular,
           color: isSelected
-              ? DesignTokens.primaryOrange
-              : DesignTokens.textPrimary,
+              ? AppColors.primaryOrange
+              : AppColors.textPrimary,
         ),
       ),
       trailing: isSelected
           ? Icon(
               Icons.check_circle,
-              color: DesignTokens.primaryOrange,
+              color: AppColors.primaryOrange,
             )
           : null,
       onTap: () {
@@ -526,6 +581,222 @@ class SettingsScreen extends ConsumerWidget {
       return '1.0.0';
     } catch (e) {
       return '1.0.0';
+    }
+  }
+
+  Future<void> _handleDataExport(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    final authState = ref.read(authControllerProvider);
+    final user = authState.user;
+
+    if (user == null) {
+      AppUtils.showErrorSnackBar(context, LocalizationFallbacks.pleaseLoginFirst(l10n));
+      return;
+    }
+
+    // Show format selection dialog
+    final format = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(LocalizationFallbacks.exportData(l10n)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(LocalizationFallbacks.selectExportFormat(l10n)),
+            const SizedBox(height: DesignTokens.spacingM),
+            ListTile(
+              leading: const Icon(Icons.text_fields),
+              title: const Text('Text Format'),
+              subtitle: const Text('Easy to read'),
+              onTap: () => Navigator.of(context).pop('text'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.code),
+              title: const Text('JSON Format'),
+              subtitle: const Text('Machine readable'),
+              onTap: () => Navigator.of(context).pop('json'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.cancel),
+          ),
+        ],
+      ),
+    );
+
+    if (format == null) return;
+
+    try {
+      if (format == 'text') {
+        await DataExport.exportAndShareAsText(user);
+      } else {
+        await DataExport.exportAndShare(user);
+      }
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(LocalizationFallbacks.dataExportedSuccessfully(l10n)),
+            backgroundColor: AppColors.successColor,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        AppUtils.showErrorSnackBar(
+          context,
+          '${LocalizationFallbacks.failedToExportData(l10n)}: ${e.toString()}',
+        );
+      }
+    }
+  }
+
+  Future<void> _showDeleteAccountDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DesignTokens.radiusL),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.warning, color: AppColors.errorColor),
+            const SizedBox(width: DesignTokens.spacingS),
+            Text(LocalizationFallbacks.deleteAccount(l10n)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              LocalizationFallbacks.deleteAccountWarning(l10n),
+              style: const TextStyle(fontWeight: DesignTokens.fontWeightMedium),
+            ),
+            const SizedBox(height: DesignTokens.spacingM),
+            Text(
+              LocalizationFallbacks.deleteAccountConsequences(l10n),
+              style: TextStyle(
+                fontSize: DesignTokens.fontSizeS,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: DesignTokens.spacingM),
+            Container(
+              padding: const EdgeInsets.all(DesignTokens.spacingM),
+              decoration: BoxDecoration(
+                color: AppColors.errorColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(DesignTokens.radiusS),
+                border: Border.all(color: AppColors.errorColor.withValues(alpha: 0.3)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline, color: AppColors.errorColor, size: 20),
+                  const SizedBox(width: DesignTokens.spacingS),
+                  Expanded(
+                    child: Text(
+                      LocalizationFallbacks.deleteAccountFinalWarning(l10n),
+                      style: TextStyle(
+                        fontSize: DesignTokens.fontSizeS,
+                        color: AppColors.errorColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.errorColor,
+            ),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      await _handleDeleteAccount(context, ref, l10n);
+    }
+  }
+
+  Future<void> _handleDeleteAccount(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    final authController = ref.read(authControllerProvider.notifier);
+    final authState = ref.read(authControllerProvider);
+
+    if (authState.user == null) {
+      AppUtils.showErrorSnackBar(context, LocalizationFallbacks.pleaseLoginFirst(l10n));
+      return;
+    }
+
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      // Delete account
+      final success = await authController.deleteAccount();
+
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+
+        if (success) {
+          // Clear all local data
+          await AuthPreferences.clearAll();
+
+          // Navigate to login screen
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/login',
+            (route) => false,
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(LocalizationFallbacks.accountDeletedSuccessfully(l10n)),
+              backgroundColor: AppColors.successColor,
+            ),
+          );
+        } else {
+          final error = ref.read(authControllerProvider).error;
+          AppUtils.showErrorSnackBar(
+            context,
+            error ?? LocalizationFallbacks.failedToDeleteAccount(l10n),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+        AppUtils.showErrorSnackBar(
+          context,
+          '${LocalizationFallbacks.failedToDeleteAccount(l10n)}: ${e.toString()}',
+        );
+      }
     }
   }
 }

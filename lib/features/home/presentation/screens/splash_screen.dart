@@ -19,10 +19,13 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen>
     with TickerProviderStateMixin {
   late AnimationController _logoAnimationController;
+  late AnimationController _breathingAnimationController;
+  late AnimationController _glowAnimationController;
   late AnimationController _loadingAnimationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
-  late Animation<double> _rotationAnimation;
+  late Animation<double> _breathingAnimation;
+  late Animation<double> _glowAnimation;
   late Animation<double> _loadingRotationAnimation;
   bool _assetsPrecached = false;
   bool _initializationComplete = false;
@@ -31,9 +34,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void initState() {
     super.initState();
 
-    // Logo animation controller (scale + fade)
+    // Logo entrance animation controller (scale + fade)
     _logoAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    // Breathing/pulse animation controller (spiritual effect)
+    _breathingAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 3000),
+      vsync: this,
+    );
+
+    // Glow animation controller (spiritual aura effect)
+    _glowAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 2500),
       vsync: this,
     );
 
@@ -43,15 +58,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       vsync: this,
     );
 
-    // Scale animation for logo
+    // Scale animation for logo entrance
     _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _logoAnimationController,
-        curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
+        curve: const Interval(0.0, 0.7, curve: Curves.easeOutCubic),
       ),
     );
 
-    // Fade animation for logo
+    // Fade animation for logo entrance
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _logoAnimationController,
@@ -59,11 +74,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       ),
     );
 
-    // Rotation animation for logo (subtle)
-    _rotationAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(
+    // Breathing animation (gentle pulse - spiritual effect)
+    _breathingAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(
       CurvedAnimation(
-        parent: _logoAnimationController,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+        parent: _breathingAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    // Glow animation (spiritual aura effect)
+    _glowAnimation = Tween<double>(begin: 0.15, end: 0.35).animate(
+      CurvedAnimation(
+        parent: _glowAnimationController,
+        curve: Curves.easeInOut,
       ),
     );
 
@@ -77,6 +100,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     // Start animations
     _logoAnimationController.forward();
+    _breathingAnimationController.repeat(reverse: true);
+    _glowAnimationController.repeat(reverse: true);
     _loadingAnimationController.repeat();
 
     // Start initialization
@@ -96,19 +121,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   Future<void> _precacheAssets() async {
     if (!mounted) return;
 
-    // Precache splash GIF and welcome screen logo in parallel
-    final imageProvider = const AssetImage('assets/images/Aai-Bail_350.gif');
+    // Precache app logo
     final logoProvider =
         const AssetImage('assets/images/seervisamajvadodara.png');
 
     try {
-      await Future.wait([
-        precacheImage(imageProvider, context),
-        precacheImage(logoProvider, context),
-      ]);
+      await precacheImage(logoProvider, context);
     } catch (e) {
       // Silently handle precache errors - images will load normally if precache fails
-      debugPrint('Failed to precache images: $e');
+      debugPrint('Failed to precache logo: $e');
     }
   }
 
@@ -206,6 +227,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   void dispose() {
     _logoAnimationController.dispose();
+    _breathingAnimationController.dispose();
+    _glowAnimationController.dispose();
     _loadingAnimationController.dispose();
     super.dispose();
   }
@@ -224,18 +247,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Animated Logo
+                  // Animated Logo with Spiritual Theme
                   AnimatedBuilder(
-                    animation: _logoAnimationController,
+                    animation: Listenable.merge([
+                      _logoAnimationController,
+                      _breathingAnimationController,
+                      _glowAnimationController,
+                    ]),
                     builder: (context, child) {
                       return Transform.scale(
-                        scale: _scaleAnimation.value,
-                        child: Transform.rotate(
-                          angle: _rotationAnimation.value,
-                          child: Opacity(
-                            opacity: _fadeAnimation.value,
-                            child: _buildLogo(),
-                          ),
+                        scale: _scaleAnimation.value * _breathingAnimation.value,
+                        child: Opacity(
+                          opacity: _fadeAnimation.value,
+                          child: _buildLogo(),
                         ),
                       );
                     },
@@ -361,38 +385,72 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   Widget _buildLogo() {
-    return Container(
-      width: 250,
-      height: 250,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryOrange.withOpacity(0.2),
-            blurRadius: 20,
-            spreadRadius: 5,
+    return AnimatedBuilder(
+      animation: _glowAnimationController,
+      builder: (context, child) {
+        return Container(
+          width: 180,
+          height: 180,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.backgroundWhite,
+                AppColors.primaryOrange.withValues(alpha: 0.08),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(DesignTokens.radiusXL),
+            boxShadow: [
+              // Animated glow effect (spiritual aura)
+              BoxShadow(
+                color: AppColors.primaryOrange.withValues(
+                  alpha: _glowAnimation.value,
+                ),
+                blurRadius: 30,
+                offset: const Offset(0, 10),
+                spreadRadius: 5,
+              ),
+              // Base shadow
+              BoxShadow(
+                color: AppColors.primaryOrange.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+                spreadRadius: 2,
+              ),
+              // Light shadow for depth
+              BoxShadow(
+                color: AppColors.shadowLight,
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: ClipOval(
-        child: Image.asset(
-          'assets/images/Aai-Bail_350.gif',
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primaryOrange.withOpacity(0.1),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(DesignTokens.radiusL),
+              child: Image.asset(
+                'assets/images/seervisamajvadodara.png',
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(DesignTokens.radiusL),
+                      color: AppColors.primaryOrange.withValues(alpha: 0.1),
+                    ),
+                    child: Icon(
+                      Icons.people,
+                      size: DesignTokens.iconSizeXL,
+                      color: AppColors.primaryOrange,
+                    ),
+                  );
+                },
               ),
-              child: Icon(
-                Icons.people,
-                size: DesignTokens.iconSizeXL,
-                color: AppColors.primaryOrange,
-              ),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../core/constants/design_tokens.dart';
 import '../../../../shared/models/post_model.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -178,7 +179,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
       decoration: BoxDecoration(
         color:
             isAdminPost ? AppColors.backgroundCream : AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(DesignTokens.radiusM),
         border: isAdminPost
             ? Border(
                 left: BorderSide(
@@ -208,7 +209,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
         elevation: 0,
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(DesignTokens.radiusM),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -367,7 +368,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.primaryOrange,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(DesignTokens.radiusM),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -396,7 +397,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.blue[100],
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(DesignTokens.radiusM),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -427,12 +428,14 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
 
     if (_post.imageUrls!.length == 1) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(DesignTokens.radiusS),
         child: CachedNetworkImage(
           imageUrl: _post.imageUrls!.first,
           fit: BoxFit.cover,
           width: double.infinity,
           height: 200,
+          memCacheWidth: 800, // Limit memory usage
+          memCacheHeight: 400,
           placeholder: (context, url) => Container(
             height: 200,
             color: Colors.grey[200],
@@ -456,12 +459,14 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
           return Container(
             margin: const EdgeInsets.only(right: 8),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(DesignTokens.radiusS),
               child: CachedNetworkImage(
                 imageUrl: _post.imageUrls![index],
                 fit: BoxFit.cover,
                 width: 200,
                 height: 200,
+                memCacheWidth: 400, // Limit memory usage
+                memCacheHeight: 400,
                 placeholder: (context, url) => Container(
                   width: 200,
                   height: 200,

@@ -20,7 +20,7 @@ class ProfileScreen extends ConsumerWidget {
     final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
-      backgroundColor: DesignTokens.grey100,
+      backgroundColor: AppColors.grey100,
       appBar: CustomAppBar(
         title: l10n.profile,
         showLogo: false,
@@ -77,8 +77,8 @@ class ProfileScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            DesignTokens.primaryOrange.withValues(alpha: 0.1),
-            DesignTokens.backgroundWhite,
+            AppColors.primaryOrange.withValues(alpha: 0.1),
+            AppColors.backgroundWhite,
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -244,8 +244,8 @@ class ProfileScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            DesignTokens.primaryOrangeLight.withValues(alpha: 0.4),
-            DesignTokens.primaryOrangeLight.withValues(alpha: 0.25),
+            AppColors.primaryOrangeLight.withValues(alpha: 0.4),
+            AppColors.primaryOrangeLight.withValues(alpha: 0.25),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -253,7 +253,7 @@ class ProfileScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(DesignTokens.radiusL),
         boxShadow: [
           BoxShadow(
-            color: DesignTokens.primaryOrange.withValues(alpha: 0.15),
+            color: AppColors.primaryOrange.withValues(alpha: 0.15),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -268,12 +268,12 @@ class ProfileScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: DesignTokens.backgroundWhite,
+                    color: AppColors.backgroundWhite,
                     width: 3,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: DesignTokens.shadowMedium,
+                      color: AppColors.shadowMedium,
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -281,7 +281,7 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 child: CircleAvatar(
                   radius: 45,
-                  backgroundColor: DesignTokens.backgroundWhite,
+                  backgroundColor: AppColors.backgroundWhite,
                   child: ClipOval(
                     child: user.profileImageUrl != null
                         ? CachedNetworkImage(
@@ -289,24 +289,26 @@ class ProfileScreen extends ConsumerWidget {
                             width: 90,
                             height: 90,
                             fit: BoxFit.cover,
+                            memCacheWidth: 180, // Limit memory usage
+                            memCacheHeight: 180,
                             placeholder: (context, url) => Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  DesignTokens.primaryOrange,
+                                  AppColors.primaryOrange,
                                 ),
                               ),
                             ),
                             errorWidget: (context, url, error) => Icon(
                               Icons.person,
                               size: 45,
-                              color: DesignTokens.primaryOrange,
+                              color: AppColors.primaryOrange,
                             ),
                           )
                         : Icon(
                             Icons.person,
                             size: 45,
-                            color: DesignTokens.primaryOrange,
+                            color: AppColors.primaryOrange,
                           ),
                   ),
                 ),
@@ -318,10 +320,10 @@ class ProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: DesignTokens.backgroundWhite,
+                    color: AppColors.backgroundWhite,
                     boxShadow: [
                       BoxShadow(
-                        color: DesignTokens.shadowMedium,
+                        color: AppColors.shadowMedium,
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -330,7 +332,7 @@ class ProfileScreen extends ConsumerWidget {
                   child: Icon(
                     Icons.camera_alt,
                     size: 16,
-                    color: DesignTokens.primaryOrange,
+                    color: AppColors.primaryOrange,
                   ),
                 ),
               ),
@@ -344,7 +346,7 @@ class ProfileScreen extends ConsumerWidget {
             style: const TextStyle(
               fontSize: DesignTokens.fontSizeH4,
               fontWeight: DesignTokens.fontWeightBold,
-              color: DesignTokens.textOnPrimary,
+              color: AppColors.textOnPrimary,
             ),
           ),
           const SizedBox(height: DesignTokens.spacingXS),
@@ -354,7 +356,7 @@ class ProfileScreen extends ConsumerWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: DesignTokens.fontSizeM,
-              color: DesignTokens.textOnPrimary.withValues(alpha: 0.9),
+              color: AppColors.textOnPrimary.withValues(alpha: 0.9),
             ),
           ),
           const SizedBox(height: DesignTokens.spacingS),
@@ -366,8 +368,8 @@ class ProfileScreen extends ConsumerWidget {
             ),
             decoration: BoxDecoration(
               color: user.isVerified
-                  ? DesignTokens.successColor
-                  : DesignTokens.warningColor,
+                  ? AppColors.successColor
+                  : AppColors.warningColor,
               borderRadius: BorderRadius.circular(DesignTokens.radiusRound),
             ),
             child: Row(
@@ -376,7 +378,7 @@ class ProfileScreen extends ConsumerWidget {
                 Icon(
                   user.isVerified ? Icons.verified : Icons.hourglass_top,
                   size: 14,
-                  color: DesignTokens.textOnPrimary,
+                  color: AppColors.textOnPrimary,
                 ),
                 const SizedBox(width: DesignTokens.spacingXS),
                 Text(
@@ -386,7 +388,7 @@ class ProfileScreen extends ConsumerWidget {
                   style: const TextStyle(
                     fontSize: DesignTokens.fontSizeS,
                     fontWeight: DesignTokens.fontWeightSemiBold,
-                    color: DesignTokens.textOnPrimary,
+                    color: AppColors.textOnPrimary,
                   ),
                 ),
               ],
@@ -411,7 +413,7 @@ class ProfileScreen extends ConsumerWidget {
             icon: Icons.badge,
             label: 'Samaj ID',
             value: user.samajId ?? l10n.notAssigned,
-            color: DesignTokens.primaryOrange,
+            color: AppColors.primaryOrange,
           ),
         ),
         const SizedBox(width: DesignTokens.spacingM),
@@ -457,7 +459,7 @@ class ProfileScreen extends ConsumerWidget {
                   label,
                   style: TextStyle(
                     fontSize: DesignTokens.fontSizeS,
-                    color: DesignTokens.textSecondary,
+                    color: AppColors.textSecondary,
                     fontWeight: DesignTokens.fontWeightMedium,
                   ),
                 ),
@@ -468,7 +470,7 @@ class ProfileScreen extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: DesignTokens.fontSizeM,
-                    color: DesignTokens.textPrimary,
+                    color: AppColors.textPrimary,
                     fontWeight: DesignTokens.fontWeightBold,
                   ),
                 ),
@@ -495,15 +497,15 @@ class ProfileScreen extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: DesignTokens.spacingM),
       decoration: BoxDecoration(
-        color: DesignTokens.backgroundWhite,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(DesignTokens.radiusL),
         border: Border.all(
-          color: DesignTokens.borderLight,
+          color: AppColors.borderLight,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: DesignTokens.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -517,8 +519,8 @@ class ProfileScreen extends ConsumerWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  DesignTokens.primaryOrange.withValues(alpha: 0.1),
-                  DesignTokens.primaryOrange.withValues(alpha: 0.05),
+                  AppColors.primaryOrange.withValues(alpha: 0.1),
+                  AppColors.primaryOrange.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: const BorderRadius.only(
@@ -531,13 +533,13 @@ class ProfileScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: DesignTokens.primaryOrange.withValues(alpha: 0.2),
+                    color: AppColors.primaryOrange.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(DesignTokens.radiusS),
                   ),
                   child: Icon(
                     icon,
                     size: DesignTokens.iconSizeM,
-                    color: DesignTokens.primaryOrange,
+                    color: AppColors.primaryOrange,
                   ),
                 ),
                 const SizedBox(width: DesignTokens.spacingM),
@@ -547,7 +549,7 @@ class ProfileScreen extends ConsumerWidget {
                     style: const TextStyle(
                       fontSize: DesignTokens.fontSizeXL,
                       fontWeight: DesignTokens.fontWeightBold,
-                      color: DesignTokens.textPrimary,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                 ),
@@ -555,7 +557,7 @@ class ProfileScreen extends ConsumerWidget {
                   IconButton(
                     icon: const Icon(Icons.edit_outlined),
                     iconSize: DesignTokens.iconSizeM,
-                    color: DesignTokens.primaryOrange,
+                    color: AppColors.primaryOrange,
                     tooltip: 'Edit',
                     onPressed: onEdit,
                     padding: EdgeInsets.zero,
@@ -596,13 +598,13 @@ class ProfileScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: DesignTokens.grey100,
+              color: AppColors.grey100,
               borderRadius: BorderRadius.circular(DesignTokens.radiusS),
             ),
             child: Icon(
               icon,
               size: DesignTokens.iconSizeM,
-              color: DesignTokens.primaryOrange,
+              color: AppColors.primaryOrange,
             ),
           ),
           const SizedBox(width: DesignTokens.spacingM),
@@ -614,7 +616,7 @@ class ProfileScreen extends ConsumerWidget {
                   label,
                   style: TextStyle(
                     fontSize: DesignTokens.fontSizeS,
-                    color: DesignTokens.textSecondary,
+                    color: AppColors.textSecondary,
                     fontWeight: DesignTokens.fontWeightMedium,
                   ),
                 ),
@@ -624,7 +626,7 @@ class ProfileScreen extends ConsumerWidget {
                   style: const TextStyle(
                     fontSize: DesignTokens.fontSizeM,
                     fontWeight: DesignTokens.fontWeightRegular,
-                    color: DesignTokens.textPrimary,
+                    color: AppColors.textPrimary,
                   ),
                   maxLines: isMultiline ? null : 1,
                   overflow: isMultiline
@@ -647,7 +649,7 @@ class ProfileScreen extends ConsumerWidget {
     required bool isPositive,
   }) {
     final Color baseColor =
-        isPositive ? DesignTokens.successColor : DesignTokens.warningColor;
+        isPositive ? AppColors.successColor : AppColors.warningColor;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: DesignTokens.spacingM),
@@ -674,7 +676,7 @@ class ProfileScreen extends ConsumerWidget {
                   label,
                   style: TextStyle(
                     fontSize: DesignTokens.fontSizeS,
-                    color: DesignTokens.textSecondary,
+                    color: AppColors.textSecondary,
                     fontWeight: DesignTokens.fontWeightMedium,
                   ),
                 ),
@@ -729,7 +731,7 @@ class ProfileScreen extends ConsumerWidget {
             child: Text(
               'Close',
               style: TextStyle(
-                color: DesignTokens.textSecondary,
+                color: AppColors.textSecondary,
                 fontSize: DesignTokens.fontSizeM,
               ),
             ),
@@ -768,7 +770,7 @@ class ProfileScreen extends ConsumerWidget {
                 style: const TextStyle(
                   fontSize: DesignTokens.fontSizeXL,
                   fontWeight: DesignTokens.fontWeightBold,
-                  color: DesignTokens.textPrimary,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ),
@@ -782,7 +784,7 @@ class ProfileScreen extends ConsumerWidget {
               l10n.areYouSureLogout,
               style: const TextStyle(
                 fontSize: DesignTokens.fontSizeM,
-                color: DesignTokens.textPrimary,
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: DesignTokens.spacingS),
@@ -790,7 +792,7 @@ class ProfileScreen extends ConsumerWidget {
               l10n.logoutConfirmation,
               style: const TextStyle(
                 fontSize: DesignTokens.fontSizeS,
-                color: DesignTokens.textSecondary,
+                color: AppColors.textSecondary,
               ),
             ),
           ],
@@ -801,7 +803,7 @@ class ProfileScreen extends ConsumerWidget {
             child: Text(
               l10n.cancel,
               style: const TextStyle(
-                color: DesignTokens.textSecondary,
+                color: AppColors.textSecondary,
                 fontSize: DesignTokens.fontSizeM,
               ),
             ),

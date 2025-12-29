@@ -3,8 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/page_transitions.dart';
 import '../../../../core/widgets/loading_overlay.dart';
+import '../../../../core/widgets/error_state_widget.dart';
+import '../../../../core/widgets/empty_state_widget.dart';
+import '../../../../core/widgets/app_network_image.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/animations/staggered_list_animation.dart';
 import '../../domain/models/vadodara_news_model.dart';
 import '../../data/vadodara_news_service.dart';
@@ -277,12 +282,12 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
         }
       },
       child: Scaffold(
-      backgroundColor: DesignTokens.backgroundWhite,
+      backgroundColor: AppColors.backgroundWhite,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(l10n.newsAnnouncements),
         centerTitle: true,
-        backgroundColor: DesignTokens.backgroundWhite,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         actions: [
           IconButton(
@@ -293,9 +298,9 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
-          labelColor: DesignTokens.primaryOrange,
-          unselectedLabelColor: DesignTokens.textSecondary,
-          indicatorColor: DesignTokens.primaryOrange,
+          labelColor: AppColors.primaryOrange,
+          unselectedLabelColor: AppColors.textSecondary,
+          indicatorColor: AppColors.primaryOrange,
           tabs: [
             Tab(text: l10n.social),
             Tab(text: l10n.gujaratNews),
@@ -329,26 +334,21 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
             Icon(
               Icons.pause_circle_outline,
               size: 80,
-              color: DesignTokens.primaryOrange.withValues(alpha: 0.6),
+              color: AppColors.primaryOrange.withValues(alpha: 0.6),
             ),
             const SizedBox(height: DesignTokens.spacingL),
             Text(
               l10n.socialNewsPaused,
-              style: const TextStyle(
-                fontSize: DesignTokens.fontSizeXL,
-                fontWeight: DesignTokens.fontWeightBold,
-                color: DesignTokens.textPrimary,
-              ),
+              style: AppTextStyles.headline6(context),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: DesignTokens.spacingM),
             Text(
               l10n.socialNewsPausedDescription,
-              style: TextStyle(
-                fontSize: DesignTokens.fontSizeM,
-                color: DesignTokens.textSecondary,
-                height: 1.5,
-              ),
+              style: AppTextStyles.withColor(
+                AppTextStyles.bodySmall(context),
+                AppColors.textSecondary,
+              ).copyWith(height: 1.5),
               textAlign: TextAlign.center,
             ),
           ],
@@ -364,59 +364,23 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
     }
 
     if (_newsError != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: DesignTokens.errorColor,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _newsError!.contains('API key')
-                  ? l10n.apiKeyNotSet
-                  : l10n.failedToLoadNews,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: DesignTokens.errorColor),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: _loadVadodaraNews,
-              icon: const Icon(Icons.refresh),
-              label: Text(l10n.refresh),
-            ),
-          ],
-        ),
+      return ErrorStateWidget(
+        error: _newsError,
+        title: _newsError!.contains('API key')
+            ? l10n.apiKeyNotSet
+            : l10n.failedToLoadNews,
+        onRetry: _loadVadodaraNews,
       );
     }
 
     if (_vadodaraNews.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.newspaper_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l10n.noNewsAvailable,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () => _loadVadodaraNews(loadMore: false),
-              icon: const Icon(Icons.refresh),
-              label: Text(l10n.refresh),
-            ),
-          ],
+      return EmptyStateWidget(
+        icon: Icons.newspaper_outlined,
+        title: l10n.noNewsAvailable,
+        action: ElevatedButton.icon(
+          onPressed: () => _loadVadodaraNews(loadMore: false),
+          icon: const Icon(Icons.refresh),
+          label: Text(l10n.refresh),
         ),
       );
     }
@@ -445,9 +409,11 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                 child: Center(child: InlineLoader()),
               );
             }
-            return StaggeredListAnimation(
-              index: index,
-              child: _buildVadodaraNewsCard(context, _vadodaraNews[index], l10n),
+            return RepaintBoundary(
+              child: StaggeredListAnimation(
+                index: index,
+                child: _buildVadodaraNewsCard(context, _vadodaraNews[index], l10n),
+              ),
             );
           },
         ),
@@ -462,59 +428,23 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
     }
 
     if (_rajasthanNewsError != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: DesignTokens.errorColor,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _rajasthanNewsError!.contains('API key')
-                  ? l10n.apiKeyNotSet
-                  : l10n.failedToLoadNews,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: DesignTokens.errorColor),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: _loadRajasthanNews,
-              icon: const Icon(Icons.refresh),
-              label: Text(l10n.refresh),
-            ),
-          ],
-        ),
+      return ErrorStateWidget(
+        error: _rajasthanNewsError,
+        title: _rajasthanNewsError!.contains('API key')
+            ? l10n.apiKeyNotSet
+            : l10n.failedToLoadNews,
+        onRetry: _loadRajasthanNews,
       );
     }
 
     if (_rajasthanNews.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.newspaper_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l10n.noNewsAvailable,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () => _loadRajasthanNews(loadMore: false),
-              icon: const Icon(Icons.refresh),
-              label: Text(l10n.refresh),
-            ),
-          ],
+      return EmptyStateWidget(
+        icon: Icons.newspaper_outlined,
+        title: l10n.noNewsAvailable,
+        action: ElevatedButton.icon(
+          onPressed: () => _loadRajasthanNews(loadMore: false),
+          icon: const Icon(Icons.refresh),
+          label: Text(l10n.refresh),
         ),
       );
     }
@@ -560,59 +490,23 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
     }
 
     if (_businessNewsError != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: DesignTokens.errorColor,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _businessNewsError!.contains('API key')
-                  ? l10n.apiKeyNotSet
-                  : l10n.failedToLoadNews,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: DesignTokens.errorColor),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: _loadBusinessNews,
-              icon: const Icon(Icons.refresh),
-              label: Text(l10n.refresh),
-            ),
-          ],
-        ),
+      return ErrorStateWidget(
+        error: _businessNewsError,
+        title: _businessNewsError!.contains('API key')
+            ? l10n.apiKeyNotSet
+            : l10n.failedToLoadNews,
+        onRetry: _loadBusinessNews,
       );
     }
 
     if (_businessNews.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.business_center_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l10n.noNewsAvailable,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () => _loadBusinessNews(loadMore: false),
-              icon: const Icon(Icons.refresh),
-              label: Text(l10n.refresh),
-            ),
-          ],
+      return EmptyStateWidget(
+        icon: Icons.business_center_outlined,
+        title: l10n.noNewsAvailable,
+        action: ElevatedButton.icon(
+          onPressed: () => _loadBusinessNews(loadMore: false),
+          icon: const Icon(Icons.refresh),
+          label: Text(l10n.refresh),
         ),
       );
     }
@@ -682,18 +576,17 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (news.imageUrl != null)
-              ClipRRect(
+              AppNetworkImage(
+                url: news.imageUrl!,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(DesignTokens.radiusM),
                 ),
-                child: Image.network(
-                  news.imageUrl!,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const SizedBox(),
-                ),
+                // Optimize memory: limit cache to display size (200px height)
+                cacheWidth: 800, // 4x for retina displays on 200px height
+                cacheHeight: 400, // 2x for retina displays
               ),
             Padding(
               padding: const EdgeInsets.all(DesignTokens.spacingM),
@@ -702,18 +595,13 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                 children: [
                   Text(
                     news.title,
-                    style: const TextStyle(
-                      fontSize: DesignTokens.fontSizeXL,
-                      fontWeight: DesignTokens.fontWeightBold,
-                    ),
+                    style: AppTextStyles.headline6(context),
                   ),
                   if (news.description.isNotEmpty) ...[
                     const SizedBox(height: DesignTokens.spacingS),
                     Text(
                       news.description,
-                      style: TextStyle(
-                        fontSize: DesignTokens.fontSizeM,
-                        color: DesignTokens.textPrimary,
+                      style: AppTextStyles.bodySmall(context).copyWith(
                         height: 1.5,
                       ),
                       maxLines: 3,
@@ -727,15 +615,15 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                         Icon(
                           Icons.article,
                           size: 16,
-                          color: DesignTokens.textSecondary,
+                          color: AppColors.textSecondary,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: DesignTokens.spacingXS),
                         Flexible(
                           child: Text(
                             news.source!,
-                            style: TextStyle(
-                              fontSize: DesignTokens.fontSizeS,
-                              color: DesignTokens.textSecondary,
+                            style: AppTextStyles.withColor(
+                              AppTextStyles.bodyExtraSmall(context),
+                              AppColors.textSecondary,
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -747,15 +635,15 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                         Icon(
                           Icons.calendar_today,
                           size: 16,
-                          color: DesignTokens.textSecondary,
+                          color: AppColors.textSecondary,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: DesignTokens.spacingXS),
                         Flexible(
                           child: Text(
                             '${l10n.publishedOn}: ${dateFormat.format(news.pubDate!)}',
-                            style: TextStyle(
-                              fontSize: DesignTokens.fontSizeS,
-                              color: DesignTokens.textSecondary,
+                            style: AppTextStyles.withColor(
+                              AppTextStyles.bodyExtraSmall(context),
+                              AppColors.textSecondary,
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -768,10 +656,12 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                     const SizedBox(height: DesignTokens.spacingS),
                     Text(
                       l10n.readMore,
-                      style: TextStyle(
-                        fontSize: DesignTokens.fontSizeS,
-                        color: DesignTokens.primaryOrange,
-                        fontWeight: DesignTokens.fontWeightSemiBold,
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.withWeight(
+                          AppTextStyles.bodyExtraSmall(context),
+                          DesignTokens.fontWeightSemiBold,
+                        ),
+                        AppColors.primaryOrange,
                       ),
                     ),
                   ],

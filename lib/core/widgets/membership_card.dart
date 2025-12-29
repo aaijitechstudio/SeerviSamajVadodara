@@ -330,6 +330,8 @@ class _MembershipCardState extends State<MembershipCard>
                       ? CachedNetworkImage(
                           imageUrl: widget.profileImageUrl!,
                           fit: BoxFit.cover,
+                          memCacheWidth: 200, // Limit memory usage
+                          memCacheHeight: 200,
                           placeholder: (context, url) => Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(

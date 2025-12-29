@@ -144,7 +144,7 @@ class HistoryScreen extends StatelessWidget {
               right: DesignTokens.spacingM,
             ),
             decoration: BoxDecoration(
-              color: DesignTokens.primaryOrange,
+              color: AppColors.primaryOrange,
               shape: BoxShape.circle,
             ),
           ),

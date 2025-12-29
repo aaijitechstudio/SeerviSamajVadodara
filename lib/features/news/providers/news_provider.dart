@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/models/post_model.dart';
 import '../../../shared/data/firebase_service.dart';
 
-// News controller provider
-final newsControllerProvider = NotifierProvider<NewsController, NewsState>(() {
+// News controller provider (auto-disposing for better memory management)
+final newsControllerProvider = NotifierProvider.autoDispose<NewsController, NewsState>(() {
   return NewsController();
 });
 
@@ -57,7 +57,7 @@ class NewsState {
 }
 
 // News controller
-class NewsController extends Notifier<NewsState> {
+class NewsController extends AutoDisposeNotifier<NewsState> {
   @override
   NewsState build() {
     return const NewsState();

@@ -7,14 +7,60 @@ import '../../domain/models/skill_model.dart';
 import '../../domain/models/exam_model.dart';
 import '../../domain/models/success_story_model.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
-import '../../../../core/animations/staggered_list_animation.dart';
+import '../../../../core/providers/ui_state_provider.dart';
 import 'career_detail_screen.dart';
 import 'scholarship_detail_screen.dart';
 import 'skill_detail_screen.dart';
 import 'exam_detail_screen.dart';
 import 'success_story_detail_screen.dart';
 import 'vedic_siksha_screen.dart';
+
+// Helper class for flattened search results
+class _SearchResultItem {
+  final String? title;
+  final CareerModel? career;
+  final ScholarshipModel? scholarship;
+  final SkillModel? skill;
+  final ExamModel? exam;
+  final SuccessStoryModel? story;
+  final bool isHeader;
+
+  _SearchResultItem._({
+    this.title,
+    this.career,
+    this.scholarship,
+    this.skill,
+    this.exam,
+    this.story,
+    required this.isHeader,
+  });
+
+  factory _SearchResultItem.header(String title) {
+    return _SearchResultItem._(title: title, isHeader: true);
+  }
+
+  factory _SearchResultItem.career(CareerModel career) {
+    return _SearchResultItem._(career: career, isHeader: false);
+  }
+
+  factory _SearchResultItem.scholarship(ScholarshipModel scholarship) {
+    return _SearchResultItem._(scholarship: scholarship, isHeader: false);
+  }
+
+  factory _SearchResultItem.skill(SkillModel skill) {
+    return _SearchResultItem._(skill: skill, isHeader: false);
+  }
+
+  factory _SearchResultItem.exam(ExamModel exam) {
+    return _SearchResultItem._(exam: exam, isHeader: false);
+  }
+
+  factory _SearchResultItem.story(SuccessStoryModel story) {
+    return _SearchResultItem._(story: story, isHeader: false);
+  }
+}
 
 /// Provider for Education Repository
 final educationRepositoryProvider = Provider<EducationRepository>((ref) {
@@ -33,7 +79,6 @@ class _EducationCareerScreenState
     extends ConsumerState<EducationCareerScreen> {
   final TextEditingController _searchController = TextEditingController();
   final EducationRepository _repository = EducationRepository();
-  bool _isSearching = false;
   Map<String, List<dynamic>> _searchResults = {};
 
   @override
@@ -45,21 +90,19 @@ class _EducationCareerScreenState
   Future<void> _performSearch(String query) async {
     if (query.isEmpty) {
       setState(() {
-        _isSearching = false;
         _searchResults = {};
       });
+      ref.read(searchActiveProvider.notifier).state = false;
       return;
     }
 
-    setState(() {
-      _isSearching = true;
-    });
+    ref.read(searchActiveProvider.notifier).state = true;
 
     final results = await _repository.search(query);
     setState(() {
       _searchResults = results;
-      _isSearching = false;
     });
+    ref.read(searchActiveProvider.notifier).state = false;
   }
 
   @override
@@ -91,7 +134,7 @@ class _EducationCareerScreenState
                       )
                     : null,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(DesignTokens.radiusM),
                 ),
                 filled: true,
                 fillColor: Colors.grey[100],
@@ -102,11 +145,16 @@ class _EducationCareerScreenState
 
           // Content
           Expanded(
-            child: _isSearching
-                ? const Center(child: CircularProgressIndicator())
-                : _searchController.text.isNotEmpty
-                    ? _buildSearchResults()
-                    : _buildMainContent(),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final isSearching = ref.watch(searchActiveProvider);
+                return isSearching
+                    ? const Center(child: CircularProgressIndicator())
+                    : _searchController.text.isNotEmpty
+                        ? _buildSearchResults()
+                        : _buildMainContent();
+              },
+            ),
           ),
         ],
       ),
@@ -120,101 +168,139 @@ class _EducationCareerScreenState
       );
     }
 
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        if (_searchResults['careers']!.isNotEmpty) ...[
-          _buildSectionHeader('Careers'),
-          ...(_searchResults['careers'] as List<CareerModel>)
-              .map((career) => _buildCareerCard(career)),
-        ],
-        if (_searchResults['scholarships']!.isNotEmpty) ...[
-          _buildSectionHeader('Scholarships'),
-          ...(_searchResults['scholarships'] as List<ScholarshipModel>)
-              .map((scholarship) => _buildScholarshipCard(scholarship)),
-        ],
-        if (_searchResults['skills']!.isNotEmpty) ...[
-          _buildSectionHeader('Skills'),
-          ...(_searchResults['skills'] as List<SkillModel>)
-              .map((skill) => _buildSkillCard(skill)),
-        ],
-        if (_searchResults['exams']!.isNotEmpty) ...[
-          _buildSectionHeader('Exams'),
-          ...(_searchResults['exams'] as List<ExamModel>)
-              .map((exam) => _buildExamCard(exam)),
-        ],
-        if (_searchResults['stories']!.isNotEmpty) ...[
-          _buildSectionHeader('Success Stories'),
-          ...(_searchResults['stories'] as List<SuccessStoryModel>)
-              .map((story) => _buildSuccessStoryCard(story)),
-        ],
-      ],
+    // Build flattened list for ListView.builder
+    final List<_SearchResultItem> items = [];
+
+    if (_searchResults['careers']!.isNotEmpty) {
+      items.add(_SearchResultItem.header('Careers'));
+      for (var career in _searchResults['careers'] as List<CareerModel>) {
+        items.add(_SearchResultItem.career(career));
+      }
+    }
+    if (_searchResults['scholarships']!.isNotEmpty) {
+      items.add(_SearchResultItem.header('Scholarships'));
+      for (var scholarship in _searchResults['scholarships'] as List<ScholarshipModel>) {
+        items.add(_SearchResultItem.scholarship(scholarship));
+      }
+    }
+    if (_searchResults['skills']!.isNotEmpty) {
+      items.add(_SearchResultItem.header('Skills'));
+      for (var skill in _searchResults['skills'] as List<SkillModel>) {
+        items.add(_SearchResultItem.skill(skill));
+      }
+    }
+    if (_searchResults['exams']!.isNotEmpty) {
+      items.add(_SearchResultItem.header('Exams'));
+      for (var exam in _searchResults['exams'] as List<ExamModel>) {
+        items.add(_SearchResultItem.exam(exam));
+      }
+    }
+    if (_searchResults['stories']!.isNotEmpty) {
+      items.add(_SearchResultItem.header('Success Stories'));
+      for (var story in _searchResults['stories'] as List<SuccessStoryModel>) {
+        items.add(_SearchResultItem.story(story));
+      }
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(DesignTokens.spacingM),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        if (item.isHeader) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: index > 0 ? DesignTokens.spacingM : 0,
+            ),
+            child: _buildSectionHeader(item.title!),
+          );
+        } else {
+          return RepaintBoundary(
+            child: _buildSearchResultItem(item),
+          );
+        }
+      },
     );
+  }
+
+  Widget _buildSearchResultItem(_SearchResultItem item) {
+    if (item.career != null) {
+      return _buildCareerCard(item.career!);
+    } else if (item.scholarship != null) {
+      return _buildScholarshipCard(item.scholarship!);
+    } else if (item.skill != null) {
+      return _buildSkillCard(item.skill!);
+    } else if (item.exam != null) {
+      return _buildExamCard(item.exam!);
+    } else if (item.story != null) {
+      return _buildSuccessStoryCard(item.story!);
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildMainContent() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(DesignTokens.spacingM),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Hero Banner
           _buildHeroBanner(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Career by Stage
           _buildSectionHeader('Career Guidance by Stage'),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildCareerByStage(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Scholarships
           _buildSectionHeader('Scholarships & Financial Help'),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildScholarshipsSection(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Career Paths
           _buildSectionHeader('Career Paths'),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildCareerPaths(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Skills
           _buildSectionHeader('Skill Development'),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildSkillsSection(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Exams
           _buildSectionHeader('Exams & Competitive'),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildExamsSection(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Success Stories
           _buildSectionHeader('Success Stories'),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildSuccessStoriesSection(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Parent Guidance
           _buildSectionHeader('Parent Guidance'),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildParentGuidance(),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Vedic Siksha Section
           _buildSectionHeader('वैदिक शिक्षा (Vedic Siksha)'),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildVedicSikshaSection(),
         ],
       ),
@@ -224,7 +310,7 @@ class _EducationCareerScreenState
   Widget _buildHeroBanner() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(DesignTokens.spacingL - 4),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -232,7 +318,7 @@ class _EducationCareerScreenState
             AppColors.primaryOrange.withOpacity(0.05),
           ],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(DesignTokens.radiusL),
       ),
       child: Column(
         children: [
@@ -241,7 +327,7 @@ class _EducationCareerScreenState
             size: 48,
             color: AppColors.primaryOrange,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: DesignTokens.spacingM * 0.75),
           SizedBox(
             width: double.infinity,
             child: Text(
@@ -254,7 +340,7 @@ class _EducationCareerScreenState
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: DesignTokens.spacingS),
           SizedBox(
             width: double.infinity,
             child: Text(
@@ -349,7 +435,7 @@ class _EducationCareerScreenState
           borderRadius: BorderRadius.circular(12),
         ),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(DesignTokens.spacingM),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             gradient: LinearGradient(
@@ -365,7 +451,7 @@ class _EducationCareerScreenState
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: 40, color: AppColors.primaryOrange),
-              const SizedBox(height: 8),
+              SizedBox(height: DesignTokens.spacingS),
               Text(
                 title,
                 style: const TextStyle(
@@ -517,7 +603,7 @@ class _EducationCareerScreenState
                 color: AppColors.primaryOrange,
                 size: 32,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: DesignTokens.spacingS),
               Text(
                 skill.title,
                 style: const TextStyle(
@@ -615,7 +701,7 @@ class _EducationCareerScreenState
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(DesignTokens.spacingM),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -634,7 +720,7 @@ class _EducationCareerScreenState
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: DesignTokens.spacingS),
               Text(
                 story.field,
                 style: TextStyle(
@@ -642,7 +728,7 @@ class _EducationCareerScreenState
                   fontSize: 12,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: DesignTokens.spacingS),
               Expanded(
                 child: Text(
                   story.journey,
@@ -747,7 +833,7 @@ class _EducationCareerScreenState
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(DesignTokens.spacingM),
           child: Row(
             children: [
               Container(
@@ -759,7 +845,7 @@ class _EducationCareerScreenState
                       AppColors.primaryOrange.withOpacity(0.1),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(DesignTokens.radiusM),
                 ),
                 child: const Icon(
                   Icons.menu_book,

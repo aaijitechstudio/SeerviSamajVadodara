@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -30,15 +31,15 @@ class AboutUsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    DesignTokens.primaryOrange.withValues(alpha: 0.1),
-                    DesignTokens.primaryOrange.withValues(alpha: 0.05),
+                    AppColors.primaryOrange.withValues(alpha: 0.1),
+                    AppColors.primaryOrange.withValues(alpha: 0.05),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(DesignTokens.radiusL),
                 border: Border.all(
-                  color: DesignTokens.primaryOrange.withValues(alpha: 0.2),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.2),
                 ),
               ),
               child: Row(
@@ -46,7 +47,7 @@ class AboutUsScreen extends StatelessWidget {
                   Icon(
                     Icons.info_outline,
                     size: DesignTokens.iconSizeXL,
-                    color: DesignTokens.primaryOrange,
+                    color: AppColors.primaryOrange,
                   ),
                   const SizedBox(width: DesignTokens.spacingM),
                   Expanded(
@@ -55,7 +56,7 @@ class AboutUsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: DesignTokens.fontSizeXL,
                         fontWeight: DesignTokens.fontWeightBold,
-                        color: DesignTokens.primaryOrange,
+                        color: AppColors.primaryOrange,
                       ),
                     ),
                   ),
@@ -68,7 +69,7 @@ class AboutUsScreen extends StatelessWidget {
               l10n.aboutContent,
               style: TextStyle(
                 fontSize: DesignTokens.fontSizeM,
-                color: DesignTokens.textPrimary,
+                color: AppColors.textPrimary,
                 height: 1.6,
               ),
             ),
@@ -79,7 +80,7 @@ class AboutUsScreen extends StatelessWidget {
               icon: Icons.flag,
               title: l10n.ourMission,
               content: l10n.missionContent,
-              color: DesignTokens.featureBlue,
+              color: AppColors.featureBlue,
             ),
             const SizedBox(height: DesignTokens.spacingM),
             // Vision
@@ -88,7 +89,7 @@ class AboutUsScreen extends StatelessWidget {
               icon: Icons.remove_red_eye,
               title: l10n.ourVision,
               content: l10n.visionContent,
-              color: DesignTokens.featureGreen,
+              color: AppColors.featureGreen,
             ),
             const SizedBox(height: DesignTokens.spacingM),
             // Values
@@ -97,7 +98,7 @@ class AboutUsScreen extends StatelessWidget {
               icon: Icons.favorite,
               title: l10n.ourValues,
               content: l10n.valuesContent,
-              color: DesignTokens.featurePurple,
+              color: AppColors.featurePurple,
             ),
           ],
         ),
@@ -115,14 +116,14 @@ class AboutUsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(DesignTokens.spacingM),
       decoration: BoxDecoration(
-        color: DesignTokens.backgroundWhite,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(DesignTokens.radiusM),
         border: Border.all(
           color: color.withValues(alpha: 0.3),
         ),
         boxShadow: [
           BoxShadow(
-            color: DesignTokens.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: DesignTokens.elevationLow,
             offset: const Offset(0, 2),
           ),
@@ -151,7 +152,7 @@ class AboutUsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeL,
                   fontWeight: DesignTokens.fontWeightBold,
-                  color: DesignTokens.textPrimary,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -161,7 +162,7 @@ class AboutUsScreen extends StatelessWidget {
             content,
             style: TextStyle(
               fontSize: DesignTokens.fontSizeM,
-              color: DesignTokens.textSecondary,
+              color: AppColors.textSecondary,
               height: 1.5,
             ),
           ),

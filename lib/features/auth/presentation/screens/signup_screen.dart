@@ -10,6 +10,8 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/google_sign_in_button.dart';
 import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
+import '../../../../core/utils/password_validator.dart';
+import '../../../../core/widgets/password_strength_indicator.dart';
 import '../../../../shared/data/firebase_service.dart';
 import '../../../home/presentation/screens/main_navigation_screen.dart';
 import 'login_screen.dart';
@@ -76,8 +78,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              DesignTokens.primaryOrange.withValues(alpha: 0.1),
-              DesignTokens.backgroundWhite,
+              AppColors.primaryOrange.withValues(alpha: 0.1),
+              AppColors.backgroundWhite,
             ],
           ),
         ),
@@ -111,8 +113,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget _buildStepIndicator(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 24.0,
-        vertical: 16.0,
+        horizontal: DesignTokens.spacingL,
+        vertical: DesignTokens.spacingM,
       ),
       child: Row(
         children: [
@@ -128,8 +130,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             width: 40,
             height: 2,
             color: _currentStep > 0
-                ? DesignTokens.primaryOrange
-                : DesignTokens.grey300,
+                ? AppColors.primaryOrange
+                : AppColors.grey300,
           ),
           Expanded(
             child: _buildStepItem(
@@ -158,35 +160,35 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: isActive || isCompleted
-                ? DesignTokens.primaryOrange
-                : DesignTokens.grey300,
+                ? AppColors.primaryOrange
+                : AppColors.grey300,
           ),
           child: Center(
             child: isCompleted
                 ? const Icon(
                     Icons.check,
-                    color: DesignTokens.textOnPrimary,
+                    color: AppColors.textOnPrimary,
                     size: 20,
                   )
                 : Text(
                     '$stepNumber',
                     style: TextStyle(
                       color: isActive || isCompleted
-                          ? DesignTokens.textOnPrimary
-                          : DesignTokens.grey600,
+                          ? AppColors.textOnPrimary
+                          : AppColors.grey600,
                       fontWeight: DesignTokens.fontWeightBold,
                     ),
                   ),
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: DesignTokens.spacingS),
         Text(
           label,
           style: TextStyle(
             fontSize: DesignTokens.fontSizeS,
             color: isActive
-                ? DesignTokens.primaryOrange
-                : DesignTokens.textSecondary,
+                ? AppColors.primaryOrange
+                : AppColors.textSecondary,
             fontWeight: isActive
                 ? DesignTokens.fontWeightBold
                 : DesignTokens.fontWeightRegular,
@@ -199,11 +201,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   Widget _buildStep1(AppLocalizations l10n) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(DesignTokens.spacingL),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 20),
+          SizedBox(height: DesignTokens.spacingXL),
 
           // Profile Image Section
           Center(
@@ -219,12 +221,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: DesignTokens.primaryOrange,
+                            color: AppColors.primaryOrange,
                             width: 3,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: DesignTokens.primaryOrange
+                              color: AppColors.primaryOrange
                                   .withValues(alpha: 0.2),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
@@ -245,9 +247,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      DesignTokens.primaryOrange
+                                      AppColors.primaryOrange
                                           .withValues(alpha: 0.1),
-                                      DesignTokens.primaryOrange
+                                      AppColors.primaryOrange
                                           .withValues(alpha: 0.3),
                                     ],
                                   ),
@@ -255,7 +257,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 child: const Icon(
                                   Icons.person_add,
                                   size: 50,
-                                  color: DesignTokens.primaryOrange,
+                                  color: AppColors.primaryOrange,
                                 ),
                               ),
                       ),
@@ -267,15 +269,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           height: 36,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: DesignTokens.primaryOrange,
+                            color: AppColors.primaryOrange,
                             border: Border.all(
-                              color: DesignTokens.backgroundWhite,
+                              color: AppColors.backgroundWhite,
                               width: 2,
                             ),
                           ),
                           child: const Icon(
                             Icons.camera_alt,
-                            color: DesignTokens.textOnPrimary,
+                            color: AppColors.textOnPrimary,
                             size: 20,
                           ),
                         ),
@@ -283,20 +285,20 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: DesignTokens.spacingM),
                 Text(
                   l10n.profileImage,
                   style: const TextStyle(
                     fontSize: DesignTokens.fontSizeM,
                     fontWeight: DesignTokens.fontWeightSemiBold,
-                    color: DesignTokens.textSecondary,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],
             ),
           ),
 
-          const SizedBox(height: 32),
+          SizedBox(height: DesignTokens.spacingXL),
 
           // Google Sign In Button (Standard Design)
           Consumer(
@@ -310,14 +312,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Divider with "OR"
           Row(
             children: [
               Expanded(child: Divider(color: AppColors.dividerColor)),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: DesignTokens.spacingM),
                 child: Text(
                   l10n.or,
                   style: TextStyle(
@@ -330,7 +332,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Name Field
           TextFormField(
@@ -350,7 +352,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Email Field
           TextFormField(
@@ -371,7 +373,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Phone Field
           TextFormField(
@@ -392,7 +394,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Password Field
           TextFormField(
@@ -412,18 +414,41 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 },
               ),
             ),
+            onChanged: (value) {
+              setState(() {}); // Trigger rebuild to update strength indicator
+            },
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return l10n.pleaseEnterPassword;
               }
+              // Use new password validator (non-strict mode for backward compatibility)
+              // Still allows 6 chars minimum but recommends 8+
+              final validationError = PasswordValidator.validatePassword(value, strict: false);
+              if (validationError != null) {
+                // Fallback to old message for 6 char minimum
               if (value.length < 6) {
                 return l10n.passwordMustBeAtLeast6;
+                }
+                return validationError;
               }
               return null;
             },
           ),
 
-          const SizedBox(height: 16),
+          // Password Strength Indicator
+          if (_passwordController.text.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(
+                top: DesignTokens.spacingS,
+                bottom: DesignTokens.spacingM,
+              ),
+              child: PasswordStrengthIndicator(
+                password: _passwordController.text,
+                showSuggestions: true,
+              ),
+            )
+          else
+            SizedBox(height: DesignTokens.spacingM),
 
           // Confirm Password Field
           TextFormField(
@@ -456,7 +481,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 32),
+          SizedBox(height: DesignTokens.spacingXL),
 
           // Next Button
           AppButton(
@@ -465,7 +490,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             onPressed: _goToStep2,
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Sign In Link
           Row(
@@ -490,11 +515,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   Widget _buildStep2(AppLocalizations l10n) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(DesignTokens.spacingL),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 20),
+          SizedBox(height: DesignTokens.spacingXL),
 
           // Gotra Field
           TextFormField(
@@ -512,7 +537,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Vadodara Address Field
           TextFormField(
@@ -532,7 +557,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Native Address Field
           TextFormField(
@@ -552,7 +577,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Pratisthan Name Field
           TextFormField(
@@ -564,7 +589,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Terms and Conditions
           Row(
@@ -586,7 +611,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     });
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 12),
+                    padding: const EdgeInsets.only(top: DesignTokens.spacingM),
                     child: Text(
                       l10n.iAgreeToTerms,
                       style: const TextStyle(fontSize: DesignTokens.fontSizeM),
@@ -597,7 +622,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ],
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: DesignTokens.spacingL),
 
           // Error Message
           Consumer(
@@ -623,7 +648,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         style: const TextStyle(color: AppColors.errorText),
                       ),
                       if (isEmailInUse) ...[
-                        const SizedBox(height: 8),
+                        SizedBox(height: DesignTokens.spacingS),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pushReplacement(
@@ -633,7 +658,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             );
                           },
                           style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
+                            padding: EdgeInsets.zero, // Intentionally zero
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
@@ -654,7 +679,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: DesignTokens.spacingM),
 
           // Previous and Sign Up Buttons
           Row(
@@ -668,7 +693,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   isFullWidth: true,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: DesignTokens.spacingM),
               Expanded(
                 flex: 2,
                 child: Consumer(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../../core/constants/design_tokens.dart';
+import '../../../../../core/theme/app_colors.dart';
 
 class AartiScreen extends StatelessWidget {
   const AartiScreen({super.key});
@@ -19,8 +20,8 @@ class AartiScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              DesignTokens.primaryOrange.withValues(alpha: 0.1),
-              DesignTokens.backgroundCream,
+              AppColors.primaryOrange.withValues(alpha: 0.1),
+              AppColors.backgroundCream,
             ],
           ),
         ),
@@ -33,11 +34,11 @@ class AartiScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(DesignTokens.spacingM),
                 decoration: BoxDecoration(
-                  color: DesignTokens.backgroundWhite,
+                  color: AppColors.backgroundWhite,
                   borderRadius: BorderRadius.circular(DesignTokens.radiusM),
                   boxShadow: [
                     BoxShadow(
-                      color: DesignTokens.shadowLight,
+                      color: AppColors.shadowLight,
                       blurRadius: DesignTokens.elevationMedium,
                       offset: const Offset(0, 2),
                     ),
@@ -50,7 +51,7 @@ class AartiScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: DesignTokens.fontSizeL,
                         fontWeight: DesignTokens.fontWeightSemiBold,
-                        color: DesignTokens.textPrimary,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: DesignTokens.spacingM),
@@ -73,7 +74,7 @@ class AartiScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeH4,
                   fontWeight: DesignTokens.fontWeightBold,
-                  color: DesignTokens.primaryOrange,
+                  color: AppColors.primaryOrange,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -93,17 +94,17 @@ class AartiScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(DesignTokens.spacingM),
                 decoration: BoxDecoration(
-                  color: DesignTokens.primaryOrange.withValues(alpha: 0.1),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(DesignTokens.radiusM),
                   border: Border.all(
-                    color: DesignTokens.primaryOrange.withValues(alpha: 0.3),
+                    color: AppColors.primaryOrange.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
                   children: [
                     Icon(
                       Icons.info_outline,
-                      color: DesignTokens.primaryOrange,
+                      color: AppColors.primaryOrange,
                       size: DesignTokens.iconSizeL,
                     ),
                     const SizedBox(height: DesignTokens.spacingS),
@@ -111,7 +112,7 @@ class AartiScreen extends StatelessWidget {
                       l10n.communityRequest,
                       style: TextStyle(
                         fontSize: DesignTokens.fontSizeM,
-                        color: DesignTokens.textPrimary,
+                        color: AppColors.textPrimary,
                         height: 1.5,
                       ),
                       textAlign: TextAlign.center,
@@ -134,7 +135,7 @@ class AartiScreen extends StatelessWidget {
       style: TextStyle(
         fontSize: DesignTokens.fontSizeL,
         fontWeight: DesignTokens.fontWeightMedium,
-        color: DesignTokens.primaryOrange,
+        color: AppColors.primaryOrange,
         fontFamily: DesignTokens.fontFamily,
       ),
       textAlign: TextAlign.center,
@@ -145,11 +146,11 @@ class AartiScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(DesignTokens.spacingL),
       decoration: BoxDecoration(
-        color: DesignTokens.backgroundWhite,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(DesignTokens.radiusM),
         boxShadow: [
           BoxShadow(
-            color: DesignTokens.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: DesignTokens.elevationMedium,
             offset: const Offset(0, 2),
           ),
@@ -160,7 +161,7 @@ class AartiScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: DesignTokens.fontSizeL,
           fontWeight: DesignTokens.fontWeightRegular,
-          color: DesignTokens.textPrimary,
+          color: AppColors.textPrimary,
           height: 1.8,
           letterSpacing: 0.5,
         ),

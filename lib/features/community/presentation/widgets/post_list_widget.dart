@@ -370,7 +370,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
               Icon(
                 Icons.post_add_outlined,
                 size: 80,
-                color: DesignTokens.grey400,
+                color: AppColors.grey400,
               ),
               const SizedBox(height: 24),
               Text(
@@ -378,7 +378,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeXL,
                   fontWeight: DesignTokens.fontWeightBold,
-                  color: DesignTokens.grey700,
+                  color: AppColors.grey700,
                 ),
               ),
               const SizedBox(height: 12),
@@ -386,7 +386,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                 'Be the first to post in this category!',
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeM,
-                  color: DesignTokens.grey500,
+                  color: AppColors.grey500,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -437,7 +437,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                           Icon(
                             Icons.post_add_outlined,
                             size: 80,
-                            color: DesignTokens.grey400,
+                            color: AppColors.grey400,
                           ),
                           const SizedBox(height: 24),
                           Text(
@@ -445,7 +445,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                             style: TextStyle(
                               fontSize: DesignTokens.fontSizeXL,
                               fontWeight: DesignTokens.fontWeightBold,
-                              color: DesignTokens.grey700,
+                              color: AppColors.grey700,
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -457,7 +457,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                                     : 'No member posts found in this category',
                             style: TextStyle(
                               fontSize: DesignTokens.fontSizeM,
-                              color: DesignTokens.grey500,
+                              color: AppColors.grey500,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -485,12 +485,14 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                     final isAdmin = _userCache[post.authorId]?.isAdmin ??
                         post.isAnnouncement;
 
-                    return PostItemWidget(
-                      post: post,
-                      isAdminPost: isAdmin,
-                      onPostUpdated: () {
-                        _refreshPosts();
-                      },
+                    return RepaintBoundary(
+                      child: PostItemWidget(
+                        post: post,
+                        isAdminPost: isAdmin,
+                        onPostUpdated: () {
+                          _refreshPosts();
+                        },
+                      ),
                     );
                   },
                 );

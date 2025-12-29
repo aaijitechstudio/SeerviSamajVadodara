@@ -124,7 +124,7 @@ class HomeQuickAccess extends StatelessWidget {
             border: enabled
                 ? null
                 : Border.all(
-                    color: DesignTokens.grey300,
+                    color: AppColors.grey300,
                     style: BorderStyle.solid,
                   ),
           ),
@@ -134,7 +134,7 @@ class HomeQuickAccess extends StatelessWidget {
               Icon(
                 icon,
                 size: DesignTokens.iconSizeXL,
-                color: enabled ? color : DesignTokens.grey500,
+                color: enabled ? color : AppColors.grey500,
               ),
               const SizedBox(height: DesignTokens.spacingM),
               Text(
@@ -142,7 +142,7 @@ class HomeQuickAccess extends StatelessWidget {
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeL,
                   fontWeight: DesignTokens.fontWeightBold,
-                  color: enabled ? null : DesignTokens.grey500,
+                  color: enabled ? null : AppColors.grey500,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -151,7 +151,7 @@ class HomeQuickAccess extends StatelessWidget {
                 subtitle,
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeS,
-                  color: enabled ? DesignTokens.grey600 : DesignTokens.grey500,
+                  color: enabled ? AppColors.grey600 : AppColors.grey500,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -161,7 +161,7 @@ class HomeQuickAccess extends StatelessWidget {
                   child: Icon(
                     Icons.lock,
                     size: DesignTokens.iconSizeS,
-                    color: DesignTokens.grey400,
+                    color: AppColors.grey400,
                   ),
                 ),
             ],

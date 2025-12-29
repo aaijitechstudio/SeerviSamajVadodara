@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../shared/models/post_model.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../auth/providers/auth_provider.dart';
 import '../widgets/post_list_widget.dart';
 import '../widgets/category_tabs.dart';
 
@@ -17,19 +16,11 @@ class CommunityBoardScreen extends ConsumerStatefulWidget {
 class _CommunityBoardScreenState extends ConsumerState<CommunityBoardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  PostCategory _selectedCategory = PostCategory.discussion;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
-        setState(() {
-          _selectedCategory = PostCategory.values[_tabController.index];
-        });
-      }
-    });
   }
 
   @override
@@ -73,9 +64,7 @@ class _CommunityBoardScreenState extends ConsumerState<CommunityBoardScreen>
           child: CategoryTabs(
             controller: _tabController,
             onCategorySelected: (category) {
-              setState(() {
-                _selectedCategory = category;
-              });
+              // Category selection handled by TabController
             },
           ),
         ),

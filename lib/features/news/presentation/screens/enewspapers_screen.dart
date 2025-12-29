@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/page_transitions.dart';
 import '../../domain/models/epaper_model.dart';
@@ -63,14 +64,14 @@ class ENewspapersScreen extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, color: DesignTokens.primaryOrange, size: 24),
+            Icon(icon, color: AppColors.primaryOrange, size: 24),
             const SizedBox(width: DesignTokens.spacingS),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: DesignTokens.fontSizeXL,
                 fontWeight: DesignTokens.fontWeightBold,
-                color: DesignTokens.textPrimary,
+                color: AppColors.textPrimary,
               ),
             ),
           ],
@@ -96,12 +97,12 @@ class ENewspapersScreen extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: DesignTokens.primaryOrange.withValues(alpha: 0.1),
+            color: AppColors.primaryOrange.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(DesignTokens.radiusS),
           ),
           child: Icon(
             Icons.newspaper,
-            color: DesignTokens.primaryOrange,
+            color: AppColors.primaryOrange,
             size: 24,
           ),
         ),
@@ -114,7 +115,7 @@ class ENewspapersScreen extends StatelessWidget {
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 16,
-          color: DesignTokens.textSecondary,
+          color: AppColors.textSecondary,
         ),
         onTap: () {
           Navigator.of(context).push(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -67,7 +67,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           WebViewWidget(controller: _controller),
           if (_isLoading)
             Container(
-              color: DesignTokens.backgroundWhite,
+              color: AppColors.backgroundWhite,
               child: const Center(
                 child: CircularProgressIndicator(),
               ),

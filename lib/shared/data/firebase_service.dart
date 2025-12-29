@@ -208,6 +208,68 @@ class FirebaseService {
     }
   }
 
+  // Delete user account
+  static Future<void> deleteUserAccount(String uid) async {
+    try {
+      // Delete user document from Firestore
+      await _firestore.collection('users').doc(uid).delete();
+
+      // Delete user's posts
+      final userPostsSnapshot = await _firestore
+          .collection('posts')
+          .where('authorId', isEqualTo: uid)
+          .get();
+
+      final batch = _firestore.batch();
+      for (final doc in userPostsSnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+
+      // Delete user's comments (comments are in posts/{postId}/comments subcollection)
+      // Get all posts first, then delete comments from each post
+      final allPostsSnapshot = await _firestore
+          .collection('posts')
+          .get();
+
+      final commentsBatch = _firestore.batch();
+      int batchCount = 0;
+
+      for (final postDoc in allPostsSnapshot.docs) {
+        final commentsSnapshot = await postDoc.reference
+            .collection('comments')
+            .where('authorId', isEqualTo: uid)
+            .get();
+
+        for (final commentDoc in commentsSnapshot.docs) {
+          commentsBatch.delete(commentDoc.reference);
+          batchCount++;
+
+          // Firestore batch limit is 500 operations
+          if (batchCount >= 450) {
+            await commentsBatch.commit();
+            batchCount = 0;
+          }
+        }
+      }
+
+      if (batchCount > 0) {
+        await commentsBatch.commit();
+      }
+
+      // Delete Firebase Auth user
+      final user = _auth.currentUser;
+      if (user != null && user.uid == uid) {
+        await user.delete();
+      }
+
+      // Sign out
+      await signOut();
+    } catch (e) {
+      throw Exception('Failed to delete account: $e');
+    }
+  }
+
   // Sign in with Google
   static Future<UserCredential?> signInWithGoogle() async {
     // Check network connectivity before making request

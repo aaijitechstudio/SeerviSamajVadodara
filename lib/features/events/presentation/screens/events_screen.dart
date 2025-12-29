@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../../domain/models/event_model.dart';
+import '../../../../core/widgets/app_network_image.dart';
+import '../../../../core/constants/design_tokens.dart';
 
 class EventsScreen extends StatelessWidget {
   const EventsScreen({super.key});
@@ -85,16 +87,17 @@ class EventsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (event.imageUrl != null)
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Image.network(
-                event.imageUrl!,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const SizedBox(),
+            AppNetworkImage(
+              url: event.imageUrl!,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(DesignTokens.radiusM),
               ),
+              // Optimize memory: limit cache to display size (200px height)
+              cacheWidth: 800, // 4x for retina displays
+              cacheHeight: 400, // 2x for retina displays
             ),
           Padding(
             padding: const EdgeInsets.all(16),

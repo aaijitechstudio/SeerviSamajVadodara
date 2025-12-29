@@ -1,90 +1,14 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
 
 /// Design Tokens - All spacing, typography defined here
-/// Colors are now in AppColors for centralized theme management
+/// Colors are in AppColors for centralized theme management
 /// Following Google Material Design 3 principles
+///
+/// Note: All color constants have been moved to AppColors.
+/// Use AppColors for all color references.
 class DesignTokens {
   // Private constructor to prevent instantiation
   DesignTokens._();
-
-  // ==================== Colors (Deprecated - Use AppColors) ====================
-  // These are kept for backward compatibility but will be removed
-  // Use AppColors instead for all color references
-  @Deprecated('Use AppColors.primaryOrange instead')
-  static const Color primaryOrange = AppColors.primaryOrange;
-  @Deprecated('Use AppColors.primaryOrangeDark instead')
-  static const Color primaryOrangeDark = AppColors.primaryOrangeDark;
-  @Deprecated('Use AppColors.primaryOrangeLight instead')
-  static const Color primaryOrangeLight = AppColors.primaryOrangeLight;
-  @Deprecated('Use AppColors.secondarySaffron instead')
-  static const Color secondarySaffron = AppColors.secondarySaffron;
-  @Deprecated('Use AppColors.accentGold instead')
-  static const Color accentGold = AppColors.accentGold;
-  @Deprecated('Use AppColors.backgroundCream instead')
-  static const Color backgroundCream = AppColors.backgroundCream;
-  @Deprecated('Use AppColors.backgroundWhite instead')
-  static const Color backgroundWhite = AppColors.backgroundWhite;
-  @Deprecated('Use AppColors.surfaceColor instead')
-  static const Color surfaceColor = AppColors.surfaceColor;
-  @Deprecated('Use AppColors.textPrimary instead')
-  static const Color textPrimary = AppColors.textPrimary;
-  @Deprecated('Use AppColors.textSecondary instead')
-  static const Color textSecondary = AppColors.textSecondary;
-  @Deprecated('Use AppColors.textTertiary instead')
-  static const Color textTertiary = AppColors.textTertiary;
-  @Deprecated('Use AppColors.textOnPrimary instead')
-  static const Color textOnPrimary = AppColors.textOnPrimary;
-  @Deprecated('Use AppColors.errorColor instead')
-  static const Color errorColor = AppColors.errorColor;
-  @Deprecated('Use AppColors.successColor instead')
-  static const Color successColor = AppColors.successColor;
-  @Deprecated('Use AppColors.warningColor instead')
-  static const Color warningColor = AppColors.warningColor;
-  @Deprecated('Use AppColors.infoColor instead')
-  static const Color infoColor = AppColors.infoColor;
-  @Deprecated('Use AppColors.borderLight instead')
-  static const Color borderLight = AppColors.borderLight;
-  @Deprecated('Use AppColors.borderMedium instead')
-  static const Color borderMedium = AppColors.borderMedium;
-  @Deprecated('Use AppColors.dividerColor instead')
-  static const Color dividerColor = AppColors.dividerColor;
-  @Deprecated('Use AppColors.grey100 instead')
-  static const Color grey100 = AppColors.grey100;
-  @Deprecated('Use AppColors.grey200 instead')
-  static const Color grey200 = AppColors.grey200;
-  @Deprecated('Use AppColors.grey300 instead')
-  static const Color grey300 = AppColors.grey300;
-  @Deprecated('Use AppColors.grey400 instead')
-  static const Color grey400 = AppColors.grey400;
-  @Deprecated('Use AppColors.grey500 instead')
-  static const Color grey500 = AppColors.grey500;
-  @Deprecated('Use AppColors.grey600 instead')
-  static const Color grey600 = AppColors.grey600;
-  @Deprecated('Use AppColors.grey700 instead')
-  static const Color grey700 = AppColors.grey700;
-  @Deprecated('Use AppColors.grey800 instead')
-  static const Color grey800 = AppColors.grey800;
-  @Deprecated('Use AppColors.grey900 instead')
-  static const Color grey900 = AppColors.grey900;
-  @Deprecated('Use AppColors.featureBlue instead')
-  static const Color featureBlue = AppColors.featureBlue;
-  @Deprecated('Use AppColors.featureOrange instead')
-  static const Color featureOrange = AppColors.featureOrange;
-  @Deprecated('Use AppColors.featureGreen instead')
-  static const Color featureGreen = AppColors.featureGreen;
-  @Deprecated('Use AppColors.featurePurple instead')
-  static const Color featurePurple = AppColors.featurePurple;
-  @Deprecated('Use AppColors.featureRed instead')
-  static const Color featureRed = AppColors.featureRed;
-  @Deprecated('Use AppColors.featureTeal instead')
-  static const Color featureTeal = AppColors.featureTeal;
-  @Deprecated('Use AppColors.shadowLight instead')
-  static const Color shadowLight = AppColors.shadowLight;
-  @Deprecated('Use AppColors.shadowMedium instead')
-  static const Color shadowMedium = AppColors.shadowMedium;
-  @Deprecated('Use AppColors.shadowDark instead')
-  static const Color shadowDark = AppColors.shadowDark;
 
   // ==================== Spacing ====================
   static const double spacingXS = 4.0;

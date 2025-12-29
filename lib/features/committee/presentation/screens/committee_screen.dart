@@ -3,10 +3,56 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../../core/constants/design_tokens.dart';
+import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/widgets/custom_app_bar.dart';
 import '../../../../../core/widgets/membership_card.dart';
+import '../../../../../core/providers/ui_state_provider.dart';
 import '../../data/committee_data.dart';
 import '../../domain/models/committee_model.dart';
+
+// Helper class for flattened list items
+class _SectionItem {
+  final String? titleHi;
+  final String? titleEn;
+  final CommitteeModel? member;
+  final double? spacerHeight;
+  final bool isHeader;
+  final bool isSpacer;
+
+  _SectionItem._({
+    this.titleHi,
+    this.titleEn,
+    this.member,
+    this.spacerHeight,
+    required this.isHeader,
+    required this.isSpacer,
+  });
+
+  factory _SectionItem.header(String titleHi, String titleEn) {
+    return _SectionItem._(
+      titleHi: titleHi,
+      titleEn: titleEn,
+      isHeader: true,
+      isSpacer: false,
+    );
+  }
+
+  factory _SectionItem.member(CommitteeModel member) {
+    return _SectionItem._(
+      member: member,
+      isHeader: false,
+      isSpacer: false,
+    );
+  }
+
+  factory _SectionItem.spacer(double height) {
+    return _SectionItem._(
+      spacerHeight: height,
+      isHeader: false,
+      isSpacer: true,
+    );
+  }
+}
 
 class CommitteeScreen extends ConsumerStatefulWidget {
   const CommitteeScreen({super.key});
@@ -17,7 +63,6 @@ class CommitteeScreen extends ConsumerStatefulWidget {
 
 class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
   final TextEditingController _searchController = TextEditingController();
-  bool _isSearchActive = false;
 
   @override
   void dispose() {
@@ -26,12 +71,11 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
   }
 
   void _toggleSearch() {
-    setState(() {
-      _isSearchActive = !_isSearchActive;
-      if (!_isSearchActive) {
-        _searchController.clear();
-      }
-    });
+    final isSearchActive = ref.read(searchActiveProvider.notifier);
+    isSearchActive.state = !isSearchActive.state;
+    if (!isSearchActive.state) {
+      _searchController.clear();
+    }
   }
 
   List<CommitteeModel> _filterMembers(
@@ -56,6 +100,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isSearchActive = ref.watch(searchActiveProvider);
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -63,8 +108,8 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
         showLogo: false,
         actions: [
           IconButton(
-            icon: Icon(_isSearchActive ? Icons.close : Icons.search),
-            tooltip: _isSearchActive ? 'Close search' : 'Search',
+            icon: Icon(isSearchActive ? Icons.close : Icons.search),
+            tooltip: isSearchActive ? 'Close search' : 'Search',
             onPressed: _toggleSearch,
           ),
         ],
@@ -72,7 +117,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
       body: Column(
         children: [
           // Search Bar
-          if (_isSearchActive)
+          if (isSearchActive)
             Padding(
               padding: const EdgeInsets.all(DesignTokens.spacingM),
               child: TextField(
@@ -86,7 +131,6 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
                           icon: const Icon(Icons.clear),
                           onPressed: () {
                             _searchController.clear();
-                            setState(() {});
                           },
                         )
                       : null,
@@ -94,7 +138,10 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
                     borderRadius: BorderRadius.circular(DesignTokens.radiusM),
                   ),
                 ),
-                onChanged: (_) => setState(() {}),
+                onChanged: (_) {
+                  // Trigger rebuild for clear button visibility
+                  setState(() {});
+                },
               ),
             ),
           // Committee List
@@ -109,10 +156,11 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
   Widget _buildCommitteeList(BuildContext context, AppLocalizations l10n) {
     final allMembers = CommitteeData.allMembers;
     final searchQuery = _searchController.text;
+    final isSearchActive = ref.watch(searchActiveProvider);
 
     // Apply search filter if active
     List<CommitteeModel> filteredMembers = allMembers;
-    if (_isSearchActive && searchQuery.isNotEmpty) {
+    if (isSearchActive && searchQuery.isNotEmpty) {
       filteredMembers = _filterMembers(allMembers, searchQuery);
     }
 
@@ -124,14 +172,14 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
             Icon(
               Icons.groups_outlined,
               size: DesignTokens.iconSizeXL,
-              color: DesignTokens.grey400,
+              color: AppColors.grey400,
             ),
             const SizedBox(height: DesignTokens.spacingM),
             Text(
               l10n.noCommitteeMembersYet,
               style: TextStyle(
                 fontSize: DesignTokens.fontSizeXL,
-                color: DesignTokens.grey600,
+                color: AppColors.grey600,
               ),
             ),
           ],
@@ -140,7 +188,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
     }
 
     // If search is active, show filtered results without sections
-    if (_isSearchActive && searchQuery.isNotEmpty) {
+    if (isSearchActive && searchQuery.isNotEmpty) {
       if (filteredMembers.isEmpty) {
         return Center(
           child: Column(
@@ -149,14 +197,14 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
               Icon(
                 Icons.search_off,
                 size: DesignTokens.iconSizeXL,
-                color: DesignTokens.grey400,
+                color: AppColors.grey400,
               ),
               const SizedBox(height: DesignTokens.spacingM),
               Text(
                 'No members found',
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeXL,
-                  color: DesignTokens.grey600,
+                  color: AppColors.grey600,
                 ),
               ),
               const SizedBox(height: DesignTokens.spacingS),
@@ -164,7 +212,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
                 'Try a different search term',
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeM,
-                  color: DesignTokens.grey500,
+                  color: AppColors.grey500,
                 ),
               ),
             ],
@@ -175,32 +223,34 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
       return RefreshIndicator(
         onRefresh: () async {
           // Refresh committee data (for future dynamic data)
-          setState(() {});
+          // No state to refresh for static data
         },
-        child: ListView(
+        child: ListView.builder(
           padding: const EdgeInsets.symmetric(
             horizontal: DesignTokens.spacingM,
             vertical: DesignTokens.spacingM,
           ),
-          children: filteredMembers.asMap().entries.map((entry) {
-            final index = entry.key;
-            final member = entry.value;
+          itemCount: filteredMembers.length,
+          itemBuilder: (context, index) {
+            final member = filteredMembers[index];
             final locale = Localizations.localeOf(context);
-            return MembershipCard(
-              name: member.name,
-              samajId: null,
-              role: member.getLocalizedPosition(locale),
-              location: member.location ?? member.area,
-              profileImageUrl: member.imageUrl,
-              gotra: member.gotra,
-              isVerified: true,
-              isCommitteeMember: true,
-              index: index,
-              onTap: member.phone.isNotEmpty
-                  ? () => _makePhoneCall(member.phone)
-                  : null,
+            return RepaintBoundary(
+              child: MembershipCard(
+                name: member.name,
+                samajId: null,
+                role: member.getLocalizedPosition(locale),
+                location: member.location ?? member.area,
+                profileImageUrl: member.imageUrl,
+                gotra: member.gotra,
+                isVerified: true,
+                isCommitteeMember: true,
+                index: index,
+                onTap: member.phone.isNotEmpty
+                    ? () => _makePhoneCall(member.phone)
+                    : null,
+              ),
             );
-          }).toList(),
+          },
         ),
       );
     }
@@ -209,29 +259,49 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
     final executiveCommittee = CommitteeData.executiveCommittee;
     final executiveMembers = CommitteeData.executiveMembers;
 
+    // Build flattened list for ListView.builder
+    final List<_SectionItem> items = [];
+    if (executiveCommittee.isNotEmpty) {
+      items.add(_SectionItem.header(l10n.executiveCommittee, l10n.executiveCommittee));
+      for (var member in executiveCommittee) {
+        items.add(_SectionItem.member(member));
+      }
+      items.add(_SectionItem.spacer(DesignTokens.spacingL));
+    }
+    if (executiveMembers.isNotEmpty) {
+      items.add(_SectionItem.header(l10n.executiveMembers, l10n.executiveMembers));
+      for (var member in executiveMembers) {
+        items.add(_SectionItem.member(member));
+      }
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
         // Refresh committee data (for future dynamic data)
         setState(() {});
       },
-      child: ListView(
+      child: ListView.builder(
         padding: const EdgeInsets.symmetric(
           horizontal: DesignTokens.spacingM,
           vertical: DesignTokens.spacingM,
         ),
-        children: [
-          // Executive Committee Section
-          if (executiveCommittee.isNotEmpty) ...[
-            _buildSectionHeader(
-              l10n.executiveCommittee,
-              l10n.executiveCommittee,
-            ),
-            const SizedBox(height: DesignTokens.spacingM),
-            ...executiveCommittee.asMap().entries.map((entry) {
-              final index = entry.key;
-              final member = entry.value;
-              final locale = Localizations.localeOf(context);
-              return MembershipCard(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+          if (item.isHeader) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: index > 0 ? DesignTokens.spacingM : 0,
+              ),
+              child: _buildSectionHeader(item.titleHi!, item.titleEn!),
+            );
+          } else if (item.isSpacer) {
+            return SizedBox(height: item.spacerHeight);
+          } else {
+            final member = item.member!;
+            final locale = Localizations.localeOf(context);
+            return RepaintBoundary(
+              child: MembershipCard(
                 name: member.name,
                 samajId: null,
                 role: member.getLocalizedPosition(locale),
@@ -244,39 +314,10 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
                 onTap: member.phone.isNotEmpty
                     ? () => _makePhoneCall(member.phone)
                     : null,
-              );
-            }),
-            const SizedBox(height: DesignTokens.spacingL),
-          ],
-
-          // Executive Members Section
-          if (executiveMembers.isNotEmpty) ...[
-            _buildSectionHeader(
-              l10n.executiveMembers,
-              l10n.executiveMembers,
-            ),
-            const SizedBox(height: DesignTokens.spacingM),
-            ...executiveMembers.asMap().entries.map((entry) {
-              final index = entry.key;
-              final member = entry.value;
-              final locale = Localizations.localeOf(context);
-              return MembershipCard(
-                name: member.name,
-                samajId: null,
-                role: member.getLocalizedPosition(locale),
-                location: member.location ?? member.area,
-                profileImageUrl: member.imageUrl,
-                gotra: member.gotra,
-                isVerified: true,
-                isCommitteeMember: true,
-                index: index,
-                onTap: member.phone.isNotEmpty
-                    ? () => _makePhoneCall(member.phone)
-                    : null,
-              );
-            }),
-          ],
-        ],
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -306,13 +347,13 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            DesignTokens.primaryOrange.withValues(alpha: 0.1),
-            DesignTokens.primaryOrange.withValues(alpha: 0.05),
+            AppColors.primaryOrange.withValues(alpha: 0.1),
+            AppColors.primaryOrange.withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(DesignTokens.radiusM),
         border: Border.all(
-          color: DesignTokens.primaryOrange.withValues(alpha: 0.3),
+          color: AppColors.primaryOrange.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -320,7 +361,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
         children: [
           Icon(
             Icons.group,
-            color: DesignTokens.primaryOrange,
+            color: AppColors.primaryOrange,
             size: 20,
           ),
           const SizedBox(width: DesignTokens.spacingS),
@@ -330,7 +371,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
               style: TextStyle(
                 fontSize: DesignTokens.fontSizeL,
                 fontWeight: DesignTokens.fontWeightBold,
-                color: DesignTokens.textPrimary,
+                color: AppColors.textPrimary,
               ),
             ),
           ),

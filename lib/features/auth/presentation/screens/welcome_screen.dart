@@ -97,15 +97,15 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                       // Samaj Logo with Enhanced Design
                       // Samaj Logo with Enhanced Design (same as welcome screen)
                       Container(
-                        width: 140,
-                        height: 140,
+                        width: logoSize,
+                        height: logoSize,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              DesignTokens.backgroundWhite,
-                              DesignTokens.primaryOrange
+                              AppColors.backgroundWhite,
+                              AppColors.primaryOrange
                                   .withValues(alpha: 0.05),
                             ],
                           ),
@@ -113,14 +113,14 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                               BorderRadius.circular(DesignTokens.radiusXL),
                           boxShadow: [
                             BoxShadow(
-                              color: DesignTokens.primaryOrange
+                              color: AppColors.primaryOrange
                                   .withValues(alpha: 0.15),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                               spreadRadius: 2,
                             ),
                             BoxShadow(
-                              color: DesignTokens.shadowLight,
+                              color: AppColors.shadowLight,
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),

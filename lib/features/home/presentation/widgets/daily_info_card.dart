@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class DailyInfoCard extends StatelessWidget {
   const DailyInfoCard({super.key});
@@ -20,20 +21,20 @@ class DailyInfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            DesignTokens.primaryOrange.withValues(alpha: 0.1),
-            DesignTokens.primaryOrange.withValues(alpha: 0.05),
+            AppColors.primaryOrange.withValues(alpha: 0.1),
+            AppColors.primaryOrange.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(DesignTokens.radiusL),
         border: Border.all(
-          color: DesignTokens.primaryOrange.withValues(alpha: 0.2),
+          color: AppColors.primaryOrange.withValues(alpha: 0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: DesignTokens.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: DesignTokens.elevationMedium,
             offset: const Offset(0, 2),
           ),
@@ -47,12 +48,12 @@ class DailyInfoCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(DesignTokens.spacingS),
                 decoration: BoxDecoration(
-                  color: DesignTokens.primaryOrange.withValues(alpha: 0.15),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(DesignTokens.radiusS),
                 ),
                 child: Icon(
                   Icons.calendar_today,
-                  color: DesignTokens.primaryOrange,
+                  color: AppColors.primaryOrange,
                   size: DesignTokens.iconSizeM,
                 ),
               ),
@@ -65,7 +66,7 @@ class DailyInfoCard extends StatelessWidget {
                       l10n.todaysDate,
                       style: TextStyle(
                         fontSize: DesignTokens.fontSizeS,
-                        color: DesignTokens.textSecondary,
+                        color: AppColors.textSecondary,
                         fontWeight: DesignTokens.fontWeightMedium,
                       ),
                     ),
@@ -75,7 +76,7 @@ class DailyInfoCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: DesignTokens.fontSizeXL,
                         fontWeight: DesignTokens.fontWeightBold,
-                        color: DesignTokens.textPrimary,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ],
@@ -96,7 +97,7 @@ class DailyInfoCard extends StatelessWidget {
               Container(
                 width: 1,
                 height: 40,
-                color: DesignTokens.borderLight,
+                color: AppColors.borderLight,
               ),
               Expanded(
                 child: _buildInfoItem(
@@ -111,10 +112,10 @@ class DailyInfoCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(DesignTokens.spacingM),
             decoration: BoxDecoration(
-              color: DesignTokens.backgroundWhite,
+              color: AppColors.backgroundWhite,
               borderRadius: BorderRadius.circular(DesignTokens.radiusM),
               border: Border.all(
-                color: DesignTokens.primaryOrange.withValues(alpha: 0.1),
+                color: AppColors.primaryOrange.withValues(alpha: 0.1),
               ),
             ),
             child: Row(
@@ -122,7 +123,7 @@ class DailyInfoCard extends StatelessWidget {
                 Icon(
                   Icons.info_outline,
                   size: DesignTokens.iconSizeS,
-                  color: DesignTokens.primaryOrange,
+                  color: AppColors.primaryOrange,
                 ),
                 const SizedBox(width: DesignTokens.spacingS),
                 Expanded(
@@ -130,7 +131,7 @@ class DailyInfoCard extends StatelessWidget {
                     l10n.dailyInfoNote,
                     style: TextStyle(
                       fontSize: DesignTokens.fontSizeS,
-                      color: DesignTokens.textSecondary,
+                      color: AppColors.textSecondary,
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -155,14 +156,14 @@ class DailyInfoCard extends StatelessWidget {
           Icon(
             icon,
             size: DesignTokens.iconSizeS,
-            color: DesignTokens.primaryOrange,
+            color: AppColors.primaryOrange,
           ),
           const SizedBox(height: DesignTokens.spacingXS),
           Text(
             label,
             style: TextStyle(
               fontSize: DesignTokens.fontSizeXS,
-              color: DesignTokens.textSecondary,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: DesignTokens.spacingXS / 2),
@@ -171,7 +172,7 @@ class DailyInfoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: DesignTokens.fontSizeM,
               fontWeight: DesignTokens.fontWeightSemiBold,
-              color: DesignTokens.textPrimary,
+              color: AppColors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),

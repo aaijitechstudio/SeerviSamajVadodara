@@ -2,9 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/models/user_model.dart';
 import '../../../core/repositories/repository_providers.dart';
 
-// Members controller provider
+// Members controller provider (auto-disposing for better memory management)
 final membersControllerProvider =
-    NotifierProvider<MembersController, MembersState>(() {
+    NotifierProvider.autoDispose<MembersController, MembersState>(() {
   return MembersController();
 });
 
@@ -58,7 +58,7 @@ class MembersState {
 }
 
 // Members controller
-class MembersController extends Notifier<MembersState> {
+class MembersController extends AutoDisposeNotifier<MembersState> {
   @override
   MembersState build() {
     return const MembersState();

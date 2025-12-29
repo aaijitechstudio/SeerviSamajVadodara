@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../domain/models/vedic_sikhsa_model.dart';
+import '../../domain/models/vedic_siksha_model.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/screens/web_view_screen.dart';
@@ -35,6 +35,8 @@ class VedicSikshaDetailScreen extends StatelessWidget {
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                memCacheWidth: 800, // Limit memory usage
+                memCacheHeight: 400,
                 placeholder: (context, url) => Container(
                   height: 200,
                   color: AppColors.primaryOrange.withOpacity(0.1),
@@ -168,6 +170,8 @@ class VedicSikshaDetailScreen extends StatelessWidget {
               imageUrl: images[index],
               width: 160,
               fit: BoxFit.cover,
+              memCacheWidth: 320, // Limit memory usage
+              memCacheHeight: 240,
               placeholder: (context, url) => Container(
                 width: 160,
                 color: AppColors.primaryOrange.withOpacity(0.1),

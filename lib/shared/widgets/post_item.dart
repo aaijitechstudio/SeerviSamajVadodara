@@ -150,6 +150,8 @@ class PostItem extends StatelessWidget {
           fit: BoxFit.cover,
           width: double.infinity,
           height: 200,
+          memCacheWidth: 800, // Limit memory usage
+          memCacheHeight: 400,
           placeholder: (context, url) => Container(
             height: 200,
             color: Colors.grey[200],
@@ -179,6 +181,8 @@ class PostItem extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: 200,
                   height: 200,
+                  memCacheWidth: 400, // Limit memory usage
+                  memCacheHeight: 400,
                   placeholder: (context, url) => Container(
                     width: 200,
                     height: 200,
