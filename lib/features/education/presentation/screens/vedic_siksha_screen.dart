@@ -33,25 +33,25 @@ class VedicSikshaScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.primaryOrange.withOpacity(0.15),
-                    AppColors.primaryOrange.withOpacity(0.05),
+                    AppColors.primaryOrange.withValues(alpha: 0.15),
+                    AppColors.primaryOrange.withValues(alpha: 0.05),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: AppColors.primaryOrange.withOpacity(0.3),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
               child: Column(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.menu_book,
                     size: 56,
                     color: AppColors.primaryOrange,
                   ),
-                  SizedBox(height: DesignTokens.spacingM * 0.75),
-                  Text(
+                  const SizedBox(height: DesignTokens.spacingM * 0.75),
+                  const Text(
                     'वैदिक ज्ञान और बुद्धिमत्ता',
                     style: TextStyle(
                       fontSize: 22,
@@ -60,7 +60,7 @@ class VedicSikshaScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: DesignTokens.spacingS),
+                  const SizedBox(height: DesignTokens.spacingS),
                   Text(
                     'Vedic Knowledge & Wisdom',
                     style: TextStyle(
@@ -73,7 +73,7 @@ class VedicSikshaScreen extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: DesignTokens.spacingL),
+            const SizedBox(height: DesignTokens.spacingL),
 
             // Vedic Scriptures Section
             _buildSectionHeader('वैदिक ग्रंथ (Vedic Scriptures)'),
@@ -112,7 +112,7 @@ class VedicSikshaScreen extends StatelessWidget {
               sectionId: 'atharvaveda',
             ),
 
-            SizedBox(height: DesignTokens.spacingL),
+            const SizedBox(height: DesignTokens.spacingL),
 
             // Upanishads Section
             _buildSectionHeader('उपनिषद (Upanishads)'),
@@ -126,7 +126,7 @@ class VedicSikshaScreen extends StatelessWidget {
               sectionId: 'upanishads',
             ),
 
-            SizedBox(height: DesignTokens.spacingL),
+            const SizedBox(height: DesignTokens.spacingL),
 
             // Vedic Philosophy Section
             _buildSectionHeader('वैदिक दर्शन (Vedic Philosophy)'),
@@ -156,7 +156,7 @@ class VedicSikshaScreen extends StatelessWidget {
               sectionId: 'vedanta',
             ),
 
-            SizedBox(height: DesignTokens.spacingL),
+            const SizedBox(height: DesignTokens.spacingL),
 
             // Vedic Values Section
             _buildSectionHeader('वैदिक मूल्य (Vedic Values)'),
@@ -186,7 +186,7 @@ class VedicSikshaScreen extends StatelessWidget {
               sectionId: 'moksha',
             ),
 
-            SizedBox(height: DesignTokens.spacingL),
+            const SizedBox(height: DesignTokens.spacingL),
 
             // Learning Resources
             _buildSectionHeader('शिक्षा संसाधन (Learning Resources)'),
@@ -249,7 +249,7 @@ class VedicSikshaScreen extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.primaryOrange.withOpacity(0.1),
+            color: AppColors.primaryOrange.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -270,7 +270,7 @@ class VedicSikshaScreen extends StatelessWidget {
           children: [
             Text(
               subtitle,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.primaryOrange,
                 fontSize: 12,
               ),
@@ -330,13 +330,13 @@ class VedicSikshaScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.primaryOrange.withOpacity(0.2),
-                      AppColors.primaryOrange.withOpacity(0.1),
+                      AppColors.primaryOrange.withValues(alpha: 0.2),
+                      AppColors.primaryOrange.withValues(alpha: 0.1),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.star,
                   color: AppColors.primaryOrange,
                   size: 24,

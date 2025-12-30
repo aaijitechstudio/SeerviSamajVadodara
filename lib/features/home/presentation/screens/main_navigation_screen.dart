@@ -76,21 +76,29 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
         ? selectedIndex
         : 0;
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+
         // Let iOS behave naturally (no system back button expectation).
-        if (!Platform.isAndroid) return true;
+        if (!Platform.isAndroid) {
+          if (!context.mounted) return;
+          Navigator.of(context).maybePop(result);
+          return;
+        }
 
         // If drawer is open, close it first.
         if (_scaffoldKey.currentState?.isDrawerOpen == true) {
+          if (!context.mounted) return;
           Navigator.of(context).pop();
-          return false;
+          return;
         }
 
         // If not on Home tab, go to Home tab instead of exiting.
         if (safeIndex != 0) {
           ref.read(navigationIndexProvider.notifier).state = 0;
-          return false;
+          return;
         }
 
         // Double-back-to-exit on Home tab.
@@ -98,103 +106,104 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
         if (_lastBackPressAt == null ||
             now.difference(_lastBackPressAt!) > const Duration(seconds: 2)) {
           _lastBackPressAt = now;
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
+          final messenger = ScaffoldMessenger.of(context);
+          messenger.clearSnackBars();
+          messenger.showSnackBar(
             const SnackBar(
               content: Text('Press back again to exit'),
               duration: Duration(seconds: 2),
             ),
           );
-          return false;
+          return;
         }
 
-        SystemNavigator.pop();
-        return false;
+        await SystemNavigator.pop();
       },
       child: ResponsivePage(
         useSafeArea: false,
         // Main shell should stay full-width; responsive constraints are applied per-tab.
         maxContentWidth: 100000,
         child: Scaffold(
-        key: _scaffoldKey,
-        drawer: AppDrawer(
-          user: user,
-          isAdmin: isAdmin,
-        ),
-        body: IndexedStack(
-          index: safeIndex,
-          children: screens,
-        ),
-        floatingActionButton: safeIndex == 0 && user != null
-            ? FloatingActionButton(
-                onPressed: () {
-                  // Navigate to post composer - default to discussion category
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PostComposerScreen(
-                        initialCategory: PostCategory.discussion,
+          key: _scaffoldKey,
+          drawer: AppDrawer(
+            user: user,
+            isAdmin: isAdmin,
+          ),
+          body: IndexedStack(
+            index: safeIndex,
+            children: screens,
+          ),
+          floatingActionButton: safeIndex == 0 && user != null
+              ? FloatingActionButton(
+                  onPressed: () {
+                    // Navigate to post composer - default to discussion category
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PostComposerScreen(
+                          initialCategory: PostCategory.discussion,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                child: const Icon(Icons.add),
-              )
-            : null,
-        bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: AppColors.backgroundWhite,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadowLight,
-              blurRadius: DesignTokens.elevationMedium,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildNavItem(
-                  context,
-                  icon: Icons.home_rounded,
-                  label: l10n.home,
-                  index: 0,
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.newspaper_rounded,
-                  label: l10n.news,
-                  index: 1,
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.people_rounded,
-                  label: l10n.members,
-                  index: 2,
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.school_rounded,
-                  label: 'Education',
-                  index: 3,
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.person_rounded,
-                  label: l10n.profile,
-                  index: 4,
+                    );
+                  },
+                  child: const Icon(Icons.add),
+                )
+              : null,
+          bottomNavigationBar: Container(
+            decoration: const BoxDecoration(
+              color: AppColors.backgroundWhite,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.shadowLight,
+                  blurRadius: DesignTokens.elevationMedium,
+                  offset: Offset(0, -2),
                 ),
               ],
             ),
+            child: SafeArea(
+              top: false,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildNavItem(
+                      context,
+                      icon: Icons.home_rounded,
+                      label: l10n.home,
+                      index: 0,
+                    ),
+                    _buildNavItem(
+                      context,
+                      icon: Icons.newspaper_rounded,
+                      label: l10n.news,
+                      index: 1,
+                    ),
+                    _buildNavItem(
+                      context,
+                      icon: Icons.people_rounded,
+                      label: l10n.members,
+                      index: 2,
+                    ),
+                    _buildNavItem(
+                      context,
+                      icon: Icons.school_rounded,
+                      label: 'Education',
+                      index: 3,
+                    ),
+                    _buildNavItem(
+                      context,
+                      icon: Icons.person_rounded,
+                      label: l10n.profile,
+                      index: 4,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
-      ),
-    ),
       ),
     );
   }
@@ -209,8 +218,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     final safeIndex =
         selectedIndex >= 0 && selectedIndex < 5 ? selectedIndex : 0;
     final isSelected = safeIndex == index;
-    final selectedColor = AppColors.primaryOrange;
-    final unselectedColor = AppColors.grey500;
+    const selectedColor = AppColors.primaryOrange;
+    const unselectedColor = AppColors.grey500;
     final shouldReduceMotion = AnimationPreferences.shouldReduceMotion(context);
     final animationDuration =
         shouldReduceMotion ? Duration.zero : AnimationDurations.fast;

@@ -41,7 +41,7 @@ class GoogleSignInButton extends ConsumerWidget {
 
     // Build asset path - folder uses capitalized platform name, filename uses lowercase
     final assetPath =
-        'assets/images/google_signin/$platform/png$densitySuffix/$theme/${platformLower}_${theme}_${shapePrefix}_${buttonTypeSuffix}$densitySuffix.png';
+        'assets/images/google_signin/$platform/png$densitySuffix/$theme/${platformLower}_${theme}_${shapePrefix}_$buttonTypeSuffix$densitySuffix.png';
 
     // Platform-specific padding per Google guidelines
     final horizontalPadding = Platform.isIOS ? 16.0 : 12.0;
@@ -87,7 +87,7 @@ class GoogleSignInButton extends ConsumerWidget {
             if (isLoading)
               Positioned.fill(
                 child: Container(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   child: const Center(
                     child: SizedBox(
                       width: 20,
@@ -155,7 +155,7 @@ class GoogleSignInButton extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  Center(
+                  const Center(
                     child: Text(
                       'G',
                       style: TextStyle(

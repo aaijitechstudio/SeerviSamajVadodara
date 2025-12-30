@@ -42,14 +42,14 @@ class HomeCommunityStats extends StatelessWidget {
                   color: AppColors.primaryOrange.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(DesignTokens.radiusS),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.people_outline,
                   color: AppColors.primaryOrange,
                   size: DesignTokens.iconSizeM,
                 ),
               ),
               const SizedBox(width: DesignTokens.spacingM),
-              Text(
+              const Text(
                 'Community Stats',
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeXL,
@@ -104,11 +104,11 @@ class HomeCommunityStats extends StatelessWidget {
           color: color.withValues(alpha: 0.2),
           width: 1,
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.shadowLight,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),

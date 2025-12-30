@@ -57,7 +57,7 @@ class LoadingOverlay extends StatelessWidget {
                       const SizedBox(height: DesignTokens.spacingM),
                       Text(
                         message!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: DesignTokens.fontSizeM,
                           color: AppColors.textSecondary,
                         ),
@@ -101,7 +101,7 @@ class FullScreenLoader extends StatelessWidget {
               const SizedBox(height: DesignTokens.spacingL),
               Text(
                 message!,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: DesignTokens.fontSizeL,
                   color: AppColors.textSecondary,
                 ),

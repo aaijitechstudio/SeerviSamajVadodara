@@ -54,7 +54,7 @@ class ErrorStateWidget extends StatelessWidget {
               size: DesignTokens.iconSizeXL * 2,
               color: AppColors.errorColor,
             ),
-            SizedBox(height: DesignTokens.spacingL),
+            const SizedBox(height: DesignTokens.spacingL),
             Text(
               title ?? 'Error',
               style: TextStyle(
@@ -64,7 +64,7 @@ class ErrorStateWidget extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: DesignTokens.spacingM),
+            const SizedBox(height: DesignTokens.spacingM),
             Text(
               _getErrorMessage(),
               style: TextStyle(
@@ -74,7 +74,7 @@ class ErrorStateWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
-              SizedBox(height: DesignTokens.spacingXL),
+              const SizedBox(height: DesignTokens.spacingXL),
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),

@@ -42,7 +42,7 @@ class VedicSikshaDetailScreen extends StatelessWidget {
                 memCacheHeight: 400,
                 placeholder: (context, url) => Container(
                   height: 200,
-                  color: AppColors.primaryOrange.withOpacity(0.1),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.1),
                   child: const Center(
                     child: CircularProgressIndicator(
                       color: AppColors.primaryOrange,
@@ -52,7 +52,7 @@ class VedicSikshaDetailScreen extends StatelessWidget {
                 errorWidget: (context, url, error) => Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryOrange.withOpacity(0.1),
+                    color: AppColors.primaryOrange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -61,12 +61,12 @@ class VedicSikshaDetailScreen extends StatelessWidget {
                       Icon(
                         Icons.menu_book,
                         size: 64,
-                        color: AppColors.primaryOrange.withOpacity(0.5),
+                        color: AppColors.primaryOrange.withValues(alpha: 0.5),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         data.title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.primaryOrange,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class VedicSikshaDetailScreen extends StatelessWidget {
 
             Text(
               data.subtitle,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.primaryOrange,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -178,7 +178,7 @@ class VedicSikshaDetailScreen extends StatelessWidget {
               memCacheHeight: 240,
               placeholder: (context, url) => Container(
                 width: 160,
-                color: AppColors.primaryOrange.withOpacity(0.1),
+                color: AppColors.primaryOrange.withValues(alpha: 0.1),
                 child: const Center(
                   child: CircularProgressIndicator(
                     color: AppColors.primaryOrange,
@@ -189,12 +189,12 @@ class VedicSikshaDetailScreen extends StatelessWidget {
               errorWidget: (context, url, error) => Container(
                 width: 160,
                 decoration: BoxDecoration(
-                  color: AppColors.primaryOrange.withOpacity(0.1),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.image_not_supported,
-                  color: AppColors.primaryOrange.withOpacity(0.3),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.3),
                   size: 40,
                 ),
               ),

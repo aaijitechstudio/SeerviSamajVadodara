@@ -35,14 +35,14 @@ class HomeSamajHighlights extends StatelessWidget {
                   color: AppColors.featureGreen.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(DesignTokens.radiusS),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.star_outline,
                   color: AppColors.featureGreen,
                   size: DesignTokens.iconSizeM,
                 ),
               ),
               const SizedBox(width: DesignTokens.spacingM),
-              Text(
+              const Text(
                 'Samaj Highlights',
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeXL,

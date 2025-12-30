@@ -250,60 +250,60 @@ class _EducationCareerScreenState
           // Hero Banner
           _buildHeroBanner(),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Career by Stage
           _buildSectionHeader('Career Guidance by Stage'),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildCareerByStage(),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Scholarships
           _buildSectionHeader('Scholarships & Financial Help'),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildScholarshipsSection(),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Career Paths
           _buildSectionHeader('Career Paths'),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildCareerPaths(),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Skills
           _buildSectionHeader('Skill Development'),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildSkillsSection(),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Exams
           _buildSectionHeader('Exams & Competitive'),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildExamsSection(),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Success Stories
           _buildSectionHeader('Success Stories'),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildSuccessStoriesSection(),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Parent Guidance
           _buildSectionHeader('Parent Guidance'),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildParentGuidance(),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Vedic Siksha Section
           _buildSectionHeader('वैदिक शिक्षा (Vedic Siksha)'),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
           _buildVedicSikshaSection(),
         ],
       ),
@@ -317,21 +317,21 @@ class _EducationCareerScreenState
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primaryOrange.withOpacity(0.1),
-            AppColors.primaryOrange.withOpacity(0.05),
+            AppColors.primaryOrange.withValues(alpha: 0.1),
+            AppColors.primaryOrange.withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(DesignTokens.radiusL),
       ),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.school,
             size: 48,
             color: AppColors.primaryOrange,
           ),
-          SizedBox(height: DesignTokens.spacingM * 0.75),
-          SizedBox(
+          const SizedBox(height: DesignTokens.spacingM * 0.75),
+          const SizedBox(
             width: double.infinity,
             child: Text(
               'शिक्षा ही सबसे बड़ा धन है',
@@ -343,7 +343,7 @@ class _EducationCareerScreenState
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: DesignTokens.spacingS),
+          const SizedBox(height: DesignTokens.spacingS),
           SizedBox(
             width: double.infinity,
             child: Text(
@@ -445,7 +445,7 @@ class _EducationCareerScreenState
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                AppColors.primaryOrange.withOpacity(0.1),
+                AppColors.primaryOrange.withValues(alpha: 0.1),
                 Colors.white,
               ],
             ),
@@ -454,7 +454,7 @@ class _EducationCareerScreenState
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: 40, color: AppColors.primaryOrange),
-              SizedBox(height: DesignTokens.spacingS),
+              const SizedBox(height: DesignTokens.spacingS),
               Text(
                 title,
                 style: const TextStyle(
@@ -601,12 +601,12 @@ class _EducationCareerScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
+              const Icon(
                 Icons.build,
                 color: AppColors.primaryOrange,
                 size: 32,
               ),
-              SizedBox(height: DesignTokens.spacingS),
+              const SizedBox(height: DesignTokens.spacingS),
               Text(
                 skill.title,
                 style: const TextStyle(
@@ -710,7 +710,7 @@ class _EducationCareerScreenState
             children: [
               Row(
                 children: [
-                  Icon(Icons.star, color: AppColors.primaryOrange, size: 20),
+                  const Icon(Icons.star, color: AppColors.primaryOrange, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -723,15 +723,15 @@ class _EducationCareerScreenState
                   ),
                 ],
               ),
-              SizedBox(height: DesignTokens.spacingS),
+              const SizedBox(height: DesignTokens.spacingS),
               Text(
                 story.field,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.primaryOrange,
                   fontSize: 12,
                 ),
               ),
-              SizedBox(height: DesignTokens.spacingS),
+              const SizedBox(height: DesignTokens.spacingS),
               Expanded(
                 child: Text(
                   story.journey,
@@ -844,8 +844,8 @@ class _EducationCareerScreenState
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.primaryOrange.withOpacity(0.2),
-                      AppColors.primaryOrange.withOpacity(0.1),
+                      AppColors.primaryOrange.withValues(alpha: 0.2),
+                      AppColors.primaryOrange.withValues(alpha: 0.1),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(DesignTokens.radiusM),
@@ -861,7 +861,7 @@ class _EducationCareerScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'वैदिक शिक्षा',
                       style: TextStyle(
                         fontSize: 18,

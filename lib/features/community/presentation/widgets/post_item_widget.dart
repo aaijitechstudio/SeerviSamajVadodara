@@ -183,7 +183,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
             isAdminPost ? AppColors.backgroundCream : AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(DesignTokens.radiusM),
         border: isAdminPost
-            ? Border(
+            ? const Border(
                 left: BorderSide(
                   color: AppColors.primaryOrange,
                   width: 4,
@@ -263,7 +263,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
                         const SizedBox(height: 2),
                         Text(
                           AppUtils.formatDateTime(_post.createdAt),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: AppColors.textSecondary,
                             fontSize: 12,
                           ),
@@ -305,9 +305,14 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (_post.metadata != null && _post.metadata!.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: _PostMetaLine(metadata: _post.metadata!),
+                        ),
                       Text(
                         _post.content,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: AppColors.textPrimary,
                           height: 1.5,
@@ -338,14 +343,14 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
                   ),
                   Text(
                     '${_post.likesCount}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14,
                     ),
                   ),
                   const SizedBox(width: 16),
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.comment_outlined,
                       color: AppColors.textSecondary,
                     ),
@@ -353,14 +358,14 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
                   ),
                   Text(
                     '${_post.commentsCount}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14,
                     ),
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.share_outlined,
                       color: AppColors.textSecondary,
                     ),
@@ -384,7 +389,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
         color: AppColors.primaryOrange,
         borderRadius: BorderRadius.circular(DesignTokens.radiusM),
       ),
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
@@ -392,7 +397,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
             size: 14,
             color: AppColors.textOnPrimary,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             'Official',
             style: TextStyle(
@@ -515,11 +520,12 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
+              final messenger = ScaffoldMessenger.of(context);
               final postRepository = ref.read(postRepositoryProvider);
 
               if (postRepository == null) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  messenger.showSnackBar(
                     const SnackBar(
                       content: Text(
                           'Firebase is not initialized. Please restart the app.'),
@@ -530,26 +536,63 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
               }
 
               final result = await postRepository.deletePost(_post.id);
+              if (!mounted) return;
               if (result.failure == null && result.success == true) {
                 widget.onPostUpdated?.call();
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Post deleted')),
-                  );
-                }
+                messenger.showSnackBar(
+                  const SnackBar(content: Text('Post deleted')),
+                );
               } else {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(result.failure?.message ??
-                            'Failed to delete post')),
-                  );
-                }
+                messenger.showSnackBar(
+                  SnackBar(
+                    content:
+                        Text(result.failure?.message ?? 'Failed to delete post'),
+                  ),
+                );
               }
             },
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PostMetaLine extends StatelessWidget {
+  final Map<String, dynamic> metadata;
+
+  const _PostMetaLine({required this.metadata});
+
+  @override
+  Widget build(BuildContext context) {
+    final parts = <String>[];
+    final music = metadata['music'];
+    final people = metadata['people'];
+    final location = metadata['location'];
+    final feeling = metadata['feeling'];
+
+    if (music is String && music.trim().isNotEmpty) {
+      parts.add('🎵 $music');
+    }
+    if (people is String && people.trim().isNotEmpty) {
+      parts.add('👥 $people');
+    }
+    if (location is String && location.trim().isNotEmpty) {
+      parts.add('📍 $location');
+    }
+    if (feeling is String && feeling.trim().isNotEmpty) {
+      parts.add('😊 $feeling');
+    }
+
+    if (parts.isEmpty) return const SizedBox.shrink();
+
+    return Text(
+      parts.join('  •  '),
+      style: const TextStyle(
+        fontSize: 13,
+        color: AppColors.textSecondary,
+        height: 1.2,
       ),
     );
   }

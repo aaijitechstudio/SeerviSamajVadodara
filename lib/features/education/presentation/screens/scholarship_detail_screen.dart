@@ -29,7 +29,7 @@ class ScholarshipDetailScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.account_balance_wallet,
                       color: AppColors.primaryOrange,
                       size: 32,
@@ -71,12 +71,12 @@ class ScholarshipDetailScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryOrange.withOpacity(0.1),
+                      color: AppColors.primaryOrange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       scholarship.amount!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryOrange,
                         fontSize: 16,
@@ -94,7 +94,7 @@ class ScholarshipDetailScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.description,
                               size: 20,
                               color: AppColors.primaryOrange,

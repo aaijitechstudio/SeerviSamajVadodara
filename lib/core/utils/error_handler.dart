@@ -127,39 +127,39 @@ class ErrorHandler {
   /// Handle HTTP exceptions
   static AppException handleHttpException(http.Response? response) {
     if (response == null) {
-      return NetworkException(
+      return const NetworkException(
         'No response received from server.',
       );
     }
 
     switch (response.statusCode) {
       case 400:
-        return ValidationException(
+        return const ValidationException(
           'Invalid request. Please check your input.',
           code: '400',
         );
       case 401:
-        return AuthenticationException(
+        return const AuthenticationException(
           'Authentication failed. Please sign in again.',
           code: '401',
         );
       case 403:
-        return AuthorizationException(
+        return const AuthorizationException(
           'Access denied. You do not have permission.',
           code: '403',
         );
       case 404:
-        return NotFoundException(
+        return const NotFoundException(
           'The requested resource was not found.',
           code: '404',
         );
       case 408:
-        return TimeoutException(
+        return const TimeoutException(
           'Request timed out. Please try again.',
           code: '408',
         );
       case 429:
-        return NetworkException(
+        return const NetworkException(
           'Too many requests. Please try again later.',
           code: '429',
         );

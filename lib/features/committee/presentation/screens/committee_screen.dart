@@ -181,7 +181,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.groups_outlined,
               size: DesignTokens.iconSizeXL,
               color: AppColors.grey400,
@@ -189,7 +189,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
             const SizedBox(height: DesignTokens.spacingM),
             Text(
               l10n.noCommitteeMembersYet,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeXL,
                 color: AppColors.grey600,
               ),
@@ -202,7 +202,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
     // If search is active, show filtered results without sections
     if (isSearchActive && searchQuery.isNotEmpty) {
       if (filteredMembers.isEmpty) {
-        return Center(
+        return const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -211,7 +211,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
                 size: DesignTokens.iconSizeXL,
                 color: AppColors.grey400,
               ),
-              const SizedBox(height: DesignTokens.spacingM),
+              SizedBox(height: DesignTokens.spacingM),
               Text(
                 'No members found',
                 style: TextStyle(
@@ -219,7 +219,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
                   color: AppColors.grey600,
                 ),
               ),
-              const SizedBox(height: DesignTokens.spacingS),
+              SizedBox(height: DesignTokens.spacingS),
               Text(
                 'Try a different search term',
                 style: TextStyle(
@@ -343,7 +343,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.group,
             color: AppColors.primaryOrange,
             size: 20,
@@ -352,7 +352,7 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
           Expanded(
             child: Text(
               getLocalizedTitle(),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeL,
                 fontWeight: DesignTokens.fontWeightBold,
                 color: AppColors.textPrimary,

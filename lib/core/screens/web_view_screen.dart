@@ -145,7 +145,7 @@ class _GlobalWebViewScreenState extends State<GlobalWebViewScreen> {
                         size: 64,
                         color: Colors.red[300],
                       ),
-                      SizedBox(height: DesignTokens.spacingM),
+                      const SizedBox(height: DesignTokens.spacingM),
                       Text(
                         _errorMessage!,
                         style: const TextStyle(
@@ -154,7 +154,7 @@ class _GlobalWebViewScreenState extends State<GlobalWebViewScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: DesignTokens.spacingL),
+                      const SizedBox(height: DesignTokens.spacingL),
                       ElevatedButton(
                         onPressed: () {
                           _controller.reload();

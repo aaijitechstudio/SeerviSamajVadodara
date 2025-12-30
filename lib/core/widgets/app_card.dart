@@ -115,7 +115,7 @@ class StatCard extends StatelessWidget {
             color: color,
             size: DesignTokens.iconSizeL,
           ),
-          SizedBox(height: DesignTokens.spacingS),
+          const SizedBox(height: DesignTokens.spacingS),
           Text(
             value,
             style: TextStyle(
@@ -124,7 +124,7 @@ class StatCard extends StatelessWidget {
               color: theme.textTheme.bodyLarge?.color,
             ),
           ),
-          SizedBox(height: DesignTokens.spacingXS / 2),
+          const SizedBox(height: DesignTokens.spacingXS / 2),
           Text(
             label,
             style: TextStyle(
@@ -166,7 +166,7 @@ class InfoCard extends StatelessWidget {
         children: [
           if (leading != null) ...[
             leading!,
-            SizedBox(width: DesignTokens.spacingM),
+            const SizedBox(width: DesignTokens.spacingM),
           ],
           Expanded(
             child: Column(
@@ -182,7 +182,7 @@ class InfoCard extends StatelessWidget {
                   ),
                 ),
                 if (subtitle != null) ...[
-                  SizedBox(height: DesignTokens.spacingXS),
+                  const SizedBox(height: DesignTokens.spacingXS),
                   Text(
                     subtitle!,
                     style: TextStyle(
@@ -195,7 +195,7 @@ class InfoCard extends StatelessWidget {
             ),
           ),
           if (trailing != null) ...[
-            SizedBox(width: DesignTokens.spacingM),
+            const SizedBox(width: DesignTokens.spacingM),
             trailing!,
           ],
         ],
@@ -227,7 +227,7 @@ class ActionCard extends StatelessWidget {
         children: [
           Expanded(child: child),
           if (icon != null) ...[
-            SizedBox(width: DesignTokens.spacingM),
+            const SizedBox(width: DesignTokens.spacingM),
             Icon(
               icon,
               color: iconColor ?? AppColors.primaryOrange,

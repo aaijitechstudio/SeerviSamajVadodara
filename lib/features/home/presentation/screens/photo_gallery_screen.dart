@@ -148,11 +148,11 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(DesignTokens.radiusS),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: AppColors.shadowLight,
               blurRadius: DesignTokens.elevationMedium,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
@@ -168,7 +168,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.broken_image,
                       color: AppColors.grey500,
                       size: DesignTokens.iconSizeXL,
@@ -176,7 +176,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
                     const SizedBox(height: DesignTokens.spacingS),
                     Text(
                       'Image $imageNumber',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.grey500,
                         fontSize: DesignTokens.fontSizeM,
                       ),
@@ -220,7 +220,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
                   color: AppColors.primaryOrange.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(DesignTokens.radiusS),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.rule,
                   color: AppColors.primaryOrange,
                   size: DesignTokens.iconSizeM,
@@ -230,7 +230,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
               Expanded(
                 child: Text(
                   l10n.elevenNiyamTitle,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: DesignTokens.fontSizeXL,
                     fontWeight: DesignTokens.fontWeightBold,
                     color: AppColors.primaryOrange,
@@ -270,14 +270,14 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
           Container(
             width: 32,
             height: 32,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.primaryOrange,
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 number.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.textOnPrimary,
                   fontSize: DesignTokens.fontSizeM,
                   fontWeight: DesignTokens.fontWeightBold,
@@ -319,7 +319,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
                 color: AppColors.primaryOrange.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.photo_library_outlined,
                 size: DesignTokens.iconSizeXL * 2,
                 color: AppColors.primaryOrange,
@@ -358,11 +358,11 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(DesignTokens.radiusM),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: AppColors.shadowLight,
               blurRadius: DesignTokens.elevationMedium,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
@@ -400,7 +400,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
                             borderRadius:
                                 BorderRadius.circular(DesignTokens.radiusM),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.broken_image,
                             size: DesignTokens.iconSizeXL,
                             color: AppColors.grey500,

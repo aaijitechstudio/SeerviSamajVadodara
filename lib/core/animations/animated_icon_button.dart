@@ -57,7 +57,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
         curve: AnimationCurves.easeInOut,
       ));
     } else {
-      _rotationAnimation = AlwaysStoppedAnimation(0.0);
+      _rotationAnimation = const AlwaysStoppedAnimation(0.0);
     }
   }
 

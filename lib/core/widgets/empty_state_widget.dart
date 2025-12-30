@@ -39,7 +39,7 @@ class EmptyStateWidget extends StatelessWidget {
               color: iconColor ??
                   (isDark ? AppColors.darkTextSecondary : AppColors.grey400),
             ),
-            SizedBox(height: DesignTokens.spacingL),
+            const SizedBox(height: DesignTokens.spacingL),
             Text(
               title,
               style: TextStyle(
@@ -50,7 +50,7 @@ class EmptyStateWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (message != null) ...[
-              SizedBox(height: DesignTokens.spacingM),
+              const SizedBox(height: DesignTokens.spacingM),
               Text(
                 message!,
                 style: TextStyle(
@@ -61,7 +61,7 @@ class EmptyStateWidget extends StatelessWidget {
               ),
             ],
             if (action != null) ...[
-              SizedBox(height: DesignTokens.spacingXL),
+              const SizedBox(height: DesignTokens.spacingXL),
               action!,
             ],
           ],

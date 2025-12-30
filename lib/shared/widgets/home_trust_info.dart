@@ -24,7 +24,7 @@ class HomeTrustInfo extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.info_outline,
                 color: AppColors.primaryOrange,
                 size: DesignTokens.iconSizeM,
@@ -32,7 +32,7 @@ class HomeTrustInfo extends StatelessWidget {
               const SizedBox(width: DesignTokens.spacingS),
               Text(
                 l10n.trustInfo,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: DesignTokens.fontSizeL,
                   fontWeight: DesignTokens.fontWeightBold,
                   color: AppColors.primaryOrange,

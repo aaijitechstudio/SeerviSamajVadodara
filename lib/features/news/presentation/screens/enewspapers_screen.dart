@@ -71,7 +71,7 @@ class ENewspapersScreen extends StatelessWidget {
             const SizedBox(width: DesignTokens.spacingS),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeXL,
                 fontWeight: DesignTokens.fontWeightBold,
                 color: AppColors.textPrimary,
@@ -103,7 +103,7 @@ class ENewspapersScreen extends StatelessWidget {
             color: AppColors.primaryOrange.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(DesignTokens.radiusS),
           ),
-          child: Icon(
+          child: const Icon(
             Icons.newspaper,
             color: AppColors.primaryOrange,
             size: 24,
@@ -115,7 +115,7 @@ class ENewspapersScreen extends StatelessWidget {
             fontWeight: DesignTokens.fontWeightSemiBold,
           ),
         ),
-        trailing: Icon(
+        trailing: const Icon(
           Icons.arrow_forward_ios,
           size: 16,
           color: AppColors.textSecondary,

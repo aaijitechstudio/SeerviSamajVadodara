@@ -73,7 +73,7 @@ class AppButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(DesignTokens.radiusM),
             ),
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: DesignTokens.fontSizeL,
               fontWeight: DesignTokens.fontWeightBold,
             ),
@@ -99,7 +99,7 @@ class AppButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(DesignTokens.radiusM),
             ),
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: DesignTokens.fontSizeL,
               fontWeight: DesignTokens.fontWeightBold,
             ),
@@ -117,7 +117,7 @@ class AppButton extends StatelessWidget {
               horizontal: DesignTokens.spacingL,
               vertical: DesignTokens.spacingM,
             ),
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: DesignTokens.fontSizeL,
               fontWeight: DesignTokens.fontWeightBold,
             ),
@@ -141,7 +141,7 @@ class AppButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(DesignTokens.radiusM),
             ),
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: DesignTokens.fontSizeM,
               fontWeight: DesignTokens.fontWeightSemiBold,
             ),
@@ -165,7 +165,7 @@ class AppButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(DesignTokens.radiusM),
             ),
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: DesignTokens.fontSizeL,
               fontWeight: DesignTokens.fontWeightBold,
             ),

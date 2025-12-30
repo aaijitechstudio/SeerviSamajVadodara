@@ -240,7 +240,7 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                 child: _isLoading && _comments.isEmpty
                     ? const Center(child: CircularProgressIndicator())
                     : _comments.isEmpty
-                        ? Center(
+                        ? const Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -249,7 +249,7 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                                   size: 64,
                                   color: AppColors.grey400,
                                 ),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16),
                                 Text(
                                   'No comments yet',
                                   style: TextStyle(
@@ -257,7 +257,7 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                                     color: AppColors.grey600,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                SizedBox(height: 8),
                                 Text(
                                   'Be the first to comment!',
                                   style: TextStyle(
@@ -329,8 +329,8 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                   ),
                 ),
               ] else
-                Padding(
-                  padding: const EdgeInsets.all(16),
+                const Padding(
+                  padding: EdgeInsets.all(16),
                   child: Text(
                     'Please login to comment',
                     style: TextStyle(color: AppColors.grey600),

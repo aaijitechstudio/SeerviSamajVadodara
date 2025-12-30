@@ -42,7 +42,7 @@ class AppTheme {
           fontWeight: DesignTokens.fontWeightSemiBold,
           color: AppColors.primaryOrange,
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: AppColors.primaryOrange,
         ),
       ),
@@ -140,7 +140,7 @@ class AppTheme {
           fontWeight: DesignTokens.fontWeightSemiBold,
           color: AppColors.darkTextPrimary,
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: AppColors.darkTextPrimary,
         ),
       ),
@@ -167,14 +167,14 @@ class AppTheme {
         fillColor: AppColors.darkBackground,
         hintStyle:
             TextStyle(color: AppColors.darkTextPrimary.withValues(alpha: 0.6)),
-        labelStyle: TextStyle(color: AppColors.darkTextPrimary),
+        labelStyle: const TextStyle(color: AppColors.darkTextPrimary),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DesignTokens.radiusM),
-          borderSide: BorderSide(color: AppColors.darkBorder),
+          borderSide: const BorderSide(color: AppColors.darkBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DesignTokens.radiusM),
-          borderSide: BorderSide(color: AppColors.darkBorder),
+          borderSide: const BorderSide(color: AppColors.darkBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DesignTokens.radiusM),
@@ -199,7 +199,7 @@ class AppTheme {
         ),
         color: AppColors.darkSurface,
       ),
-      dividerTheme: DividerThemeData(
+      dividerTheme: const DividerThemeData(
         color: AppColors.darkBorder,
         thickness: 1,
         space: 1,

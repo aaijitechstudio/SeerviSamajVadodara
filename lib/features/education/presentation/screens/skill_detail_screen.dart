@@ -30,7 +30,7 @@ class SkillDetailScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.build,
                       color: AppColors.primaryOrange,
                       size: 32,
@@ -60,19 +60,19 @@ class SkillDetailScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryOrange.withOpacity(0.1),
+                      color: AppColors.primaryOrange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.access_time,
                           color: AppColors.primaryOrange,
                         ),
                         const SizedBox(width: 8),
                         Text(
                           'Duration: ${skill.duration}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryOrange,
                           ),
@@ -90,7 +90,7 @@ class SkillDetailScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.person,
                               size: 20,
                               color: AppColors.primaryOrange,
@@ -131,14 +131,14 @@ class SkillDetailScreen extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         resource,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           color: AppColors.primaryOrange,
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),
                                     ),
-                                    Icon(
+                                    const Icon(
                                       Icons.arrow_forward_ios,
                                       size: 16,
                                       color: AppColors.primaryOrange,
@@ -177,7 +177,7 @@ class SkillDetailScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.work,
                               size: 20,
                               color: AppColors.primaryOrange,

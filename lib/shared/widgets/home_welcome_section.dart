@@ -137,7 +137,7 @@ class HomeWelcomeSection extends StatelessWidget {
               children: [
                 Text(
                   l10n.welcomeUser(user!.name.split(' ').first),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.textOnPrimary,
                     fontSize: DesignTokens.fontSizeXXL,
                     fontWeight: DesignTokens.fontWeightBold,

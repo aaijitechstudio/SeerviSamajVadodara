@@ -420,7 +420,7 @@ class _MergedMembersScreenState extends ConsumerState<MergedMembersScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.groups_outlined,
               size: DesignTokens.iconSizeXL,
               color: AppColors.grey400,
@@ -428,7 +428,7 @@ class _MergedMembersScreenState extends ConsumerState<MergedMembersScreen>
             const SizedBox(height: DesignTokens.spacingM),
             Text(
               l10n.noCommitteeMembersYet,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeXL,
                 color: AppColors.grey600,
               ),
@@ -441,7 +441,7 @@ class _MergedMembersScreenState extends ConsumerState<MergedMembersScreen>
     // If search is active, show filtered results without sections
     if (isCommitteeSearchActive && searchQuery.isNotEmpty) {
       if (filteredMembers.isEmpty) {
-        return Center(
+        return const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -450,7 +450,7 @@ class _MergedMembersScreenState extends ConsumerState<MergedMembersScreen>
                 size: DesignTokens.iconSizeXL,
                 color: AppColors.grey400,
               ),
-              const SizedBox(height: DesignTokens.spacingM),
+              SizedBox(height: DesignTokens.spacingM),
               Text(
                 'No members found',
                 style: TextStyle(
@@ -458,7 +458,7 @@ class _MergedMembersScreenState extends ConsumerState<MergedMembersScreen>
                   color: AppColors.grey600,
                 ),
               ),
-              const SizedBox(height: DesignTokens.spacingS),
+              SizedBox(height: DesignTokens.spacingS),
               Text(
                 'Try a different search term',
                 style: TextStyle(
@@ -608,7 +608,7 @@ class _MergedMembersScreenState extends ConsumerState<MergedMembersScreen>
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.group,
             color: AppColors.primaryOrange,
             size: 20,
@@ -617,7 +617,7 @@ class _MergedMembersScreenState extends ConsumerState<MergedMembersScreen>
           Expanded(
             child: Text(
               getLocalizedTitle(),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeL,
                 fontWeight: DesignTokens.fontWeightBold,
                 color: AppColors.textPrimary,

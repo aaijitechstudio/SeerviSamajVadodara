@@ -94,7 +94,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                    SizedBox(
+                    const SizedBox(
                         height:
                             DesignTokens.spacingXXL + DesignTokens.spacingM),
 
@@ -126,10 +126,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   offset: const Offset(0, 8),
                                   spreadRadius: 2,
                                 ),
-                                BoxShadow(
+                                const BoxShadow(
                                   color: AppColors.shadowLight,
                                   blurRadius: 10,
-                                  offset: const Offset(0, 4),
+                                  offset: Offset(0, 4),
                                 ),
                               ],
                             ),
@@ -153,7 +153,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: DesignTokens.spacingL),
+                          const SizedBox(height: DesignTokens.spacingL),
                           Text(
                             l10n.welcomeBack,
                             style: Theme.of(context)
@@ -163,7 +163,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
-                          SizedBox(height: DesignTokens.spacingS),
+                          const SizedBox(height: DesignTokens.spacingS),
                           Text(
                             l10n.signInToYourAccount,
                             style:
@@ -175,7 +175,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
 
-                    SizedBox(height: DesignTokens.spacingXXL),
+                    const SizedBox(height: DesignTokens.spacingXXL),
 
                     // Email Field
                     AnimatedTextField(
@@ -194,7 +194,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
 
-                    SizedBox(height: DesignTokens.spacingM),
+                    const SizedBox(height: DesignTokens.spacingM),
 
                     // Password Field
                     AnimatedTextField(
@@ -225,7 +225,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
 
-                    SizedBox(height: DesignTokens.spacingS),
+                    const SizedBox(height: DesignTokens.spacingS),
 
                     // Remember Me and Forgot Password Row
                     Row(
@@ -245,7 +245,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                             Text(
                               LocalizationFallbacks.rememberMe(l10n),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: DesignTokens.fontSizeS,
                                 color: AppColors.textSecondary,
                               ),
@@ -259,7 +259,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           },
                           child: Text(
                             l10n.forgotPassword,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.primaryOrange,
                               fontWeight: DesignTokens.fontWeightMedium,
                               fontSize: DesignTokens.fontSizeS,
@@ -269,7 +269,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ],
                     ),
 
-                    SizedBox(height: DesignTokens.spacingM),
+                    const SizedBox(height: DesignTokens.spacingM),
 
                     // Login Button
                     Consumer(
@@ -290,7 +290,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
 
-                    SizedBox(height: DesignTokens.spacingM),
+                    const SizedBox(height: DesignTokens.spacingM),
 
                     // Divider with "OR"
                     Row(
@@ -311,7 +311,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ],
                     ),
 
-                    SizedBox(height: DesignTokens.spacingM),
+                    const SizedBox(height: DesignTokens.spacingM),
 
                     // Google Sign In Button (Standard Design)
                     Consumer(
@@ -324,7 +324,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
 
-                    SizedBox(height: DesignTokens.spacingM),
+                    const SizedBox(height: DesignTokens.spacingM),
 
                     // Error Message
                     Consumer(
@@ -349,7 +349,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
 
-                    SizedBox(height: DesignTokens.spacingM),
+                    const SizedBox(height: DesignTokens.spacingM),
 
                     // Sign Up Link
                     Row(
@@ -365,7 +365,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ],
                     ),
 
-                    SizedBox(height: DesignTokens.spacingM),
+                    const SizedBox(height: DesignTokens.spacingM),
 
                     // Terms and Privacy Policy
                     Center(
@@ -375,7 +375,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           Text(
                             '${l10n.bySigningInYouAgreeTo} ',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: DesignTokens.fontSizeS,
                               color: AppColors.textSecondary,
                             ),
@@ -384,7 +384,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             onTap: () => _openUrl('https://example.com/terms'),
                             child: Text(
                               l10n.termsAndConditions,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: DesignTokens.fontSizeS,
                                 color: AppColors.primaryOrange,
                                 fontWeight: DesignTokens.fontWeightMedium,
@@ -394,7 +394,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           Text(
                             ' ${l10n.and} ',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: DesignTokens.fontSizeS,
                               color: AppColors.textSecondary,
                             ),
@@ -404,7 +404,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 _openUrl('https://example.com/privacy'),
                             child: Text(
                               l10n.privacyPolicy,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: DesignTokens.fontSizeS,
                                 color: AppColors.primaryOrange,
                                 fontWeight: DesignTokens.fontWeightMedium,
@@ -416,7 +416,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
 
-                    SizedBox(height: DesignTokens.spacingL),
+                    const SizedBox(height: DesignTokens.spacingL),
 
                     // Powered By Footer
                     Center(

@@ -242,8 +242,9 @@ class PostController extends AutoDisposeNotifier<PostState> {
   }) {
     return state.posts.where((post) {
       if (type != null && post.type != type) return false;
-      if (isAnnouncement != null && post.isAnnouncement != isAnnouncement)
+      if (isAnnouncement != null && post.isAnnouncement != isAnnouncement) {
         return false;
+      }
       if (isPinned != null && post.isPinned != isPinned) return false;
       return true;
     }).toList();

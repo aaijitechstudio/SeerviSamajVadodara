@@ -103,7 +103,7 @@ class WeatherCard extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: DesignTokens.spacingM),
-        Expanded(
+        const Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -131,7 +131,7 @@ class WeatherCard extends ConsumerWidget {
             color: AppColors.featureBlue.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(DesignTokens.radiusS),
           ),
-          child: Icon(
+          child: const Icon(
             Icons.cloud_off,
             color: AppColors.featureBlue,
             size: DesignTokens.iconSizeM,
@@ -142,7 +142,7 @@ class WeatherCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Weather unavailable',
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeL,
@@ -189,7 +189,7 @@ class WeatherCard extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.location_on,
                         size: DesignTokens.iconSizeS,
                         color: AppColors.featureBlue,
@@ -198,7 +198,7 @@ class WeatherCard extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           weather.location,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: DesignTokens.fontSizeL,
                             fontWeight: DesignTokens.fontWeightBold,
                             color: AppColors.featureBlue,
@@ -224,7 +224,7 @@ class WeatherCard extends ConsumerWidget {
               children: [
                 Text(
                   '${weather.temperature.toStringAsFixed(0)}°C',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: DesignTokens.fontSizeH5,
                     fontWeight: DesignTokens.fontWeightBold,
                     color: AppColors.featureBlue,

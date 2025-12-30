@@ -77,7 +77,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 children: [
                 if (!_emailSent) ...[
                   const SizedBox(height: DesignTokens.spacingXL),
-                  Icon(
+                  const Icon(
                     Icons.lock_reset,
                     size: DesignTokens.iconSizeXL,
                     color: AppColors.primaryOrange,
@@ -85,7 +85,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   const SizedBox(height: DesignTokens.spacingL),
                   Text(
                     l10n.resetYourPassword,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: DesignTokens.fontSizeH4,
                       fontWeight: DesignTokens.fontWeightBold,
                     ),
@@ -94,7 +94,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   const SizedBox(height: DesignTokens.spacingM),
                   Text(
                     l10n.resetPasswordDescription,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: DesignTokens.fontSizeM,
                       color: AppColors.textSecondary,
                     ),
@@ -144,7 +144,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   ),
                 ] else ...[
                   const SizedBox(height: DesignTokens.spacingXL),
-                  Icon(
+                  const Icon(
                     Icons.check_circle,
                     size: DesignTokens.iconSizeXL,
                     color: AppColors.successColor,
@@ -152,7 +152,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   const SizedBox(height: DesignTokens.spacingL),
                   Text(
                     l10n.emailSent,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: DesignTokens.fontSizeH4,
                       fontWeight: DesignTokens.fontWeightBold,
                     ),
@@ -161,7 +161,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   const SizedBox(height: DesignTokens.spacingM),
                   Text(
                     l10n.emailSentDescription(_emailController.text.trim()),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: DesignTokens.fontSizeM,
                       color: AppColors.textSecondary,
                     ),

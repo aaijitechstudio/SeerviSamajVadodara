@@ -158,8 +158,9 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
 
   Future<void> _loadRajasthanNews({bool loadMore = false}) async {
     if (!mounted) return;
-    if (loadMore && (!_hasMoreRajasthanNews || _isLoadingMoreRajasthanNews))
+    if (loadMore && (!_hasMoreRajasthanNews || _isLoadingMoreRajasthanNews)) {
       return;
+    }
 
     setState(() {
       if (loadMore) {
@@ -206,8 +207,9 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
 
   Future<void> _loadBusinessNews({bool loadMore = false}) async {
     if (!mounted) return;
-    if (loadMore && (!_hasMoreBusinessNews || _isLoadingMoreBusinessNews))
+    if (loadMore && (!_hasMoreBusinessNews || _isLoadingMoreBusinessNews)) {
       return;
+    }
 
     setState(() {
       if (loadMore) {
@@ -277,7 +279,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
 
     return PopScope(
       canPop: true,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         // Prevent navigation to login screen if user is authenticated
         // If user tries to go back and is authenticated, ensure we don't navigate to login
@@ -628,12 +630,12 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                   Row(
                     children: [
                       if (news.source != null) ...[
-                        Icon(
+                        const Icon(
                           Icons.article,
                           size: 16,
                           color: AppColors.textSecondary,
                         ),
-                        SizedBox(width: DesignTokens.spacingXS),
+                        const SizedBox(width: DesignTokens.spacingXS),
                         Flexible(
                           child: Text(
                             news.source!,
@@ -648,12 +650,12 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
                         const SizedBox(width: DesignTokens.spacingM),
                       ],
                       if (news.pubDate != null) ...[
-                        Icon(
+                        const Icon(
                           Icons.calendar_today,
                           size: 16,
                           color: AppColors.textSecondary,
                         ),
-                        SizedBox(width: DesignTokens.spacingXS),
+                        const SizedBox(width: DesignTokens.spacingXS),
                         Flexible(
                           child: Text(
                             '${l10n.publishedOn}: ${dateFormat.format(news.pubDate!)}',

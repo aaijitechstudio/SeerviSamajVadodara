@@ -80,7 +80,8 @@ class CareerDetailScreen extends StatelessWidget {
                 children: career.requiredSubjects
                     .map((subject) => Chip(
                           label: Text(subject),
-                          backgroundColor: AppColors.primaryOrange.withOpacity(0.1),
+                          backgroundColor:
+                              AppColors.primaryOrange.withValues(alpha: 0.1),
                         ))
                     .toList(),
               ),
@@ -94,7 +95,7 @@ class CareerDetailScreen extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.check_circle,
                           size: 20,
                           color: AppColors.primaryOrange,
@@ -135,7 +136,7 @@ class CareerDetailScreen extends StatelessWidget {
                                 Expanded(
                               child: Text(
                                 resource,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: AppColors.primaryOrange,
                                   decoration: TextDecoration.underline,
@@ -185,7 +186,7 @@ class CareerDetailScreen extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.warning,
                           size: 20,
                           color: Colors.orange,
@@ -206,12 +207,12 @@ class CareerDetailScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryOrange.withOpacity(0.1),
+                  color: AppColors.primaryOrange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.attach_money,
                       color: AppColors.primaryOrange,
                     ),
@@ -219,7 +220,7 @@ class CareerDetailScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Salary Range: ${career.salaryRange}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.primaryOrange,
                         ),

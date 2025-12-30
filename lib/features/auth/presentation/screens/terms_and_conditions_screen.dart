@@ -28,7 +28,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
             children: [
             Text(
               l10n.termsAndConditionsTitle,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeH3,
                 fontWeight: DesignTokens.fontWeightBold,
               ),
@@ -36,7 +36,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
             const SizedBox(height: DesignTokens.spacingL),
             Text(
               '${l10n.lastUpdated}: ${DateTime.now().year}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeS,
                 color: AppColors.textSecondary,
               ),
@@ -73,7 +73,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
             const SizedBox(height: DesignTokens.spacingXL),
             Text(
               l10n.contactUs,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeXL,
                 fontWeight: DesignTokens.fontWeightBold,
               ),
@@ -81,7 +81,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
             const SizedBox(height: DesignTokens.spacingM),
             Text(
               l10n.termsContactDescription,
-              style: TextStyle(fontSize: DesignTokens.fontSizeM),
+              style: const TextStyle(fontSize: DesignTokens.fontSizeM),
             ),
             ],
           ),
@@ -98,7 +98,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: DesignTokens.fontSizeXL,
               fontWeight: DesignTokens.fontWeightSemiBold,
             ),
@@ -106,7 +106,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
           const SizedBox(height: DesignTokens.spacingS),
           Text(
             content,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: DesignTokens.fontSizeM,
               height: 1.5, // Standard line height ratio
             ),

@@ -47,7 +47,7 @@ class ContactUsScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.contact_support,
                     size: DesignTokens.iconSizeXL,
                     color: AppColors.primaryOrange,
@@ -56,7 +56,7 @@ class ContactUsScreen extends StatelessWidget {
                   Expanded(
                     child: Text(
                       l10n.getInTouch,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DesignTokens.fontSizeXL,
                         fontWeight: DesignTokens.fontWeightBold,
                         color: AppColors.primaryOrange,
@@ -151,7 +151,7 @@ class ContactUsScreen extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DesignTokens.fontSizeS,
                         color: AppColors.textSecondary,
                         fontWeight: DesignTokens.fontWeightMedium,
@@ -160,7 +160,7 @@ class ContactUsScreen extends StatelessWidget {
                     const SizedBox(height: DesignTokens.spacingXS),
                     Text(
                       content,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DesignTokens.fontSizeM,
                         fontWeight: DesignTokens.fontWeightSemiBold,
                         color: AppColors.textPrimary,
@@ -170,7 +170,7 @@ class ContactUsScreen extends StatelessWidget {
                 ),
               ),
               if (onTap != null)
-                Icon(
+                const Icon(
                   Icons.arrow_forward_ios,
                   size: DesignTokens.iconSizeS,
                   color: AppColors.grey500,

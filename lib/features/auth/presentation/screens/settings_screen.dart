@@ -298,7 +298,7 @@ class SettingsScreen extends ConsumerWidget {
             )
           : null,
       trailing: onTap != null
-          ? Icon(
+          ? const Icon(
               Icons.chevron_right,
               color: AppColors.textTertiary,
             )
@@ -332,7 +332,7 @@ class SettingsScreen extends ConsumerWidget {
           color: AppColors.primaryOrange.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(DesignTokens.radiusS),
         ),
-        child: Icon(
+        child: const Icon(
           Icons.translate_outlined,
           color: AppColors.primaryOrange,
           size: 20,
@@ -355,7 +355,7 @@ class SettingsScreen extends ConsumerWidget {
               AppColors.textSecondary,
         ),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.chevron_right,
         color: AppColors.textTertiary,
       ),
@@ -380,7 +380,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         title: Row(
           children: [
-            Icon(Icons.translate_outlined, color: AppColors.primaryOrange),
+            const Icon(Icons.translate_outlined, color: AppColors.primaryOrange),
             const SizedBox(width: DesignTokens.spacingS),
             Text(l10n.selectLanguage),
           ],
@@ -447,7 +447,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
       trailing: isSelected
-          ? Icon(
+          ? const Icon(
               Icons.check_circle,
               color: AppColors.primaryOrange,
             )
@@ -510,7 +510,7 @@ class SettingsScreen extends ConsumerWidget {
               AppColors.textSecondary,
         ),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.chevron_right,
         color: AppColors.textTertiary,
       ),
@@ -529,7 +529,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         title: Row(
           children: [
-            Icon(Icons.lock_outline, color: AppColors.primaryOrange),
+            const Icon(Icons.lock_outline, color: AppColors.primaryOrange),
             const SizedBox(width: DesignTokens.spacingS),
             Text(l10n.changePassword),
           ],
@@ -557,7 +557,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         title: Row(
           children: [
-            Icon(Icons.brightness_6_outlined,
+            const Icon(Icons.brightness_6_outlined,
                 color: AppColors.primaryOrange),
             const SizedBox(width: DesignTokens.spacingS),
             Text(l10n.themeMode),
@@ -631,7 +631,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
       trailing: isSelected
-          ? Icon(
+          ? const Icon(
               Icons.check_circle,
               color: AppColors.primaryOrange,
             )
@@ -737,7 +737,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         title: Row(
           children: [
-            Icon(Icons.warning, color: AppColors.errorColor),
+            const Icon(Icons.warning, color: AppColors.errorColor),
             const SizedBox(width: DesignTokens.spacingS),
             Text(LocalizationFallbacks.deleteAccount(l10n)),
           ],
@@ -753,7 +753,7 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: DesignTokens.spacingM),
             Text(
               LocalizationFallbacks.deleteAccountConsequences(l10n),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeS,
                 color: AppColors.textSecondary,
               ),
@@ -768,12 +768,12 @@ class SettingsScreen extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: AppColors.errorColor, size: 20),
+                  const Icon(Icons.info_outline, color: AppColors.errorColor, size: 20),
                   const SizedBox(width: DesignTokens.spacingS),
                   Expanded(
                     child: Text(
                       LocalizationFallbacks.deleteAccountFinalWarning(l10n),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DesignTokens.fontSizeS,
                         color: AppColors.errorColor,
                       ),
@@ -835,6 +835,7 @@ class SettingsScreen extends ConsumerWidget {
         if (success) {
           // Clear all local data
           await AuthPreferences.clearAll();
+          if (!context.mounted) return;
 
           // Navigate to login screen
           Navigator.of(context).pushNamedAndRemoveUntil(

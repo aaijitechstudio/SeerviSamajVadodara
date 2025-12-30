@@ -68,18 +68,18 @@ class AppInfoLogger {
 
       AppLogger.info(logMessage);
 
-      // Print to console for terminal visibility
-      print('═══════════════════════════════════════════════════════════');
-      print('🚀 APP STARTED');
-      print('═══════════════════════════════════════════════════════════');
-      print('📱 App Name: ${packageInfo.appName}');
-      print('📦 Version: ${packageInfo.version} (Build: ${packageInfo.buildNumber})');
-      print('📋 Package: ${packageInfo.packageName}');
-      print('💻 Platform: $platform ($platformVersion)');
-      print('═══════════════════════════════════════════════════════════');
+      // Print to console for terminal visibility (avoid_print-safe)
+      debugPrint('═══════════════════════════════════════════════════════════');
+      debugPrint('APP STARTED');
+      debugPrint('═══════════════════════════════════════════════════════════');
+      debugPrint('App Name: ${packageInfo.appName}');
+      debugPrint('Version: ${packageInfo.version} (Build: ${packageInfo.buildNumber})');
+      debugPrint('Package: ${packageInfo.packageName}');
+      debugPrint('Platform: $platform ($platformVersion)');
+      debugPrint('═══════════════════════════════════════════════════════════');
     } catch (e) {
       AppLogger.error('Failed to log app info', e);
-      print('⚠️  Failed to log app info: $e');
+      debugPrint('Failed to log app info: $e');
     }
   }
 }

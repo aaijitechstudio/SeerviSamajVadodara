@@ -44,7 +44,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: DesignTokens.spacingS),
+            const SizedBox(width: DesignTokens.spacingS),
             Text(
               description,
               style: TextStyle(
@@ -58,25 +58,25 @@ class PasswordStrengthIndicator extends StatelessWidget {
 
         // Suggestions
         if (showSuggestions && suggestions.isNotEmpty) ...[
-          SizedBox(height: DesignTokens.spacingXS),
+          const SizedBox(height: DesignTokens.spacingXS),
           ...suggestions.take(3).map((suggestion) => Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: DesignTokens.spacingM,
                   top: DesignTokens.spacingXS,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.info_outline,
                       size: 14,
                       color: AppColors.textSecondary,
                     ),
-                    SizedBox(width: DesignTokens.spacingXS),
+                    const SizedBox(width: DesignTokens.spacingXS),
                     Expanded(
                       child: Text(
                         suggestion,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: DesignTokens.fontSizeXS,
                           color: AppColors.textSecondary,
                         ),

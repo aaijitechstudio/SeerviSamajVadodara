@@ -38,7 +38,7 @@ class AppDrawer extends ConsumerWidget {
           // Drawer Header - Compact Modern Design
           Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
@@ -94,7 +94,7 @@ class AppDrawer extends ConsumerWidget {
                                   fit: BoxFit.cover,
                                   memCacheWidth: 180, // Limit memory usage
                                   memCacheHeight: 180,
-                                  placeholder: (context, url) => Center(
+                                  placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
@@ -102,14 +102,14 @@ class AppDrawer extends ConsumerWidget {
                                       ),
                                     ),
                                   ),
-                                  errorWidget: (context, url, error) => Icon(
+                                  errorWidget: (context, url, error) => const Icon(
                                     Icons.person,
                                     size: DesignTokens.iconSizeXL,
                                     color: AppColors.primaryOrange,
                                   ),
                                 ),
                               )
-                            : Icon(
+                            : const Icon(
                                 Icons.person,
                                 size: DesignTokens.iconSizeXL,
                                 color: AppColors.primaryOrange,
@@ -119,7 +119,7 @@ class AppDrawer extends ConsumerWidget {
                     const SizedBox(height: DesignTokens.spacingM),
                     Text(
                       user?.name ?? l10n.samajTitle,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.textOnPrimary,
                         fontSize: DesignTokens.fontSizeL,
                         fontWeight: DesignTokens.fontWeightBold,
@@ -181,7 +181,7 @@ class AppDrawer extends ConsumerWidget {
                     ),
                     child: Text(
                       l10n.menu,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: DesignTokens.fontSizeS,
                         fontWeight: DesignTokens.fontWeightSemiBold,
@@ -294,7 +294,7 @@ class AppDrawer extends ConsumerWidget {
                     ),
                     child: Text(
                       l10n.settings,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: DesignTokens.fontSizeS,
                         fontWeight: DesignTokens.fontWeightSemiBold,
@@ -336,7 +336,7 @@ class AppDrawer extends ConsumerWidget {
               horizontal: DesignTokens.spacingM,
               vertical: DesignTokens.spacingS,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.grey100,
               border: Border(
                 top: BorderSide(
@@ -352,7 +352,7 @@ class AppDrawer extends ConsumerWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.info_outline,
                       size: 12,
                       color: AppColors.textTertiary,
@@ -360,7 +360,7 @@ class AppDrawer extends ConsumerWidget {
                     const SizedBox(width: DesignTokens.spacingXS),
                     Text(
                       'Version $version',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.textTertiary,
                         fontSize: DesignTokens.fontSizeXS,
                         fontWeight: DesignTokens.fontWeightMedium,
@@ -448,7 +448,7 @@ class AppDrawer extends ConsumerWidget {
                   const SizedBox(width: DesignTokens.spacingXS),
                   trailing,
                 ] else ...[
-                  Icon(
+                  const Icon(
                     Icons.chevron_right,
                     size: 18,
                     color: AppColors.textTertiary,
@@ -490,7 +490,7 @@ class AppDrawer extends ConsumerWidget {
 
     return Text(
       getCurrentLanguageName(),
-      style: TextStyle(
+      style: const TextStyle(
         color: AppColors.primaryOrange,
         fontWeight: DesignTokens.fontWeightSemiBold,
         fontSize: DesignTokens.fontSizeS,
@@ -510,7 +510,7 @@ class AppDrawer extends ConsumerWidget {
         ),
         title: Row(
           children: [
-            Icon(Icons.language, color: AppColors.primaryOrange),
+            const Icon(Icons.language, color: AppColors.primaryOrange),
             const SizedBox(width: DesignTokens.spacingM),
             Text(l10n.selectLanguage),
           ],
@@ -601,7 +601,7 @@ class AppDrawer extends ConsumerWidget {
                 color: AppColors.errorBackground,
                 borderRadius: BorderRadius.circular(DesignTokens.radiusS),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.logout,
                 color: AppColors.errorText,
                 size: DesignTokens.iconSizeM,
@@ -626,7 +626,7 @@ class AppDrawer extends ConsumerWidget {
           children: [
             Text(
               l10n.areYouSureLogout,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeM,
                 color: AppColors.textPrimary,
               ),
@@ -634,7 +634,7 @@ class AppDrawer extends ConsumerWidget {
             const SizedBox(height: DesignTokens.spacingS),
             Text(
               l10n.logoutConfirmation,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeS,
                 color: AppColors.textSecondary,
               ),
@@ -646,7 +646,7 @@ class AppDrawer extends ConsumerWidget {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               l10n.cancel,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: DesignTokens.fontSizeM,
               ),

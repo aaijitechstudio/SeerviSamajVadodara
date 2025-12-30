@@ -46,7 +46,7 @@ class AboutUsScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.info_outline,
                     size: DesignTokens.iconSizeXL,
                     color: AppColors.primaryOrange,
@@ -55,7 +55,7 @@ class AboutUsScreen extends StatelessWidget {
                   Expanded(
                     child: Text(
                       l10n.aboutSamaj,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DesignTokens.fontSizeXL,
                         fontWeight: DesignTokens.fontWeightBold,
                         color: AppColors.primaryOrange,
@@ -69,7 +69,7 @@ class AboutUsScreen extends StatelessWidget {
             // About Content
             Text(
               l10n.aboutContent,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: DesignTokens.fontSizeM,
                 color: AppColors.textPrimary,
                 height: 1.6,
@@ -124,11 +124,11 @@ class AboutUsScreen extends StatelessWidget {
         border: Border.all(
           color: color.withValues(alpha: 0.3),
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.shadowLight,
             blurRadius: DesignTokens.elevationLow,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -152,7 +152,7 @@ class AboutUsScreen extends StatelessWidget {
               const SizedBox(width: DesignTokens.spacingM),
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: DesignTokens.fontSizeL,
                   fontWeight: DesignTokens.fontWeightBold,
                   color: AppColors.textPrimary,
@@ -163,7 +163,7 @@ class AboutUsScreen extends StatelessWidget {
           const SizedBox(height: DesignTokens.spacingM),
           Text(
             content,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: DesignTokens.fontSizeM,
               color: AppColors.textSecondary,
               height: 1.5,

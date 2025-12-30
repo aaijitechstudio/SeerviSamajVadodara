@@ -64,26 +64,33 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     final spacingMultiplier =
         isSmallScreen ? 0.7 : (isMediumScreen ? 0.85 : 1.0);
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (!Platform.isAndroid) return true;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+
+        if (!Platform.isAndroid) {
+          if (!context.mounted) return;
+          Navigator.of(context).maybePop(result);
+          return;
+        }
 
         final now = DateTime.now();
         if (_lastBackPressAt == null ||
             now.difference(_lastBackPressAt!) > const Duration(seconds: 2)) {
           _lastBackPressAt = now;
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
+          final messenger = ScaffoldMessenger.of(context);
+          messenger.clearSnackBars();
+          messenger.showSnackBar(
             const SnackBar(
               content: Text('Press back again to exit'),
               duration: Duration(seconds: 2),
             ),
           );
-          return false;
+          return;
         }
 
-        SystemNavigator.pop();
-        return false;
+        await SystemNavigator.pop();
       },
       child: Scaffold(
         appBar: AppBar(
@@ -142,10 +149,10 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                               offset: const Offset(0, 8),
                               spreadRadius: 2,
                             ),
-                            BoxShadow(
+                            const BoxShadow(
                               color: AppColors.shadowLight,
                               blurRadius: 10,
-                              offset: const Offset(0, 4),
+                              offset: Offset(0, 4),
                             ),
                           ],
                         ),
@@ -326,10 +333,10 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
             offset: const Offset(0, 3),
             spreadRadius: 0,
           ),
-          BoxShadow(
+          const BoxShadow(
             color: AppColors.shadowLight,
             blurRadius: 4,
-            offset: const Offset(0, 1),
+            offset: Offset(0, 1),
           ),
         ],
       ),

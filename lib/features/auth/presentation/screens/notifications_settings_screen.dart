@@ -132,7 +132,7 @@ class _NotificationsSettingsScreenState
       padding: const EdgeInsets.symmetric(vertical: DesignTokens.spacingM),
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: DesignTokens.fontSizeXL,
           fontWeight: DesignTokens.fontWeightBold,
         ),

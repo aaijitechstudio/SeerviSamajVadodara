@@ -33,9 +33,9 @@ class SuccessStoryDetailScreen extends StatelessWidget {
                       height: 60,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.primaryOrange.withOpacity(0.1),
+                        color: AppColors.primaryOrange.withValues(alpha: 0.1),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.person,
                         size: 40,
                         color: AppColors.primaryOrange,
@@ -60,12 +60,13 @@ class SuccessStoryDetailScreen extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryOrange.withOpacity(0.1),
+                              color:
+                                  AppColors.primaryOrange.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
                               story.field,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: AppColors.primaryOrange,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -81,12 +82,12 @@ class SuccessStoryDetailScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: Colors.blue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.work,
                           color: Colors.blue,
                         ),
@@ -94,7 +95,7 @@ class SuccessStoryDetailScreen extends StatelessWidget {
                         Expanded(
                           child: Text(
                             story.currentPosition!,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                             ),
@@ -120,26 +121,26 @@ class SuccessStoryDetailScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        AppColors.primaryOrange.withOpacity(0.1),
-                        AppColors.primaryOrange.withOpacity(0.05),
+                        AppColors.primaryOrange.withValues(alpha: 0.1),
+                        AppColors.primaryOrange.withValues(alpha: 0.05),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: AppColors.primaryOrange.withOpacity(0.3),
+                      color: AppColors.primaryOrange.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      const Row(
                         children: [
                           Icon(
                             Icons.format_quote,
                             color: AppColors.primaryOrange,
                             size: 24,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Text(
                             'Message to Youth',
                             style: TextStyle(
@@ -152,7 +153,7 @@ class SuccessStoryDetailScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       Text(
                         story.message,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           fontStyle: FontStyle.italic,
                           height: 1.6,

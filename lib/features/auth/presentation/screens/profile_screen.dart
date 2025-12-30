@@ -241,8 +241,8 @@ class ProfileScreen extends ConsumerWidget {
       showEditButton: false,
       children: [
         if (postRepository == null)
-          Padding(
-            padding: const EdgeInsets.all(DesignTokens.spacingM),
+          const Padding(
+            padding: EdgeInsets.all(DesignTokens.spacingM),
             child: Text(
               'Posts are unavailable right now. Please restart the app.',
               style: TextStyle(
@@ -266,8 +266,8 @@ class ProfileScreen extends ConsumerWidget {
               final posts = data?.data ?? const <PostModel>[];
 
               if (posts.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.all(DesignTokens.spacingM),
+                return const Padding(
+                  padding: EdgeInsets.all(DesignTokens.spacingM),
                   child: Text(
                     'No posts yet',
                     style: TextStyle(
@@ -378,11 +378,11 @@ class ProfileScreen extends ConsumerWidget {
                     color: AppColors.backgroundWhite,
                     width: 3,
                   ),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: AppColors.shadowMedium,
                       blurRadius: 8,
-                      offset: const Offset(0, 4),
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
@@ -398,7 +398,7 @@ class ProfileScreen extends ConsumerWidget {
                             fit: BoxFit.cover,
                             memCacheWidth: 180, // Limit memory usage
                             memCacheHeight: 180,
-                            placeholder: (context, url) => Center(
+                            placeholder: (context, url) => const Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor: AlwaysStoppedAnimation<Color>(
@@ -406,13 +406,13 @@ class ProfileScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            errorWidget: (context, url, error) => Icon(
+                            errorWidget: (context, url, error) => const Icon(
                               Icons.person,
                               size: 45,
                               color: AppColors.primaryOrange,
                             ),
                           )
-                        : Icon(
+                        : const Icon(
                             Icons.person,
                             size: 45,
                             color: AppColors.primaryOrange,
@@ -425,18 +425,18 @@ class ProfileScreen extends ConsumerWidget {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.backgroundWhite,
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.shadowMedium,
                         blurRadius: 4,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.camera_alt,
                     size: 16,
                     color: AppColors.primaryOrange,
@@ -564,7 +564,7 @@ class ProfileScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: DesignTokens.fontSizeS,
                     color: AppColors.textSecondary,
                     fontWeight: DesignTokens.fontWeightMedium,
@@ -575,7 +575,7 @@ class ProfileScreen extends ConsumerWidget {
                   value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: DesignTokens.fontSizeM,
                     color: AppColors.textPrimary,
                     fontWeight: DesignTokens.fontWeightBold,
@@ -610,11 +610,11 @@ class ProfileScreen extends ConsumerWidget {
           color: AppColors.borderLight,
           width: 1,
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.shadowLight,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -721,7 +721,7 @@ class ProfileScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: DesignTokens.fontSizeS,
                     color: AppColors.textSecondary,
                     fontWeight: DesignTokens.fontWeightMedium,
@@ -781,7 +781,7 @@ class ProfileScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: DesignTokens.fontSizeS,
                     color: AppColors.textSecondary,
                     fontWeight: DesignTokens.fontWeightMedium,
@@ -835,7 +835,7 @@ class ProfileScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
+            child: const Text(
               'Close',
               style: TextStyle(
                 color: AppColors.textSecondary,
@@ -864,7 +864,7 @@ class ProfileScreen extends ConsumerWidget {
                 color: AppColors.errorBackground,
                 borderRadius: BorderRadius.circular(DesignTokens.radiusS),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.logout,
                 color: AppColors.errorText,
                 size: DesignTokens.iconSizeM,
@@ -956,7 +956,7 @@ class _PostTextThumb extends StatelessWidget {
         post.content,
         maxLines: 5,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 12,
           color: AppColors.textPrimary,
           height: 1.2,

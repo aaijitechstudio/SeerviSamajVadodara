@@ -119,7 +119,14 @@ class _MembershipCardState extends State<MembershipCard>
               builder: (context, child) {
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
-                  transform: Matrix4.identity()..scale(_isPressed ? 0.98 : 1.0),
+                  transform:
+                      Matrix4.identity()
+                        ..scaleByDouble(
+                          _isPressed ? 0.98 : 1.0,
+                          _isPressed ? 0.98 : 1.0,
+                          _isPressed ? 0.98 : 1.0,
+                          1.0,
+                        ),
                   margin: const EdgeInsets.only(
                     top: DesignTokens.spacingS,
                     bottom: DesignTokens.spacingS,
@@ -249,7 +256,7 @@ class _MembershipCardState extends State<MembershipCard>
                         'assets/images/seervisamajvadodara.png',
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return Icon(
+                          return const Icon(
                             Icons.people,
                             color: AppColors.primaryOrange,
                             size: DesignTokens.iconSizeM,
@@ -352,7 +359,7 @@ class _MembershipCardState extends State<MembershipCard>
                           vertical: DesignTokens.spacingXS / 2,
                         ),
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
+                          gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
@@ -377,7 +384,7 @@ class _MembershipCardState extends State<MembershipCard>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.star,
                               size: 14,
                               color: AppColors.backgroundWhite,
@@ -496,7 +503,7 @@ class _MembershipCardState extends State<MembershipCard>
                   shape: BoxShape.circle,
                   color: AppColors.successColor.withValues(alpha: 0.1),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.verified,
                   size: 16,
                   color: AppColors.successColor,
@@ -627,7 +634,7 @@ class _MembershipCardState extends State<MembershipCard>
               ),
               child: Text(
                 widget.role!,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: DesignTokens.fontSizeS,
                   fontWeight: DesignTokens.fontWeightSemiBold,
                   color: AppColors.primaryOrange,
@@ -702,7 +709,7 @@ class _MembershipCardState extends State<MembershipCard>
                 Container(
                   width: 16,
                   height: 16,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: [

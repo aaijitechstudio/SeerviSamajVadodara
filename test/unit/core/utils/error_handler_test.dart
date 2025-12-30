@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:seervi_kshatriya_samaj_vadodara/core/utils/error_handler.dart';
 import 'package:seervi_kshatriya_samaj_vadodara/core/errors/app_exceptions.dart';
 
@@ -95,7 +94,7 @@ void main() {
 
     group('Exception conversion', () {
       test('converts AppException to Failure', () {
-        final exception = NetworkException('Network error');
+        const exception = NetworkException('Network error');
         final failure = ErrorHandler.exceptionToFailure(exception);
         expect(failure, isNotNull);
         expect(failure.message, 'Network error');

@@ -41,11 +41,11 @@ class AartiScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.backgroundWhite,
                     borderRadius: BorderRadius.circular(DesignTokens.radiusM),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: AppColors.shadowLight,
                         blurRadius: DesignTokens.elevationMedium,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
@@ -53,7 +53,7 @@ class AartiScreen extends StatelessWidget {
                     children: [
                       Text(
                         l10n.devotionalInvocations,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: DesignTokens.fontSizeL,
                           fontWeight: DesignTokens.fontWeightSemiBold,
                           color: AppColors.textPrimary,
@@ -76,7 +76,7 @@ class AartiScreen extends StatelessWidget {
                 // Aarti Title
                 Text(
                   l10n.aaiMataAarti,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: DesignTokens.fontSizeH4,
                     fontWeight: DesignTokens.fontWeightBold,
                     color: AppColors.primaryOrange,
@@ -107,7 +107,7 @@ class AartiScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.info_outline,
                         color: AppColors.primaryOrange,
                         size: DesignTokens.iconSizeL,
@@ -115,7 +115,7 @@ class AartiScreen extends StatelessWidget {
                       const SizedBox(height: DesignTokens.spacingS),
                       Text(
                         l10n.communityRequest,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: DesignTokens.fontSizeM,
                           color: AppColors.textPrimary,
                           height: 1.5,
@@ -138,7 +138,7 @@ class AartiScreen extends StatelessWidget {
   Widget _buildInvocationText(String text) {
     return Text(
       text,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: DesignTokens.fontSizeL,
         fontWeight: DesignTokens.fontWeightMedium,
         color: AppColors.primaryOrange,
@@ -154,17 +154,17 @@ class AartiScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(DesignTokens.radiusM),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.shadowLight,
             blurRadius: DesignTokens.elevationMedium,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
       child: Text(
         verse,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: DesignTokens.fontSizeL,
           fontWeight: DesignTokens.fontWeightRegular,
           color: AppColors.textPrimary,

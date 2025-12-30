@@ -30,7 +30,7 @@ class ExamDetailScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.quiz,
                       color: AppColors.primaryOrange,
                       size: 32,
@@ -69,12 +69,12 @@ class ExamDetailScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryOrange.withOpacity(0.1),
+                      color: AppColors.primaryOrange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.calendar_today,
                           color: AppColors.primaryOrange,
                         ),
@@ -82,7 +82,7 @@ class ExamDetailScreen extends StatelessWidget {
                         Expanded(
                           child: Text(
                             exam.examFrequency!,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: AppColors.primaryOrange,
                             ),
@@ -117,14 +117,14 @@ class ExamDetailScreen extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         resource,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           color: AppColors.primaryOrange,
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),
                                     ),
-                                    Icon(
+                                    const Icon(
                                       Icons.arrow_forward_ios,
                                       size: 16,
                                       color: AppColors.primaryOrange,

@@ -182,7 +182,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   ),
           ),
         ),
-        SizedBox(height: DesignTokens.spacingS),
+        const SizedBox(height: DesignTokens.spacingS),
         Text(
           label,
           style: TextStyle(
@@ -206,7 +206,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: DesignTokens.spacingXL),
+          const SizedBox(height: DesignTokens.spacingXL),
 
           // Profile Image Section
           Center(
@@ -286,7 +286,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: DesignTokens.spacingM),
+                const SizedBox(height: DesignTokens.spacingM),
                 Text(
                   l10n.profileImage,
                   style: const TextStyle(
@@ -299,7 +299,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
 
-          SizedBox(height: DesignTokens.spacingXL),
+          const SizedBox(height: DesignTokens.spacingXL),
 
           // Google Sign In Button (Standard Design)
           Consumer(
@@ -313,27 +313,27 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Divider with "OR"
           Row(
             children: [
-              Expanded(child: Divider(color: AppColors.dividerColor)),
+              const Expanded(child: Divider(color: AppColors.dividerColor)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: DesignTokens.spacingM),
                 child: Text(
                   l10n.or,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.grey600,
                     fontWeight: DesignTokens.fontWeightMedium,
                   ),
                 ),
               ),
-              Expanded(child: Divider(color: AppColors.dividerColor)),
+              const Expanded(child: Divider(color: AppColors.dividerColor)),
             ],
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Name Field
           TextFormField(
@@ -353,7 +353,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Email Field
           TextFormField(
@@ -374,7 +374,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Phone Field
           TextFormField(
@@ -395,7 +395,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Password Field
           TextFormField(
@@ -449,7 +449,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ),
             )
           else
-            SizedBox(height: DesignTokens.spacingM),
+            const SizedBox(height: DesignTokens.spacingM),
 
           // Confirm Password Field
           TextFormField(
@@ -482,7 +482,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingXL),
+          const SizedBox(height: DesignTokens.spacingXL),
 
           // Next Button
           AppButton(
@@ -491,7 +491,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             onPressed: _goToStep2,
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Sign In Link
           Row(
@@ -517,7 +517,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: DesignTokens.spacingXL),
+          const SizedBox(height: DesignTokens.spacingXL),
 
           // Gotra Field
           TextFormField(
@@ -535,7 +535,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Vadodara Address Field
           TextFormField(
@@ -555,7 +555,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Native Address Field
           TextFormField(
@@ -575,7 +575,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Pratisthan Name Field
           TextFormField(
@@ -587,7 +587,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Terms and Conditions
           Row(
@@ -620,7 +620,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ],
           ),
 
-          SizedBox(height: DesignTokens.spacingL),
+          const SizedBox(height: DesignTokens.spacingL),
 
           // Error Message
           Consumer(
@@ -646,7 +646,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         style: const TextStyle(color: AppColors.errorText),
                       ),
                       if (isEmailInUse) ...[
-                        SizedBox(height: DesignTokens.spacingS),
+                        const SizedBox(height: DesignTokens.spacingS),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pushReplacementNamed('/login');
@@ -658,7 +658,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           ),
                           child: Text(
                             l10n.goToSignIn,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.primaryOrange,
                               fontWeight: DesignTokens.fontWeightBold,
                             ),
@@ -673,7 +673,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             },
           ),
 
-          SizedBox(height: DesignTokens.spacingM),
+          const SizedBox(height: DesignTokens.spacingM),
 
           // Previous and Sign Up Buttons
           Row(
@@ -687,7 +687,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   isFullWidth: true,
                 ),
               ),
-              SizedBox(width: DesignTokens.spacingM),
+              const SizedBox(width: DesignTokens.spacingM),
               Expanded(
                 flex: 2,
                 child: Consumer(

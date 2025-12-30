@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+// (removed unused foundation import)
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -33,6 +33,10 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
   bool _isPosting = false;
   String _uploadStatus = '';
   double _uploadProgress = 0.0;
+  String? _selectedMusic;
+  String? _selectedPeople;
+  String? _selectedLocation;
+  String? _selectedFeeling;
 
   @override
   void initState() {
@@ -41,6 +45,10 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
       _selectedCategory = widget.initialCategory!;
       _isAnnouncement = widget.initialCategory == PostCategory.announcement;
     }
+    _contentController.addListener(() {
+      if (!mounted) return;
+      setState(() {});
+    });
   }
 
   @override
@@ -62,8 +70,24 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
     }
   }
 
+  bool get _canPost {
+    final hasText = _contentController.text.trim().isNotEmpty;
+    final hasMedia = _selectedImages.isNotEmpty || _selectedVideos.isNotEmpty;
+    return (hasText || hasMedia) && !_isPosting;
+  }
+
   Future<void> _handleSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
+    final hasText = _contentController.text.trim().isNotEmpty;
+    final hasMedia = _selectedImages.isNotEmpty || _selectedVideos.isNotEmpty;
+    if (!hasText && !hasMedia) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Write something or add media to post.')),
+        );
+      }
+      return;
+    }
 
     final authState = ref.read(authControllerProvider);
     final user = authState.user;
@@ -233,6 +257,12 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
         isAnnouncement:
             _isAnnouncement || _selectedCategory == PostCategory.announcement,
         category: _selectedCategory,
+        metadata: {
+          if (_selectedMusic != null) 'music': _selectedMusic,
+          if (_selectedPeople != null) 'people': _selectedPeople,
+          if (_selectedLocation != null) 'location': _selectedLocation,
+          if (_selectedFeeling != null) 'feeling': _selectedFeeling,
+        },
       );
 
       final postRepository = ref.read(postRepositoryProvider);
@@ -515,7 +545,7 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
   Future<void> _pickVideo() async {
     try {
       // Check if already have 1 video
-      if (_selectedVideos.length >= 1) {
+      if (_selectedVideos.isNotEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -545,210 +575,519 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final keyboardOpen = mq.viewInsets.bottom > 0;
     final authState = ref.watch(authControllerProvider);
     final user = authState.user;
     final isAdmin = user?.isAdmin ?? false;
 
+    if (user == null) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: const Text('New post'),
+          centerTitle: true,
+        ),
+        body: const Center(child: Text('Please login to create a post')),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Post'),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text('New post'),
+        centerTitle: true,
         actions: [
-          TextButton(
-            onPressed: _isPosting ? null : _handleSubmit,
-            child: _isPosting
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          IconButton(
+            icon: const Icon(Icons.more_horiz),
+            tooltip: 'More',
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                showDragHandle: true,
+                builder: (context) {
+                  return SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (isAdmin)
+                            SwitchListTile(
+                              title: const Text('Mark as Announcement'),
+                              value: _isAnnouncement,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isAnnouncement = value;
+                                  if (_isAnnouncement) {
+                                    _selectedCategory =
+                                        PostCategory.announcement;
+                                  }
+                                });
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ListTile(
+                            leading: const Icon(Icons.category_outlined),
+                            title: const Text('Category'),
+                            subtitle:
+                                Text(_getCategoryLabel(_selectedCategory)),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              _showCategoryPicker(context, isAdmin);
+                            },
+                          ),
+                          if (_selectedImages.isNotEmpty ||
+                              _selectedVideos.isNotEmpty)
+                            ListTile(
+                              leading: const Icon(Icons.delete_outline),
+                              title: const Text('Remove media'),
+                              onTap: () {
+                                setState(() {
+                                  _selectedImages = [];
+                                  _selectedVideos = [];
+                                });
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                        ],
+                      ),
                     ),
-                  )
-                : const Text(
-                    'Post',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  );
+                },
+              );
+            },
           ),
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: ResponsivePage(
-            useSafeArea: false,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              // Category Selection
-              _buildCategorySelection(isAdmin),
-              const SizedBox(height: 16),
-
-              // Content Field
-              TextFormField(
-                controller: _contentController,
-                decoration: const InputDecoration(
-                  labelText: 'What\'s on your mind?',
-                  hintText: 'Write something...',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 6,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter some content';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Media Preview
-              if (_selectedImages.isNotEmpty) _buildImagePreview(),
-              if (_selectedVideos.isNotEmpty) _buildVideoPreview(),
-
-              // Upload Progress Indicator
-              if (_isPosting && _uploadStatus.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.blue.shade200),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _uploadStatus,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      LinearProgressIndicator(
-                        value: _uploadProgress,
-                        backgroundColor: Colors.blue.shade100,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${(_uploadProgress * 100).toStringAsFixed(0)}%',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue.shade700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-
-              const SizedBox(height: 16),
-
-              // Media Selection Buttons
-              Row(
+      // We'll manage keyboard layout manually to avoid any overflows.
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: [
+            // Main content (kept scrollable). We add bottom padding to avoid being hidden by the composer bar.
+            Padding(
+              padding: const EdgeInsets.only(bottom: 170),
+              child: Column(
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.photo_library),
-                    onPressed: _pickImages,
-                    tooltip: 'Add Photos',
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.video_library),
-                    onPressed: _pickVideo,
-                    tooltip: 'Add Video',
-                  ),
-                  if (_selectedImages.isNotEmpty || _selectedVideos.isNotEmpty)
-                    IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        setState(() {
-                          _selectedImages = [];
-                          _selectedVideos = [];
-                        });
-                      },
-                      tooltip: 'Remove Media',
+                  // Header row: avatar + name
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: (user.profileImageUrl != null &&
+                                  (user.profileImageUrl as String).isNotEmpty)
+                              ? NetworkImage(user.profileImageUrl as String)
+                              : null,
+                          child: (user.profileImageUrl == null ||
+                                  (user.profileImageUrl as String).isEmpty)
+                              ? const Icon(Icons.person)
+                              : null,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user.name,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  _Pill(
+                                    icon: Icons.public,
+                                    label: 'Friends',
+                                    onTap: () {
+                                      // Placeholder – can add privacy selection later.
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _Pill(
+                                    icon: Icons.category_outlined,
+                                    label: _selectedCategory
+                                        .toString()
+                                        .split('.')
+                                        .last,
+                                    onTap: () =>
+                                        _showCategoryPicker(context, isAdmin),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  // Show limits
-                  if (_selectedImages.length >= 3)
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        'Max 3 images (5MB each)',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+
+                  // Quick actions row (simple and tappable)
+                  SizedBox(
+                    height: 44,
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _QuickChip(
+                          icon: Icons.music_note,
+                          label: _selectedMusic == null ? 'Music' : 'Music ✓',
+                          onTap: () => _pickMusic(context),
+                        ),
+                        _QuickChip(
+                          icon: Icons.person_add_alt_1,
+                          label:
+                              _selectedPeople == null ? 'People' : 'People ✓',
+                          onTap: () => _pickPeople(context),
+                        ),
+                        _QuickChip(
+                          icon: Icons.location_on_outlined,
+                          label: _selectedLocation == null
+                              ? 'Location'
+                              : 'Location ✓',
+                          onTap: () => _pickLocation(context),
+                        ),
+                        _QuickChip(
+                          icon: Icons.emoji_emotions_outlined,
+                          label: _selectedFeeling == null
+                              ? 'Feeling'
+                              : 'Feeling ✓',
+                          onTap: () => _pickFeeling(context),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Divider(height: 1),
+
+                  // Main editor (scrolls when keyboard shows)
+                  Expanded(
+                    child: Form(
+                      key: _formKey,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                        child: ResponsivePage(
+                          useSafeArea: false,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (_selectedMusic != null ||
+                                  _selectedPeople != null ||
+                                  _selectedLocation != null ||
+                                  _selectedFeeling != null) ...[
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 6,
+                                  children: [
+                                    if (_selectedMusic != null)
+                                      Chip(
+                                        label: Text('🎵 ${_selectedMusic!}'),
+                                        onDeleted: () => setState(
+                                            () => _selectedMusic = null),
+                                      ),
+                                    if (_selectedPeople != null)
+                                      Chip(
+                                        label: Text('👥 ${_selectedPeople!}'),
+                                        onDeleted: () => setState(
+                                            () => _selectedPeople = null),
+                                      ),
+                                    if (_selectedLocation != null)
+                                      Chip(
+                                        label: Text('📍 ${_selectedLocation!}'),
+                                        onDeleted: () => setState(
+                                            () => _selectedLocation = null),
+                                      ),
+                                    if (_selectedFeeling != null)
+                                      Chip(
+                                        label: Text('😊 ${_selectedFeeling!}'),
+                                        onDeleted: () => setState(
+                                            () => _selectedFeeling = null),
+                                      ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                              ],
+                              TextField(
+                                controller: _contentController,
+                                maxLines: null,
+                                minLines: 6,
+                                decoration: const InputDecoration(
+                                  hintText: "What's on your mind?",
+                                  border: InputBorder.none,
+                                ),
+                                style:
+                                    const TextStyle(fontSize: 20, height: 1.3),
+                              ),
+                              if (_selectedImages.isNotEmpty) ...[
+                                const SizedBox(height: 12),
+                                _buildImagePreview(),
+                              ],
+                              if (_selectedVideos.isNotEmpty) ...[
+                                const SizedBox(height: 12),
+                                _buildVideoPreview(),
+                              ],
+                              if (_isPosting && _uploadStatus.isNotEmpty) ...[
+                                const SizedBox(height: 16),
+                                Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.shade50,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border:
+                                        Border.all(color: Colors.blue.shade200),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _uploadStatus,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      LinearProgressIndicator(
+                                        value: _uploadProgress,
+                                        backgroundColor: Colors.blue.shade100,
+                                        valueColor:
+                                            const AlwaysStoppedAnimation<Color>(
+                                                Colors.blue),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${(_uploadProgress * 100).toStringAsFixed(0)}%',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.blue.shade700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  if (_selectedVideos.length >= 1)
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        'Max 1 video (50MB)',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ),
+                  ),
                 ],
               ),
+            ),
 
-              if (isAdmin) ...[
-                const SizedBox(height: 16),
-                CheckboxListTile(
-                  title: const Text('Mark as Announcement'),
-                  value: _isAnnouncement,
-                  onChanged: (value) {
+            // Bottom composer bar (overlay; moves above keyboard without affecting layout)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: AnimatedPadding(
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOut,
+                padding: EdgeInsets.only(bottom: mq.viewInsets.bottom),
+                child: _ComposerBar(
+                  keyboardOpen: keyboardOpen,
+                  hasMedia:
+                      _selectedImages.isNotEmpty || _selectedVideos.isNotEmpty,
+                  onPickImages: _pickImages,
+                  onPickVideo: _pickVideo,
+                  onClearMedia: () {
                     setState(() {
-                      _isAnnouncement = value ?? false;
-                      if (_isAnnouncement) {
-                        _selectedCategory = PostCategory.announcement;
-                      }
+                      _selectedImages = [];
+                      _selectedVideos = [];
                     });
                   },
+                  canPost: _canPost,
+                  isPosting: _isPosting,
+                  onPost: _handleSubmit,
+                  bottomInset: mq.padding.bottom,
                 ),
-              ],
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildCategorySelection(bool isAdmin) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Category',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  Future<void> _pickMusic(BuildContext context) async {
+    final controller = TextEditingController(text: _selectedMusic ?? '');
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add music'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Song name',
+          ),
+          autofocus: true,
         ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: PostCategory.values.map((category) {
-            final isSelected = _selectedCategory == category;
-            final isDisabled =
-                !isAdmin && category == PostCategory.announcement;
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    final value = result?.trim();
+    if (!mounted) return;
+    setState(() {
+      _selectedMusic = (value == null || value.isEmpty) ? null : value;
+    });
+  }
 
-            return FilterChip(
-              label: Text(_getCategoryLabel(category)),
-              selected: isSelected,
-              onSelected: isDisabled
-                  ? null
-                  : (selected) {
-                      if (selected) {
+  Future<void> _pickPeople(BuildContext context) async {
+    final controller = TextEditingController(text: _selectedPeople ?? '');
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Tag people'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Names (e.g., Ram, Shyam)',
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    final value = result?.trim();
+    if (!mounted) return;
+    setState(() {
+      _selectedPeople = (value == null || value.isEmpty) ? null : value;
+    });
+  }
+
+  Future<void> _pickLocation(BuildContext context) async {
+    final controller = TextEditingController(text: _selectedLocation ?? '');
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add location'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'City / Place (e.g., Vadodara)',
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    final value = result?.trim();
+    if (!mounted) return;
+    setState(() {
+      _selectedLocation = (value == null || value.isEmpty) ? null : value;
+    });
+  }
+
+  Future<void> _pickFeeling(BuildContext context) async {
+    const feelings = [
+      'Happy',
+      'Blessed',
+      'Excited',
+      'Grateful',
+      'Proud',
+      'Sad',
+    ];
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            for (final f in feelings)
+              ListTile(
+                title: Text(f),
+                onTap: () => Navigator.of(context).pop(f),
+              ),
+            ListTile(
+              leading: const Icon(Icons.clear),
+              title: const Text('Remove feeling'),
+              onTap: () => Navigator.of(context).pop(''),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted) return;
+    setState(() {
+      _selectedFeeling = (result == null || result.isEmpty) ? null : result;
+    });
+  }
+
+  void _showCategoryPicker(BuildContext context, bool isAdmin) {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            children: PostCategory.values.map((category) {
+              final isDisabled =
+                  !isAdmin && category == PostCategory.announcement;
+              final isSelected = _selectedCategory == category;
+              return ListTile(
+                enabled: !isDisabled,
+                leading: Icon(
+                  isSelected
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_off,
+                ),
+                title: Text(_getCategoryLabel(category)),
+                onTap: isDisabled
+                    ? null
+                    : () {
                         setState(() {
                           _selectedCategory = category;
                           if (category == PostCategory.announcement) {
                             _isAnnouncement = true;
                           }
                         });
-                      }
-                    },
-            );
-          }).toList(),
-        ),
-      ],
+                        Navigator.of(context).pop();
+                      },
+              );
+            }).toList(),
+          ),
+        );
+      },
     );
   }
 
@@ -850,6 +1189,264 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
           );
         }),
       ],
+    );
+  }
+}
+
+class _Pill extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _Pill({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black.withValues(alpha: 0.12)),
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _QuickChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: Colors.black.withValues(alpha: 0.12)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 18),
+              const SizedBox(width: 8),
+              Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomAction extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool isEnabled;
+
+  const _BottomAction({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.isEnabled = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = isEnabled
+        ? Theme.of(context).iconTheme.color
+        : Theme.of(context).disabledColor;
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: InkWell(
+        onTap: isEnabled ? onTap : null,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 92,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.03),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: fg, size: 18),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10,
+                  height: 1.0,
+                  fontWeight: FontWeight.w600,
+                  color: fg,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ComposerBar extends StatelessWidget {
+  final bool keyboardOpen;
+  final bool hasMedia;
+  final VoidCallback onPickImages;
+  final VoidCallback onPickVideo;
+  final VoidCallback onClearMedia;
+  final bool canPost;
+  final bool isPosting;
+  final VoidCallback onPost;
+  final double bottomInset;
+
+  const _ComposerBar({
+    required this.keyboardOpen,
+    required this.hasMedia,
+    required this.onPickImages,
+    required this.onPickVideo,
+    required this.onClearMedia,
+    required this.canPost,
+    required this.isPosting,
+    required this.onPost,
+    required this.bottomInset,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        border: Border(
+          top: BorderSide(
+            color: Colors.black.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+      ),
+      padding: EdgeInsets.only(
+        left: 12,
+        right: 12,
+        top: 10,
+        bottom: 10 + bottomInset,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (!keyboardOpen) ...[
+            SizedBox(
+              height: 64,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  _BottomAction(
+                    icon: Icons.photo_library_outlined,
+                    label: 'Gallery',
+                    onTap: onPickImages,
+                  ),
+                  _BottomAction(
+                    icon: Icons.video_library_outlined,
+                    label: 'Video',
+                    onTap: onPickVideo,
+                  ),
+                  _BottomAction(
+                    icon: Icons.gif_box_outlined,
+                    label: 'GIF',
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Coming soon')),
+                      );
+                    },
+                  ),
+                  _BottomAction(
+                    icon: Icons.clear,
+                    label: 'Clear',
+                    onTap: onClearMedia,
+                    isEnabled: hasMedia,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
+          Row(
+            children: [
+              if (keyboardOpen) ...[
+                IconButton(
+                  icon: const Icon(Icons.photo_library_outlined),
+                  tooltip: 'Gallery',
+                  onPressed: onPickImages,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.video_library_outlined),
+                  tooltip: 'Video',
+                  onPressed: onPickVideo,
+                ),
+                if (hasMedia)
+                  IconButton(
+                    icon: const Icon(Icons.clear),
+                    tooltip: 'Clear',
+                    onPressed: onClearMedia,
+                  ),
+              ] else ...[
+                _Pill(icon: Icons.group, label: 'Friends', onTap: () {}),
+                const SizedBox(width: 8),
+                _Pill(icon: Icons.lock_open, label: 'On', onTap: () {}),
+                const SizedBox(width: 8),
+                _Pill(
+                    icon: Icons.camera_alt_outlined, label: 'On', onTap: () {}),
+              ],
+              const Spacer(),
+              FilledButton(
+                onPressed: canPost ? onPost : null,
+                child: isPosting
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Post'),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

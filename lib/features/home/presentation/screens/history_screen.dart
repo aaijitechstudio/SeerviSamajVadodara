@@ -46,7 +46,7 @@ class HistoryScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.history,
                     size: DesignTokens.iconSizeXL,
                     color: AppColors.primaryOrange,
@@ -55,7 +55,7 @@ class HistoryScreen extends StatelessWidget {
                   Expanded(
                     child: Text(
                       l10n.samajHistory,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DesignTokens.fontSizeXL,
                         fontWeight: DesignTokens.fontWeightBold,
                         color: AppColors.primaryOrange,
@@ -146,7 +146,7 @@ class HistoryScreen extends StatelessWidget {
               top: DesignTokens.spacingS,
               right: DesignTokens.spacingM,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.primaryOrange,
               shape: BoxShape.circle,
             ),

@@ -120,8 +120,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted) return;
 
     // Precache app logo
-    final logoProvider =
-        const AssetImage('assets/images/seervisamajvadodara.png');
+    const logoProvider =
+        AssetImage('assets/images/seervisamajvadodara.png');
 
     try {
       await precacheImage(logoProvider, context);
@@ -221,7 +221,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       builder: (context, child) {
                         return Transform.rotate(
                           angle: _loadingRotationAnimation.value * 2 * 3.14159,
-                          child: SizedBox(
+                          child: const SizedBox(
                             width: 40,
                             height: 40,
                             child: CircularProgressIndicator(
@@ -244,7 +244,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.wifi,
                               size: 16,
                               color: Colors.green,
@@ -254,7 +254,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                               NetworkHelper.getConnectivityMessage(
                                 connectivity.result,
                               ),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.green,
                                 fontWeight: FontWeight.w500,
@@ -263,7 +263,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           ],
                         );
                       } else {
-                        return Row(
+                        return const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
@@ -271,7 +271,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                               size: 16,
                               color: Colors.red,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Text(
                               'No Internet Connection',
                               style: TextStyle(
@@ -303,7 +303,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     opacity: _fadeAnimation.value,
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           'Seervi Kshatriya Samaj',
                           style: TextStyle(
                             fontSize: 18,
@@ -367,10 +367,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 spreadRadius: 2,
               ),
               // Light shadow for depth
-              BoxShadow(
+              const BoxShadow(
                 color: AppColors.shadowLight,
                 blurRadius: 10,
-                offset: const Offset(0, 4),
+                offset: Offset(0, 4),
               ),
             ],
           ),
@@ -387,7 +387,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       borderRadius: BorderRadius.circular(DesignTokens.radiusL),
                       color: AppColors.primaryOrange.withValues(alpha: 0.1),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.people,
                       size: DesignTokens.iconSizeXL,
                       color: AppColors.primaryOrange,

@@ -64,8 +64,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return WillPopScope(
-      onWillPop: _handleBack,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _handleBack();
+        if (!context.mounted) return;
+        if (shouldPop) {
+          Navigator.of(context).pop(result);
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title ?? l10n.eNewspaper),
@@ -74,7 +82,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () async {
               final shouldPop = await _handleBack();
-              if (!mounted) return;
+              if (!context.mounted) return;
               if (shouldPop) {
                 Navigator.of(context).pop();
               }

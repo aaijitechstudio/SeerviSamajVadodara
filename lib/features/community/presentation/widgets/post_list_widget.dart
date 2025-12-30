@@ -32,7 +32,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
   String? _lastDocumentId;
   String? _loadErrorMessage;
   PostFilterType _selectedFilter = PostFilterType.all;
-  Map<String, UserModel> _userCache =
+  final Map<String, UserModel> _userCache =
       {}; // Cache for user data to check admin status
 
   @override
@@ -275,7 +275,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
         horizontal: DesignTokens.spacingM,
         vertical: DesignTokens.spacingS,
       ),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.backgroundWhite,
         border: Border(
           bottom: BorderSide(
@@ -374,12 +374,12 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.error_outline, size: 64, color: AppColors.grey500),
+              const Icon(Icons.error_outline, size: 64, color: AppColors.grey500),
               const SizedBox(height: 12),
               Text(
                 _loadErrorMessage!,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: DesignTokens.fontSizeM,
                   color: AppColors.grey700,
                 ),
@@ -403,13 +403,13 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.post_add_outlined,
                 size: 80,
                 color: AppColors.grey400,
               ),
               const SizedBox(height: 24),
-              Text(
+              const Text(
                 'No posts found',
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeXL,
@@ -418,7 +418,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
+              const Text(
                 'Be the first to post in this category!',
                 style: TextStyle(
                   fontSize: DesignTokens.fontSizeM,
@@ -470,13 +470,13 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.post_add_outlined,
                             size: 80,
                             color: AppColors.grey400,
                           ),
                           const SizedBox(height: 24),
-                          Text(
+                          const Text(
                             'No posts found',
                             style: TextStyle(
                               fontSize: DesignTokens.fontSizeXL,
@@ -491,7 +491,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                                 : _selectedFilter == PostFilterType.admin
                                     ? 'No admin posts found in this category'
                                     : 'No member posts found in this category',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: DesignTokens.fontSizeM,
                               color: AppColors.grey500,
                             ),

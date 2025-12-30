@@ -113,23 +113,23 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.history,
                         size: 64,
                         color: AppColors.textSecondary,
                       ),
-                      SizedBox(height: DesignTokens.spacingM),
+                      const SizedBox(height: DesignTokens.spacingM),
                       Text(
                         LocalizationFallbacks.noLoginHistory(l10n),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: DesignTokens.fontSizeL,
                           color: AppColors.textSecondary,
                         ),
                       ),
-                      SizedBox(height: DesignTokens.spacingS),
+                      const SizedBox(height: DesignTokens.spacingS),
                       Text(
                         LocalizationFallbacks.loginHistoryWillAppearHere(l10n),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: DesignTokens.fontSizeM,
                           color: AppColors.textTertiary,
                         ),
@@ -176,7 +176,7 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
                               const SizedBox(height: DesignTokens.spacingXS),
                               Text(
                                 email,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: DesignTokens.fontSizeS,
                                   color: AppColors.textSecondary,
                                 ),
@@ -184,7 +184,7 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
                               const SizedBox(height: DesignTokens.spacingXS),
                               Text(
                                 _formatTimestamp(timestamp),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: DesignTokens.fontSizeXS,
                                   color: AppColors.textTertiary,
                                 ),
@@ -194,7 +194,7 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
                                 const SizedBox(height: DesignTokens.spacingXS),
                                 Text(
                                   deviceInfo,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: DesignTokens.fontSizeXS,
                                     color: AppColors.textTertiary,
                                   ),
@@ -202,7 +202,7 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
                               ],
                             ],
                           ),
-                          trailing: Icon(
+                          trailing: const Icon(
                             Icons.chevron_right,
                             color: AppColors.textSecondary,
                           ),
@@ -242,14 +242,13 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
 
     if (confirmed == true) {
       await AuthPreferences.clearLoginHistory();
-      if (mounted) {
-        _loadLoginHistory();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(LocalizationFallbacks.loginHistoryCleared(l10n)),
-          ),
-        );
-      }
+      if (!context.mounted) return;
+      _loadLoginHistory();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(LocalizationFallbacks.loginHistoryCleared(l10n)),
+        ),
+      );
     }
   }
 }

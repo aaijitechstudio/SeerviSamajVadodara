@@ -156,8 +156,8 @@ class HomeQuickAccess extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               if (!enabled)
-                Padding(
-                  padding: const EdgeInsets.only(top: DesignTokens.spacingS),
+                const Padding(
+                  padding: EdgeInsets.only(top: DesignTokens.spacingS),
                   child: Icon(
                     Icons.lock,
                     size: DesignTokens.iconSizeS,

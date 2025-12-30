@@ -58,8 +58,10 @@ class WeatherService {
 
       // Active request: keep timeout short to avoid blocking UX
       final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.lowest,
-        timeLimit: const Duration(seconds: 4),
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.lowest,
+          timeLimit: Duration(seconds: 4),
+        ),
       );
 
       return position;
