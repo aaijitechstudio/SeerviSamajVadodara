@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../theme/app_colors.dart';
-import '../widgets/custom_app_bar.dart';
 
 /// Full-screen video player screen for iOS and Android
 /// Supports network video URLs
@@ -97,9 +96,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: CustomAppBar(
-        title: widget.title ?? 'Video',
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(widget.title ?? 'Video'),
+        centerTitle: true,
       ),
       body: _isLoading
           ? const Center(

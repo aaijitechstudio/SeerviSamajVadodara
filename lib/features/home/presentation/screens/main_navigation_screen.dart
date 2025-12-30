@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -11,6 +13,7 @@ import '../../../auth/providers/auth_provider.dart';
 import '../../../community/presentation/screens/post_composer_screen.dart';
 import '../../../education/presentation/screens/education_career_screen.dart';
 import '../../../../shared/models/post_model.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import '../widgets/app_drawer.dart';
 import 'home_screen.dart';
 
@@ -26,6 +29,9 @@ class MainNavigationScreen extends ConsumerStatefulWidget {
 }
 
 class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  DateTime? _lastBackPressAt;
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +46,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
 
   List<Widget> _buildScreens() {
     return [
-      const HomeScreen(),
+      HomeScreen(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
       const NewsScreen(),
       const MergedMembersScreen(),
       const EducationCareerScreen(),
@@ -68,31 +76,71 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
         ? selectedIndex
         : 0;
 
-    return Scaffold(
-      drawer: AppDrawer(
-        user: user,
-        isAdmin: isAdmin,
-      ),
-      body: IndexedStack(
-        index: safeIndex,
-        children: screens,
-      ),
-      floatingActionButton: safeIndex == 0 && user != null
-          ? FloatingActionButton(
-              onPressed: () {
-                // Navigate to post composer - default to discussion category
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PostComposerScreen(
-                      initialCategory: PostCategory.discussion,
+    return WillPopScope(
+      onWillPop: () async {
+        // Let iOS behave naturally (no system back button expectation).
+        if (!Platform.isAndroid) return true;
+
+        // If drawer is open, close it first.
+        if (_scaffoldKey.currentState?.isDrawerOpen == true) {
+          Navigator.of(context).pop();
+          return false;
+        }
+
+        // If not on Home tab, go to Home tab instead of exiting.
+        if (safeIndex != 0) {
+          ref.read(navigationIndexProvider.notifier).state = 0;
+          return false;
+        }
+
+        // Double-back-to-exit on Home tab.
+        final now = DateTime.now();
+        if (_lastBackPressAt == null ||
+            now.difference(_lastBackPressAt!) > const Duration(seconds: 2)) {
+          _lastBackPressAt = now;
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Press back again to exit'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return false;
+        }
+
+        SystemNavigator.pop();
+        return false;
+      },
+      child: ResponsivePage(
+        useSafeArea: false,
+        // Main shell should stay full-width; responsive constraints are applied per-tab.
+        maxContentWidth: 100000,
+        child: Scaffold(
+        key: _scaffoldKey,
+        drawer: AppDrawer(
+          user: user,
+          isAdmin: isAdmin,
+        ),
+        body: IndexedStack(
+          index: safeIndex,
+          children: screens,
+        ),
+        floatingActionButton: safeIndex == 0 && user != null
+            ? FloatingActionButton(
+                onPressed: () {
+                  // Navigate to post composer - default to discussion category
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PostComposerScreen(
+                        initialCategory: PostCategory.discussion,
+                      ),
                     ),
-                  ),
-                );
-              },
-              child: const Icon(Icons.add),
-            )
-          : null,
-      bottomNavigationBar: Container(
+                  );
+                },
+                child: const Icon(Icons.add),
+              )
+            : null,
+        bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.backgroundWhite,
           boxShadow: [
@@ -145,6 +193,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
             ),
           ),
         ),
+      ),
+    ),
       ),
     );
   }

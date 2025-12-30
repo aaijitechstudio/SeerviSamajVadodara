@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class PhotoGalleryScreen extends StatefulWidget {
   const PhotoGalleryScreen({super.key});
@@ -33,16 +33,18 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.photoGallery,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(l10n.photoGallery),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Column(
-        children: [
+      body: ResponsivePage(
+        useSafeArea: false,
+        child: Column(
+          children: [
           TabBar(
             controller: _tabController,
             labelColor: AppColors.primaryOrange,
@@ -64,7 +66,8 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen>
               ],
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

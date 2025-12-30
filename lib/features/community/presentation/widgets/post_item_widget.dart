@@ -13,6 +13,7 @@ import 'comments_sheet.dart';
 class PostItemWidget extends ConsumerStatefulWidget {
   final PostModel post;
   final VoidCallback? onPostUpdated;
+  final VoidCallback? onOpenDetails;
   final bool?
       isAdminPost; // Optional: if provided, use this instead of checking
 
@@ -20,6 +21,7 @@ class PostItemWidget extends ConsumerStatefulWidget {
     super.key,
     required this.post,
     this.onPostUpdated,
+    this.onOpenDetails,
     this.isAdminPost,
   });
 
@@ -294,21 +296,33 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
               ),
               const SizedBox(height: 12),
 
-              // Content
-              Text(
-                _post.content,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.textPrimary,
-                  height: 1.5,
+              // Content + Media (tap to open details)
+              InkWell(
+                onTap: widget.onOpenDetails,
+                borderRadius: BorderRadius.circular(DesignTokens.radiusS),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _post.content,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.textPrimary,
+                          height: 1.5,
+                        ),
+                      ),
+
+                      // Media
+                      if (_post.hasImages) ...[
+                        const SizedBox(height: 12),
+                        _buildImages(),
+                      ],
+                    ],
+                  ),
                 ),
               ),
-
-              // Media
-              if (_post.hasImages) ...[
-                const SizedBox(height: 12),
-                _buildImages(),
-              ],
 
               const SizedBox(height: 12),
 

@@ -8,7 +8,8 @@ final weatherServiceProvider = Provider<WeatherService>((ref) {
 });
 
 // Weather provider (auto-disposing for better memory management)
-final weatherProvider = FutureProvider.autoDispose<WeatherModel?>((ref) async {
+// Keep weather cached while the app is running to avoid repeated location calls.
+final weatherProvider = FutureProvider<WeatherModel?>((ref) async {
   final weatherService = ref.watch(weatherServiceProvider);
   return await weatherService.getCurrentWeather();
 });

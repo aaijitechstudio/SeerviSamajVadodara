@@ -7,6 +7,7 @@ import '../../../../shared/models/post_model.dart';
 import '../../../../core/repositories/repository_providers.dart';
 import '../../../auth/providers/auth_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class PostComposerScreen extends ConsumerStatefulWidget {
   final PostCategory? initialCategory;
@@ -574,9 +575,11 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
         key: _formKey,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          child: ResponsivePage(
+            useSafeArea: false,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               // Category Selection
               _buildCategorySelection(isAdmin),
               const SizedBox(height: 16),
@@ -703,7 +706,8 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
                   },
                 ),
               ],
-            ],
+              ],
+            ),
           ),
         ),
       ),

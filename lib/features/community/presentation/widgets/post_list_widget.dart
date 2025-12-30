@@ -30,6 +30,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
   bool _isLoading = false;
   bool _hasMore = true;
   String? _lastDocumentId;
+  String? _loadErrorMessage;
   PostFilterType _selectedFilter = PostFilterType.all;
   Map<String, UserModel> _userCache =
       {}; // Cache for user data to check admin status
@@ -61,22 +62,17 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
 
     setState(() {
       _isLoading = true;
+      _loadErrorMessage = null;
     });
 
     try {
       final postRepository = ref.read(postRepositoryProvider);
 
       if (postRepository == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('Firebase is not initialized. Please restart the app.'),
-            ),
-          );
-        }
         setState(() {
           _isLoading = false;
+          _loadErrorMessage =
+              'Firebase is not initialized. Please restart the app.';
         });
         return;
       }
@@ -99,6 +95,10 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
             ),
           );
         }
+        setState(() {
+          _loadErrorMessage =
+              ErrorHandler.getUserFriendlyMessageFromFailure(result.failure!);
+        });
       } else if (result.data != null) {
         setState(() {
           _posts = result.data!;
@@ -106,6 +106,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           if (result.data!.isNotEmpty) {
             _lastDocumentId = result.data!.last.id;
           }
+          _loadErrorMessage = null;
         });
         // Load user data for filtering
         _loadUserDataForPosts();
@@ -116,6 +117,9 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           SnackBar(content: Text('Error loading posts: $e')),
         );
       }
+      setState(() {
+        _loadErrorMessage = 'Error loading posts: $e';
+      });
     } finally {
       if (mounted) {
         setState(() {
@@ -136,16 +140,10 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
       final postRepository = ref.read(postRepositoryProvider);
 
       if (postRepository == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('Firebase is not initialized. Please restart the app.'),
-            ),
-          );
-        }
         setState(() {
           _isLoading = false;
+          _loadErrorMessage =
+              'Firebase is not initialized. Please restart the app.';
         });
         return;
       }
@@ -170,6 +168,10 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
             ),
           );
         }
+        setState(() {
+          _loadErrorMessage =
+              ErrorHandler.getUserFriendlyMessageFromFailure(result.failure!);
+        });
       } else if (result.data != null) {
         setState(() {
           _posts.addAll(result.data!);
@@ -179,6 +181,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           } else {
             _hasMore = false;
           }
+          _loadErrorMessage = null;
         });
         // Load user data for new posts
         _loadUserDataForPosts();
@@ -189,6 +192,9 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           SnackBar(content: Text('Error loading more posts: $e')),
         );
       }
+      setState(() {
+        _loadErrorMessage = 'Error loading more posts: $e';
+      });
     } finally {
       if (mounted) {
         setState(() {
@@ -204,6 +210,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
       _lastDocumentId = null;
       _hasMore = true;
       _userCache.clear();
+      _loadErrorMessage = null;
     });
     await _loadPosts();
   }
@@ -360,12 +367,41 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
       );
     }
 
+    if (_loadErrorMessage != null && _posts.isEmpty && !_isLoading) {
+      return _CenteredScrollable(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: AppColors.grey500),
+              const SizedBox(height: 12),
+              Text(
+                _loadErrorMessage!,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: DesignTokens.fontSizeM,
+                  color: AppColors.grey700,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _refreshPosts,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (_posts.isEmpty && !_isLoading) {
-      return Center(
+      return _CenteredScrollable(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.post_add_outlined,
@@ -428,11 +464,11 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                 final filteredPosts = _getFilteredPosts();
 
                 if (filteredPosts.isEmpty && !_isLoading) {
-                  return Center(
+                  return _CenteredScrollable(
                     child: Padding(
                       padding: const EdgeInsets.all(32.0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             Icons.post_add_outlined,
@@ -489,6 +525,12 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                       child: PostItemWidget(
                         post: post,
                         isAdminPost: isAdmin,
+                        onOpenDetails: () {
+                          Navigator.of(context).pushNamed(
+                            '/post-detail',
+                            arguments: post,
+                          );
+                        },
                         onPostUpdated: () {
                           _refreshPosts();
                         },
@@ -501,6 +543,27 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CenteredScrollable extends StatelessWidget {
+  final Widget child;
+
+  const _CenteredScrollable({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(child: child),
+          ),
+        );
+      },
     );
   }
 }

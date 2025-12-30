@@ -5,8 +5,8 @@ import '../../../../core/utils/auth_preferences.dart';
 import '../../../../core/utils/localization_helper.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class LoginHistoryScreen extends ConsumerStatefulWidget {
   const LoginHistoryScreen({super.key});
@@ -90,9 +90,9 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: LocalizationFallbacks.loginHistory(l10n),
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(LocalizationFallbacks.loginHistory(l10n)),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -140,10 +140,12 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
                 )
               : RefreshIndicator(
                   onRefresh: _loadLoginHistory,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(DesignTokens.spacingM),
-                    itemCount: _loginHistory.length,
-                    itemBuilder: (context, index) {
+                  child: ResponsivePage(
+                    useSafeArea: false,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(DesignTokens.spacingM),
+                      itemCount: _loginHistory.length,
+                      itemBuilder: (context, index) {
                       final activity = _loginHistory[index];
                       final email = activity['email']?.toString() ?? 'Unknown';
                       final timestamp = activity['timestamp']?.toString();
@@ -206,7 +208,8 @@ class _LoginHistoryScreenState extends ConsumerState<LoginHistoryScreen> {
                           ),
                         ),
                       );
-                    },
+                      },
+                    ),
                   ),
                 ),
     );

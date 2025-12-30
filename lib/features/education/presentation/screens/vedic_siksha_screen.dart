@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/design_tokens.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../data/vedic_siksha_data.dart';
 import 'vedic_siksha_detail_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 /// Vedic Siksha Screen - Vedic Knowledge & Wisdom in Hindi
 class VedicSikshaScreen extends StatelessWidget {
@@ -11,11 +11,15 @@ class VedicSikshaScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ResponsivePage(
+      useSafeArea: false,
+      // Keep this screen visually identical; responsive constraints can be tuned later.
+      maxContentWidth: 100000,
+      child: Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: CustomAppBar(
-        title: 'वैदिक शिक्षा',
-        showLogo: false,
+      appBar: AppBar(
+        title: const Text('वैदिक शिक्षा'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -216,6 +220,7 @@ class VedicSikshaScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

@@ -62,7 +62,20 @@ flutter:
   generate: true
 
   assets:
-    - assets/images/
+    - assets/images/aai_darshan-1.jpg
+    - assets/images/aai_darshan-2.jpg
+    - assets/images/aai_darshan-3.jpg
+    - assets/images/aai_darshan-4.jpg
+    - assets/images/aai_darshan-5.jpg
+    - assets/images/aai_darshan-6.jpg
+    - assets/images/aai_darshan-7.jpg
+    - assets/images/aai_darshan-8.jpg
+    - assets/images/aai_darshan-9.jpg
+    - assets/images/aai_darshan-10.jpg
+    - assets/images/aai_darshan-11.jpg
+    - assets/images/Aai-Bail_350.gif
+    - assets/images/samaj_logo.png
+    - assets/images/seervisamajvadodara.png
     - assets/images/google_signin/
     - assets/icons/
     - assets/data/

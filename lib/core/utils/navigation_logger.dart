@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'app_logger.dart';
 
 /// Navigation observer that logs all route changes
@@ -32,6 +33,9 @@ class NavigationLogger extends NavigatorObserver {
   }
 
   void _logNavigation(String action, Route<dynamic> route, Route<dynamic>? previousRoute) {
+    // Avoid log/print overhead in release/profile builds.
+    if (!kDebugMode) return;
+
     final routeName = route.settings.name ?? route.runtimeType.toString();
     final previousRouteName = previousRoute?.settings.name ?? previousRoute?.runtimeType.toString() ?? 'None';
     final arguments = route.settings.arguments?.toString() ?? 'None';
@@ -41,8 +45,7 @@ class NavigationLogger extends NavigatorObserver {
 
     AppLogger.info(logMessage);
 
-    // Also print to console for terminal visibility
-    print('📱 [NAVIGATION] $action: $routeName (from: $previousRouteName)');
+    // Keep console prints minimal; AppLogger already writes to console in debug.
   }
 }
 
@@ -50,6 +53,7 @@ class NavigationLogger extends NavigatorObserver {
 class AppInfoLogger {
   static Future<void> logAppInfo() async {
     try {
+      if (!kDebugMode) return;
       // Get package info
       final packageInfo = await PackageInfo.fromPlatform();
 

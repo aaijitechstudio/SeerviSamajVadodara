@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../domain/models/vedic_siksha_model.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/screens/web_view_screen.dart';
 import '../../../../core/screens/video_player_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class VedicSikshaDetailScreen extends StatelessWidget {
   final VedicSikshaDetail data;
@@ -16,11 +16,14 @@ class VedicSikshaDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ResponsivePage(
+      useSafeArea: false,
+      maxContentWidth: 100000,
+      child: Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: CustomAppBar(
-        title: data.title,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(data.title),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -122,6 +125,7 @@ class VedicSikshaDetailScreen extends StatelessWidget {
             _disclaimer(),
           ],
         ),
+      ),
       ),
     );
   }

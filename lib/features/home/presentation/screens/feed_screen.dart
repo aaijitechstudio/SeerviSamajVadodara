@@ -7,6 +7,7 @@ import '../../../../core/widgets/loading_overlay.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../community/presentation/screens/post_composer_screen.dart';
 import '../../../auth/presentation/screens/profile_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -29,7 +30,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: ResponsivePage(
+        useSafeArea: false,
+        child: _screens[_selectedIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,

@@ -5,17 +5,14 @@ import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/auth_preferences.dart';
 import '../../../../core/utils/localization_helper.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/language_switcher.dart';
 import '../../../../core/widgets/google_sign_in_button.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/animations/animated_button.dart';
 import '../../../../core/animations/animated_text_field.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import '../../../../l10n/app_localizations.dart';
-import 'signup_screen.dart';
-import 'forgot_password_screen.dart';
-import '../../../home/presentation/screens/main_navigation_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -36,21 +33,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.initState();
     // Load saved email and remember me preference
     _loadSavedCredentials();
-    // Check if user is already authenticated and redirect
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final authState = ref.read(authControllerProvider);
-      if (authState.user != null && mounted) {
-        // User is already logged in, redirect to main screen
-        if (Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
-        } else {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) => const MainNavigationScreen()),
-          );
-        }
-      }
-    });
   }
 
   Future<void> _loadSavedCredentials() async {
@@ -76,51 +58,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final authState = ref.watch(authControllerProvider);
 
-    // If user is already authenticated, show loading and redirect
-    if (authState.user != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
-          } else {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) => const MainNavigationScreen()),
-            );
-          }
-        }
-      });
-      // Show loading while redirecting
-      return Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primaryOrange,
-          ),
-        ),
-      );
-    }
-
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) {
-        if (didPop) return;
-        // Prevent back navigation if user is authenticated
-        final currentAuthState = ref.read(authControllerProvider);
-        if (currentAuthState.user != null) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) => const MainNavigationScreen()),
-          );
-        } else {
-          Navigator.of(context).pop();
-        }
-      },
-      child: Scaffold(
-        appBar: CustomAppBar(
-          showLogo: false,
-          title: l10n.login,
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.login),
+          centerTitle: true,
           leading: Navigator.of(context).canPop()
               ? IconButton(
                   icon: const Icon(Icons.arrow_back),
@@ -145,11 +87,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(DesignTokens.spacingL),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
+              child: ResponsivePage(
+                useSafeArea: false,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
                     SizedBox(
                         height:
                             DesignTokens.spacingXXL + DesignTokens.spacingM),
@@ -311,12 +255,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         // Forgot Password Link
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const ForgotPasswordScreen(),
-                              ),
-                            );
+                            Navigator.of(context).pushNamed('/forgot-password');
                           },
                           child: Text(
                             l10n.forgotPassword,
@@ -419,10 +358,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Text(l10n.dontHaveAccount),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const SignupScreen()),
-                            );
+                            Navigator.of(context).pushReplacementNamed('/signup');
                           },
                           child: Text(l10n.signUp),
                         ),
@@ -499,14 +435,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Future<void> _handleLogin() async {
@@ -536,9 +472,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         method: 'email',
       );
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
-      );
+      // AuthGate will route to the correct screen on successful login.
     } else if (mounted) {
       // Check for error in auth state
       final authState = ref.read(authControllerProvider);
@@ -568,9 +502,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         method: 'google',
       );
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
-      );
+      // AuthGate will route to the correct screen on successful login.
     } else if (mounted) {
       // Check for error in auth state
       final authState = ref.read(authControllerProvider);

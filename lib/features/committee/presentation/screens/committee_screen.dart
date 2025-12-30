@@ -4,11 +4,12 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../../core/constants/design_tokens.dart';
 import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/widgets/custom_app_bar.dart';
 import '../../../../../core/widgets/membership_card.dart';
 import '../../../../../core/providers/ui_state_provider.dart';
+import '../../../../../core/widgets/responsive_page.dart';
 import '../../data/committee_data.dart';
 import '../../domain/models/committee_model.dart';
+import '../providers/committee_image_url_provider.dart';
 
 // Helper class for flattened list items
 class _SectionItem {
@@ -103,9 +104,9 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
     final isSearchActive = ref.watch(searchActiveProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.committeeMembers,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(l10n.committeeMembers),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(isSearchActive ? Icons.close : Icons.search),
@@ -114,8 +115,10 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
+      body: ResponsivePage(
+        useSafeArea: false,
+        child: Column(
+          children: [
           // Search Bar
           if (isSearchActive)
             Padding(
@@ -148,8 +151,17 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
           Expanded(
             child: _buildCommitteeList(context, l10n),
           ),
-        ],
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildMemberCard(CommitteeModel member, int index) {
+    return _CommitteeMemberCard(
+      member: member,
+      index: index,
+      onTap: member.phone.isNotEmpty ? () => _makePhoneCall(member.phone) : null,
     );
   }
 
@@ -233,22 +245,8 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
           itemCount: filteredMembers.length,
           itemBuilder: (context, index) {
             final member = filteredMembers[index];
-            final locale = Localizations.localeOf(context);
             return RepaintBoundary(
-              child: MembershipCard(
-                name: member.name,
-                samajId: null,
-                role: member.getLocalizedPosition(locale),
-                location: member.location ?? member.area,
-                profileImageUrl: member.imageUrl,
-                gotra: member.gotra,
-                isVerified: true,
-                isCommitteeMember: true,
-                index: index,
-                onTap: member.phone.isNotEmpty
-                    ? () => _makePhoneCall(member.phone)
-                    : null,
-              ),
+              child: _buildMemberCard(member, index),
             );
           },
         ),
@@ -299,22 +297,8 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
             return SizedBox(height: item.spacerHeight);
           } else {
             final member = item.member!;
-            final locale = Localizations.localeOf(context);
             return RepaintBoundary(
-              child: MembershipCard(
-                name: member.name,
-                samajId: null,
-                role: member.getLocalizedPosition(locale),
-                location: member.location ?? member.area,
-                profileImageUrl: member.imageUrl,
-                gotra: member.gotra,
-                isVerified: true,
-                isCommitteeMember: true,
-                index: index,
-                onTap: member.phone.isNotEmpty
-                    ? () => _makePhoneCall(member.phone)
-                    : null,
-              ),
+              child: _buildMemberCard(member, index),
             );
           }
         },
@@ -385,5 +369,44 @@ class _CommitteeScreenState extends ConsumerState<CommitteeScreen> {
     if (await canLaunchUrl(phoneUri)) {
       await launchUrl(phoneUri);
     }
+  }
+}
+
+class _CommitteeMemberCard extends ConsumerWidget {
+  final CommitteeModel member;
+  final int index;
+  final VoidCallback? onTap;
+
+  const _CommitteeMemberCard({
+    required this.member,
+    required this.index,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = Localizations.localeOf(context);
+
+    final directUrl = member.imageUrl;
+    final storagePath = member.imageStoragePath;
+
+    final resolvedUrl = (directUrl != null && directUrl.isNotEmpty)
+        ? directUrl
+        : (storagePath != null && storagePath.isNotEmpty)
+            ? ref.watch(committeeImageUrlProvider(storagePath)).valueOrNull
+            : null;
+
+    return MembershipCard(
+      name: member.name,
+      samajId: null,
+      role: member.getLocalizedPosition(locale),
+      location: member.location ?? member.area,
+      profileImageUrl: resolvedUrl,
+      gotra: member.gotra,
+      isVerified: true,
+      isCommitteeMember: true,
+      index: index,
+      onTap: onTap,
+    );
   }
 }

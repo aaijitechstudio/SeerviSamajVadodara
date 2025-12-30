@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class AddAnnouncementScreen extends StatefulWidget {
   const AddAnnouncementScreen({super.key});
@@ -33,11 +34,13 @@ class _AddAnnouncementScreenState extends State<AddAnnouncementScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
@@ -87,7 +90,8 @@ class _AddAnnouncementScreenState extends State<AddAnnouncementScreen> {
                       )
                     : const Text('Add Announcement'),
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

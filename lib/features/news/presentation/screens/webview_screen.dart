@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -21,6 +20,18 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   late final WebViewController _controller;
   bool _isLoading = true;
+
+  Future<bool> _handleBack() async {
+    try {
+      if (await _controller.canGoBack()) {
+        await _controller.goBack();
+        return false;
+      }
+    } catch (_) {
+      // Ignore and fall back to popping the route.
+    }
+    return true;
+  }
 
   @override
   void initState() {
@@ -53,26 +64,35 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.title ?? l10n.eNewspaper,
-        showLogo: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+    return WillPopScope(
+      onWillPop: _handleBack,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title ?? l10n.eNewspaper),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () async {
+              final shouldPop = await _handleBack();
+              if (!mounted) return;
+              if (shouldPop) {
+                Navigator.of(context).pop();
+              }
+            },
+          ),
         ),
-      ),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (_isLoading)
-            Container(
-              color: AppColors.backgroundWhite,
-              child: const Center(
-                child: CircularProgressIndicator(),
+        body: Stack(
+          children: [
+            WebViewWidget(controller: _controller),
+            if (_isLoading)
+              Container(
+                color: AppColors.backgroundWhite,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

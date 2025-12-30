@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../providers/auth_provider.dart';
-import '../../../../core/widgets/page_transitions.dart';
-import 'login_screen.dart';
-import 'samaj_id_card_screen.dart';
-import 'settings_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
+import '../../../community/presentation/screens/post_detail_screen.dart';
+import '../../../../core/repositories/repository_providers.dart';
+import '../../../../shared/models/post_model.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -21,29 +20,23 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.grey100,
-      appBar: CustomAppBar(
-        title: l10n.profile,
-        showLogo: false,
+      appBar: AppBar(
         automaticallyImplyLeading: false,
+        title: Text(l10n.profile),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: l10n.settings,
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
-                ),
-              );
+              Navigator.of(context).pushNamed('/settings');
             },
           ),
           IconButton(
             icon: const Icon(Icons.badge_outlined),
             tooltip: l10n.viewIdCard,
             onPressed: () {
-              Navigator.of(context).push(
-                PageTransitions.fadeSlideRoute(const SamajIdCardScreen()),
-              );
+              Navigator.of(context).pushNamed('/samaj-id-card');
             },
           ),
           IconButton(
@@ -92,12 +85,14 @@ class ProfileScreen extends ConsumerWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(DesignTokens.spacingM),
           physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              _buildProfileHeader(context, user, l10n),
-              const SizedBox(height: DesignTokens.spacingM),
-              _buildQuickInfoRow(context, user, l10n),
-              const SizedBox(height: DesignTokens.spacingM),
+          child: ResponsivePage(
+            useSafeArea: false,
+            child: Column(
+              children: [
+                _buildProfileHeader(context, user, l10n),
+                const SizedBox(height: DesignTokens.spacingM),
+                _buildQuickInfoRow(context, user, l10n),
+                const SizedBox(height: DesignTokens.spacingM),
 
               // Personal Information Section
               _buildSection(
@@ -222,10 +217,122 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            ],
+              const SizedBox(height: DesignTokens.spacingM),
+              _buildUserPostsSection(context, ref, user),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildUserPostsSection(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic user,
+  ) {
+    final postRepository = ref.watch(postRepositoryProvider);
+
+    return _buildSection(
+      context,
+      title: 'My Posts',
+      icon: Icons.grid_on_outlined,
+      showEditButton: false,
+      children: [
+        if (postRepository == null)
+          Padding(
+            padding: const EdgeInsets.all(DesignTokens.spacingM),
+            child: Text(
+              'Posts are unavailable right now. Please restart the app.',
+              style: TextStyle(
+                fontSize: DesignTokens.fontSizeS,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          )
+        else
+          FutureBuilder<({Object? failure, List<PostModel>? data})>(
+            future: postRepository.getPostsByAuthor(user.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Padding(
+                  padding: EdgeInsets.all(DesignTokens.spacingM),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              final data = snapshot.data;
+              final posts = data?.data ?? const <PostModel>[];
+
+              if (posts.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.all(DesignTokens.spacingM),
+                  child: Text(
+                    'No posts yet',
+                    style: TextStyle(
+                      fontSize: DesignTokens.fontSizeS,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                );
+              }
+
+              return Padding(
+                padding: const EdgeInsets.all(DesignTokens.spacingM),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: posts.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 6,
+                    mainAxisSpacing: 6,
+                  ),
+                  itemBuilder: (context, index) {
+                    final post = posts[index];
+                    final thumbUrl =
+                        (post.imageUrls != null && post.imageUrls!.isNotEmpty)
+                            ? post.imageUrls!.first
+                            : null;
+
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          PostDetailScreen.routeName,
+                          arguments: post,
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(DesignTokens.radiusS),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: thumbUrl != null
+                              ? CachedNetworkImage(
+                                  imageUrl: thumbUrl,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    color: AppColors.grey200,
+                                    child: const Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      _PostTextThumb(post: post),
+                                )
+                              : _PostTextThumb(post: post),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+      ],
     );
   }
 
@@ -745,7 +852,7 @@ class ProfileScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DesignTokens.radiusL),
         ),
@@ -809,13 +916,10 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ref.read(authControllerProvider.notifier).signOut();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-                (route) => false,
-              );
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await ref.read(authControllerProvider.notifier).signOut();
+              // AuthGate will route to Welcome/Login automatically after sign out.
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.errorText,
@@ -833,6 +937,30 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PostTextThumb extends StatelessWidget {
+  final PostModel post;
+
+  const _PostTextThumb({required this.post});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.primaryOrange.withValues(alpha: 0.08),
+      padding: const EdgeInsets.all(8),
+      child: Text(
+        post.content,
+        maxLines: 5,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: 12,
+          color: AppColors.textPrimary,
+          height: 1.2,
+        ),
       ),
     );
   }

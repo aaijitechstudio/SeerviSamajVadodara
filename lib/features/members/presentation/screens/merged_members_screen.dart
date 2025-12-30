@@ -7,6 +7,7 @@ import '../../../../core/widgets/membership_card.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/providers/ui_state_provider.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import '../../providers/members_provider.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../committee/data/committee_data.dart';
@@ -281,14 +282,17 @@ class _MergedMembersScreenState extends ConsumerState<MergedMembersScreen>
 
           // Tab Views
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // Members Tab
-                _buildMembersTab(isAuthenticated, membersState, l10n),
-                // Committee Members Tab
-                _buildCommitteeTab(l10n),
-              ],
+            child: ResponsivePage(
+              useSafeArea: false,
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // Members Tab
+                  _buildMembersTab(isAuthenticated, membersState, l10n),
+                  // Committee Members Tab
+                  _buildCommitteeTab(l10n),
+                ],
+              ),
             ),
           ),
         ],

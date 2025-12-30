@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/providers/locale_provider.dart';
 import '../../../../core/providers/theme_provider.dart';
 import '../../../../core/utils/data_export.dart';
@@ -11,10 +10,7 @@ import '../../../../core/utils/auth_preferences.dart';
 import '../../../../core/utils/localization_helper.dart';
 import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
-import 'notifications_settings_screen.dart';
-import 'terms_and_conditions_screen.dart';
-import 'privacy_policy_screen.dart';
-import 'login_history_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -29,44 +25,26 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: isDark ? Colors.black : AppColors.grey100,
-      appBar: CustomAppBar(
-        title: l10n.settings,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(l10n.settings),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(DesignTokens.spacingM),
-        children: [
+      body: ResponsivePage(
+        useSafeArea: false,
+        child: ListView(
+          padding: const EdgeInsets.all(DesignTokens.spacingM),
+          children: [
           // Language Settings
           _buildSettingsSection(
             context,
             title: l10n.language,
             icon: Icons.language,
             children: [
-              _buildLanguageOption(
-                context,
-                ref,
-                const Locale('hi', 'IN'),
-                l10n.hindi,
-                currentLocale,
-              ),
-              _buildLanguageOption(
-                context,
-                ref,
-                const Locale('en', 'US'),
-                l10n.english,
-                currentLocale,
-              ),
-              _buildLanguageOption(
-                context,
-                ref,
-                const Locale('gu', 'IN'),
-                l10n.gujarati,
-                currentLocale,
-              ),
+              _buildLanguageTile(context, ref, l10n, currentLocale),
             ],
           ),
           const SizedBox(height: DesignTokens.spacingM),
@@ -92,11 +70,7 @@ class SettingsScreen extends ConsumerWidget {
                 title: l10n.notifications,
                 subtitle: l10n.manageNotifications,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationsSettingsScreen(),
-                    ),
-                  );
+                  Navigator.of(context).pushNamed('/settings/notifications');
                 },
               ),
               _buildSettingsTile(
@@ -105,11 +79,7 @@ class SettingsScreen extends ConsumerWidget {
                 title: LocalizationFallbacks.loginHistory(l10n),
                 subtitle: LocalizationFallbacks.viewLoginHistory(l10n),
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginHistoryScreen(),
-                    ),
-                  );
+                  Navigator.of(context).pushNamed('/settings/login-history');
                 },
               ),
               _buildSettingsTile(
@@ -167,11 +137,7 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.description_outlined,
                 title: l10n.termsAndConditions,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const TermsAndConditionsScreen(),
-                    ),
-                  );
+                  Navigator.of(context).pushNamed('/terms');
                 },
               ),
               _buildSettingsTile(
@@ -179,11 +145,7 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.privacy_tip_outlined,
                 title: l10n.privacyPolicy,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const PrivacyPolicyScreen(),
-                    ),
-                  );
+                  Navigator.of(context).pushNamed('/privacy');
                 },
               ),
               FutureBuilder<String>(
@@ -225,7 +187,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -344,42 +307,143 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLanguageOption(
+  Widget _buildLanguageTile(
     BuildContext context,
     WidgetRef ref,
-    Locale locale,
-    String languageName,
+    AppLocalizations l10n,
     Locale currentLocale,
   ) {
-    final isSelected = currentLocale.languageCode == locale.languageCode;
+    String getCurrentLanguageName() {
+      switch (currentLocale.languageCode) {
+        case 'hi':
+          return l10n.hindi;
+        case 'gu':
+          return l10n.gujarati;
+        case 'en':
+        default:
+          return l10n.english;
+      }
+    }
 
     return ListTile(
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primaryOrange.withValues(alpha: 0.15)
-              : AppColors.grey100,
+          color: AppColors.primaryOrange.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(DesignTokens.radiusS),
         ),
         child: Icon(
-          Icons.language,
-          color: isSelected
-              ? AppColors.primaryOrange
-              : AppColors.textSecondary,
+          Icons.translate_outlined,
+          color: AppColors.primaryOrange,
           size: 20,
         ),
       ),
       title: Text(
-        languageName,
+        l10n.language,
         style: TextStyle(
           fontSize: DesignTokens.fontSizeM,
+          fontWeight: DesignTokens.fontWeightMedium,
+          color: Theme.of(context).textTheme.bodyLarge?.color ??
+              AppColors.textPrimary,
+        ),
+      ),
+      subtitle: Text(
+        getCurrentLanguageName(),
+        style: TextStyle(
+          fontSize: DesignTokens.fontSizeS,
+          color: Theme.of(context).textTheme.bodySmall?.color ??
+              AppColors.textSecondary,
+        ),
+      ),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: AppColors.textTertiary,
+      ),
+      onTap: () {
+        _showLanguageDialog(context, ref, l10n);
+      },
+    );
+  }
+
+  void _showLanguageDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
+    final currentLocale = ref.read(localeProvider);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DesignTokens.radiusL),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.translate_outlined, color: AppColors.primaryOrange),
+            const SizedBox(width: DesignTokens.spacingS),
+            Text(l10n.selectLanguage),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildLanguageDialogOption(
+              context,
+              ref,
+              const Locale('hi', 'IN'),
+              l10n.hindi,
+              currentLocale,
+            ),
+            _buildLanguageDialogOption(
+              context,
+              ref,
+              const Locale('en', 'US'),
+              l10n.english,
+              currentLocale,
+            ),
+            _buildLanguageDialogOption(
+              context,
+              ref,
+              const Locale('gu', 'IN'),
+              l10n.gujarati,
+              currentLocale,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.cancel),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageDialogOption(
+    BuildContext context,
+    WidgetRef ref,
+    Locale locale,
+    String title,
+    Locale currentLocale,
+  ) {
+    final isSelected = currentLocale.languageCode == locale.languageCode;
+
+    return ListTile(
+      leading: Icon(
+        Icons.language,
+        color:
+            isSelected ? AppColors.primaryOrange : AppColors.textSecondary,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
           fontWeight: isSelected
               ? DesignTokens.fontWeightSemiBold
               : DesignTokens.fontWeightRegular,
-          color: isSelected
-              ? AppColors.primaryOrange
-              : AppColors.textPrimary,
+          color:
+              isSelected ? AppColors.primaryOrange : AppColors.textPrimary,
         ),
       ),
       trailing: isSelected
@@ -388,8 +452,11 @@ class SettingsScreen extends ConsumerWidget {
               color: AppColors.primaryOrange,
             )
           : null,
-      onTap: () {
-        ref.read(localeProvider.notifier).setLocale(locale);
+      onTap: () async {
+        await ref.read(localeProvider.notifier).setLocale(locale);
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       },
     );
   }

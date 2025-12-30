@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../domain/models/event_model.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class EventsScreen extends StatelessWidget {
   const EventsScreen({super.key});
@@ -14,13 +15,15 @@ class EventsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Events'),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('events')
-            .where('isActive', isEqualTo: true)
-            .orderBy('eventDate')
-            .snapshots(),
-        builder: (context, snapshot) {
+      body: ResponsivePage(
+        useSafeArea: false,
+        child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('events')
+              .where('isActive', isEqualTo: true)
+              .orderBy('eventDate')
+              .snapshots(),
+          builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -67,7 +70,8 @@ class EventsScreen extends StatelessWidget {
               return _buildEventCard(context, event);
             },
           );
-        },
+          },
+        ),
       ),
     );
   }

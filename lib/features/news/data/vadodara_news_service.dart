@@ -77,8 +77,8 @@ class VadodaraNewsService {
       }
     } catch (e) {
       AppLogger.logApiResponse('fetchVadodaraNews', error: e);
-      // Return empty response on error
-      return NewsResponse(news: []);
+      // Propagate errors so the UI can show a proper error state.
+      throw Exception(e.toString().replaceFirst('Exception: ', ''));
     }
   }
 
@@ -115,8 +115,7 @@ class VadodaraNewsService {
       }
     } catch (e) {
       AppLogger.logApiResponse('fetchBusinessNews', error: e);
-      // Return empty response on error
-      return NewsResponse(news: []);
+      throw Exception(e.toString().replaceFirst('Exception: ', ''));
     }
   }
 
@@ -191,8 +190,7 @@ class VadodaraNewsService {
       }
     } catch (e) {
       AppLogger.logApiResponse('fetchRajasthanNews', error: e);
-      // Return empty response on error
-      return NewsResponse(news: []);
+      throw Exception(e.toString().replaceFirst('Exception: ', ''));
     }
   }
 

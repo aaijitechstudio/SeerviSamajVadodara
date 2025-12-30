@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../domain/models/user_model.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class MemberDetailScreen extends StatelessWidget {
   final UserModel member;
@@ -15,8 +16,10 @@ class MemberDetailScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Column(
+            children: [
             // Profile Header
             Card(
               elevation: 4,
@@ -152,7 +155,8 @@ class MemberDetailScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

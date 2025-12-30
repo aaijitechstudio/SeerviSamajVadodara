@@ -48,10 +48,18 @@ class WeatherService {
         return null;
       }
 
-      // Get current position
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low,
-        timeLimit: const Duration(seconds: 10),
+      // Fast path: last known position (instant, no GPS wait)
+      try {
+        final lastKnown = await Geolocator.getLastKnownPosition();
+        if (lastKnown != null) return lastKnown;
+      } catch (_) {
+        // Ignore and fall back to active location request.
+      }
+
+      // Active request: keep timeout short to avoid blocking UX
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.lowest,
+        timeLimit: const Duration(seconds: 4),
       );
 
       return position;

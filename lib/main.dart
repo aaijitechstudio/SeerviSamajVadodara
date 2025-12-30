@@ -10,7 +10,7 @@ import 'core/providers/theme_provider.dart';
 import 'core/config/app_config.dart';
 import 'core/utils/app_logger.dart';
 import 'core/utils/navigation_logger.dart';
-import 'features/home/presentation/screens/splash_screen.dart';
+import 'features/auth/presentation/screens/auth_gate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -191,7 +191,7 @@ class MyApp extends ConsumerWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
       locale: locale,
-      home: const SplashScreen(),
+      home: const AuthGate(),
       navigatorObservers: [
         NavigationLogger(),
       ],
@@ -217,6 +217,13 @@ bool _verifyFirebaseConfigFiles() {
   // Skip file system checks in release mode for better performance
   if (!const bool.fromEnvironment('dart.vm.product')) {
     try {
+      // On Android/iOS, these files are used at build time and are not reliably
+      // discoverable via runtime file system paths. Skip this check to avoid
+      // false warnings and startup I/O on devices/emulators.
+      if (Platform.isAndroid || Platform.isIOS) {
+        return true;
+      }
+
       // Get the current working directory (project root)
       final currentDir = Directory.current.path;
 

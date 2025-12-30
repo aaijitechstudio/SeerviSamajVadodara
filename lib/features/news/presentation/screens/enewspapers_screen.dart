@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/page_transitions.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import '../../domain/models/epaper_model.dart';
 import '../../data/epaper_data.dart';
 import 'webview_screen.dart';
@@ -16,9 +16,9 @@ class ENewspapersScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.eNewspapers,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(l10n.eNewspapers),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -26,9 +26,11 @@ class ENewspapersScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(DesignTokens.spacingM),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             // Vadodara Newspapers (No login required)
             _buildNewspaperSection(
               context,
@@ -46,7 +48,8 @@ class ENewspapersScreen extends StatelessWidget {
               papers: EpaperData.rajasthanPapersNoLogin,
               l10n: l10n,
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
-import '../../../home/presentation/screens/feed_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class PhoneLoginScreen extends ConsumerStatefulWidget {
   const PhoneLoginScreen({super.key});
@@ -34,11 +34,13 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+          child: ResponsivePage(
+            useSafeArea: false,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                 const SizedBox(height: 60),
 
                 // Logo and Title
@@ -204,7 +206,8 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
                     return const SizedBox.shrink();
                   },
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -227,16 +230,12 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           // Auto-verification completed
-          final success = await authController.verifyOTP(
+          await authController.verifyOTP(
             verificationId: _verificationId ?? '',
             otp: credential.smsCode ?? '',
           );
 
-          if (success && mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const FeedScreen()),
-            );
-          }
+          // AuthGate will route to the correct screen on successful login.
         },
         verificationFailed: (FirebaseAuthException e) {
           setState(() {
@@ -284,9 +283,7 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
       );
 
       if (success && mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const FeedScreen()),
-        );
+        // AuthGate will route to the correct screen on successful login.
       } else {
         setState(() {
           _isLoading = false;
@@ -314,16 +311,12 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           // Auto-verification completed
-          final success = await authController.verifyOTP(
+          await authController.verifyOTP(
             verificationId: _verificationId ?? '',
             otp: credential.smsCode ?? '',
           );
 
-          if (success && mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const FeedScreen()),
-            );
-          }
+          // AuthGate will route to the correct screen on successful login.
         },
         verificationFailed: (FirebaseAuthException e) {
           setState(() {

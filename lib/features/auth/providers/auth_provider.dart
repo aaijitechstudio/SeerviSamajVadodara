@@ -43,7 +43,7 @@ final currentUserProvider = FutureProvider<UserModel?>((ref) async {
 });
 
 // Auth controller provider (auto-disposing for better memory management)
-final authControllerProvider = NotifierProvider.autoDispose<AuthController, AuthState>(() {
+final authControllerProvider = NotifierProvider<AuthController, AuthState>(() {
   return AuthController();
 });
 
@@ -80,7 +80,7 @@ class AuthState {
 }
 
 // Auth controller
-class AuthController extends AutoDisposeNotifier<AuthState> {
+class AuthController extends Notifier<AuthState> {
   @override
   AuthState build() {
     // Initialize from Firebase Auth state
@@ -92,11 +92,7 @@ class AuthController extends AutoDisposeNotifier<AuthState> {
         next.whenData((user) {
           if (user != null) {
             // User is authenticated via Firebase - fetch user data
-            FirebaseService.getUserData(user.uid).then((userData) {
-              state = state.copyWith(
-                user: userData,
-              );
-            });
+            _syncUserModelFromFirebaseUser(user);
           } else {
             // User is not authenticated
             state = const AuthState();
@@ -105,6 +101,20 @@ class AuthController extends AutoDisposeNotifier<AuthState> {
       },
     );
     return const AuthState();
+  }
+
+  Future<void> _syncUserModelFromFirebaseUser(User firebaseUser) async {
+    try {
+      var userData = await FirebaseService.getUserData(firebaseUser.uid);
+      if (userData == null) {
+        await FirebaseService.ensureUserDocumentExistsFromFirebaseUser(
+            firebaseUser);
+        userData = await FirebaseService.getUserData(firebaseUser.uid);
+      }
+      state = state.copyWith(user: userData);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
   }
 
   // Initialize from Firebase Auth
@@ -118,10 +128,7 @@ class AuthController extends AutoDisposeNotifier<AuthState> {
 
       final currentUser = auth.currentUser;
       if (currentUser != null) {
-        final userData = await FirebaseService.getUserData(currentUser.uid);
-        state = state.copyWith(
-          user: userData,
-        );
+        await _syncUserModelFromFirebaseUser(currentUser);
       }
     } catch (e) {
       // Silently fail initialization - Firebase might not be ready
@@ -230,24 +237,18 @@ required String email,
 
       if (credential?.user != null) {
         // Fetch user data and ensure it's loaded
-        final userData =
-            await FirebaseService.getUserData(credential!.user!.uid);
-
+        final firebaseUser = credential!.user!;
+        var userData = await FirebaseService.getUserData(firebaseUser.uid);
         if (userData == null) {
-          // User authenticated but no Firestore document - create one
           AppLogger.warning(
               'User authenticated but no Firestore document found. Creating...');
-          // This should not happen in normal flow, but handle gracefully
-          state = state.copyWith(
-            isLoading: false,
-            error: 'User account not properly set up. Please contact support.',
-          );
-          return false;
+          await FirebaseService.ensureUserDocumentExistsFromFirebaseUser(
+              firebaseUser);
+          userData = await FirebaseService.getUserData(firebaseUser.uid);
         }
 
         // Check email verification status (non-blocking)
-        final firebaseUser = credential.user;
-        final isEmailVerified = firebaseUser?.emailVerified ?? false;
+        final isEmailVerified = firebaseUser.emailVerified;
 
         // Update state with user data
         state = state.copyWith(

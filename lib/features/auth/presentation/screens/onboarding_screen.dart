@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -40,8 +40,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Column(
+            children: [
             // Skip Button
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -122,7 +124,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ],
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -183,9 +186,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _navigateToAuth() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-    );
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 }
 

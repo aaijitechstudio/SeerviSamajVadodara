@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import '../../../auth/providers/auth_provider.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/providers/connectivity_provider.dart';
 import '../../../../core/utils/network_helper.dart';
-import '../../../auth/presentation/screens/welcome_screen.dart';
-import 'main_navigation_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -104,7 +102,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _glowAnimationController.repeat(reverse: true);
     _loadingAnimationController.repeat();
 
-    // Start initialization
+    // Splash is now display-only (routing handled by AuthGate).
     _initializeApp();
   }
 
@@ -150,8 +148,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     await Future.delayed(const Duration(milliseconds: 300));
 
     if (!mounted) return;
-
-    await _navigateToNextScreen();
   }
 
   Future<void> _checkNetworkAndFirebase() async {
@@ -169,60 +165,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         'Firebase: ${isFirebaseInitialized ? "Initialized" : "Not Initialized"}');
   }
 
-  Future<void> _navigateToNextScreen() async {
-    if (!mounted) return;
-
-    // Verify Firebase is initialized
-    if (Firebase.apps.isEmpty) {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-        );
-      }
-      return;
-    }
-
-    if (!mounted) return;
-
-    try {
-      final container = ProviderScope.containerOf(context);
-      final authState = container.read(authStateProvider);
-
-      authState.when(
-        data: (user) {
-          if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => user != null
-                    ? const MainNavigationScreen()
-                    : const WelcomeScreen(),
-              ),
-            );
-          }
-        },
-        loading: () {
-          if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-            );
-          }
-        },
-        error: (error, stackTrace) {
-          if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-            );
-          }
-        },
-      );
-    } catch (e) {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-        );
-      }
-    }
-  }
+  // NOTE: routing is handled by `AuthGate`.
 
   @override
   void dispose() {
@@ -240,8 +183,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
       body: SafeArea(
-        child: Stack(
-          children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          // Splash should stay full-width (avoid tablet max-width constraining).
+          maxContentWidth: 100000,
+          child: Stack(
+            children: [
             // Main content
             Center(
               child: Column(
@@ -378,7 +325,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 },
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

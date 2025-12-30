@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/language_switcher.dart';
 import '../../../../core/widgets/app_button.dart';
-import 'login_screen.dart';
-import 'signup_screen.dart';
 
 class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
@@ -16,6 +16,8 @@ class WelcomeScreen extends ConsumerStatefulWidget {
 }
 
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
+  DateTime? _lastBackPressAt;
+
   @override
   void initState() {
     super.initState();
@@ -62,11 +64,32 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     final spacingMultiplier =
         isSmallScreen ? 0.7 : (isMediumScreen ? 0.85 : 1.0);
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: const [LanguageSwitcher()],
-      ),
-      body: Container(
+    return WillPopScope(
+      onWillPop: () async {
+        if (!Platform.isAndroid) return true;
+
+        final now = DateTime.now();
+        if (_lastBackPressAt == null ||
+            now.difference(_lastBackPressAt!) > const Duration(seconds: 2)) {
+          _lastBackPressAt = now;
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Press back again to exit'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return false;
+        }
+
+        SystemNavigator.pop();
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          actions: const [LanguageSwitcher()],
+        ),
+        body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
@@ -227,10 +250,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                         label: l10n.login,
                         type: AppButtonType.primary,
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const LoginScreen()),
-                          );
+                          Navigator.of(context).pushNamed('/login');
                         },
                       ),
 
@@ -241,10 +261,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                         label: l10n.registerMembersOnly,
                         type: AppButtonType.secondary,
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const SignupScreen()),
-                          );
+                          Navigator.of(context).pushNamed('/signup');
                         },
                       ),
 
@@ -269,6 +286,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               );
             },
           ),
+        ),
         ),
       ),
     );

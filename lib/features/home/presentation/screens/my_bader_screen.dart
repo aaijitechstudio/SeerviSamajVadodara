@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class MyBaderScreen extends StatelessWidget {
   const MyBaderScreen({super.key});
@@ -17,32 +18,35 @@ class MyBaderScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.people_alt,
-              size: 64,
-              color: Colors.grey,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'My Bader',
-              style: TextStyle(
-                fontSize: 18,
+      body: const ResponsivePage(
+        useSafeArea: false,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.people_alt,
+                size: 64,
                 color: Colors.grey,
               ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Connect with your Bader (family/relatives) in the community',
-              style: TextStyle(
-                color: Colors.grey,
+              SizedBox(height: 16),
+              Text(
+                'My Bader',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey,
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              SizedBox(height: 8),
+              Text(
+                'Connect with your Bader (family/relatives) in the community',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

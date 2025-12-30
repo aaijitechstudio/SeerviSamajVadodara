@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/models/career_model.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/screens/web_view_screen.dart';
 import '../../../../core/screens/video_player_screen.dart';
 
@@ -19,9 +18,9 @@ class CareerDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: CustomAppBar(
-        title: _getCategoryTitle(category),
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(_getCategoryTitle(category)),
+        centerTitle: true,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),

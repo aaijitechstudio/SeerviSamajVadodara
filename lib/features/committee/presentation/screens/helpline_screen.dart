@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../../core/widgets/responsive_page.dart';
 
 class HelplineScreen extends StatelessWidget {
   const HelplineScreen({super.key});
@@ -10,9 +11,11 @@ class HelplineScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Helpline'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
+      body: ResponsivePage(
+        useSafeArea: false,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
           _buildSection(
             context,
             title: 'Emergency Contacts',
@@ -68,7 +71,8 @@ class HelplineScreen extends StatelessWidget {
               ),
             ],
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

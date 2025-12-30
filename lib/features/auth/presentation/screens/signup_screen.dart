@@ -5,16 +5,14 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/google_sign_in_button.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/password_validator.dart';
 import '../../../../core/widgets/password_strength_indicator.dart';
 import '../../../../shared/data/firebase_service.dart';
-import '../../../home/presentation/screens/main_navigation_screen.dart';
-import 'login_screen.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -62,9 +60,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: CustomAppBar(
-        showLogo: false,
-        title: l10n.signUp,
+      appBar: AppBar(
+        title: Text(l10n.signUp),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -84,26 +82,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              // Step Indicator
-              _buildStepIndicator(l10n),
+          child: ResponsivePage(
+            useSafeArea: false,
+            child: Column(
+              children: [
+                // Step Indicator
+                _buildStepIndicator(l10n),
 
-              // Form Content
-              Expanded(
-                child: Form(
-                  key: _formKey,
-                  child: PageView(
-                    controller: _pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      _buildStep1(l10n),
-                      _buildStep2(l10n),
-                    ],
+                // Form Content
+                Expanded(
+                  child: Form(
+                    key: _formKey,
+                    child: PageView(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        _buildStep1(l10n),
+                        _buildStep2(l10n),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -499,10 +500,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               Text("${l10n.alreadyHaveAccount} "),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()),
-                  );
+                  Navigator.of(context).pushReplacementNamed('/login');
                 },
                 child: Text(l10n.signIn),
               ),
@@ -651,11 +649,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         SizedBox(height: DesignTokens.spacingS),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
+                            Navigator.of(context).pushReplacementNamed('/login');
                           },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero, // Intentionally zero
@@ -811,9 +805,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final success = await authController.signInWithGoogle();
 
     if (success && mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
-      );
+      // AuthGate will route to the correct screen on successful login.
     } else if (mounted) {
       // Check for error in auth state
       final authState = ref.read(authControllerProvider);
@@ -896,11 +888,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         backgroundColor: AppColors.successColor,
       );
 
-      // Navigate to login screen
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (route) => false,
-      );
+      // AuthGate will route to the correct screen once auth state updates.
     }
   }
 }

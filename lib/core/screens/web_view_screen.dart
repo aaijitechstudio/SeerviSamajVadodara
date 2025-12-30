@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../constants/design_tokens.dart';
 import '../theme/app_colors.dart';
-import '../widgets/custom_app_bar.dart';
 import '../../l10n/app_localizations.dart';
 
 /// Global WebView screen with dynamic URL and app bar title
@@ -99,9 +98,9 @@ class _GlobalWebViewScreenState extends State<GlobalWebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: _getAppBarTitle(),
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(_getAppBarTitle()),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

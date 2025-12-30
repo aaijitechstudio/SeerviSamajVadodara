@@ -8,6 +8,7 @@ class CommitteeModel {
   final String phone;
   final String? email;
   final String? imageUrl;
+  final String? imageStoragePath;
   final String? fatherName; // S/O (Son of)
   final String? location; // Location in parentheses
   final String? area; // Area/Region for executive members
@@ -22,6 +23,7 @@ class CommitteeModel {
     required this.phone,
     this.email,
     this.imageUrl,
+    this.imageStoragePath,
     this.fatherName,
     this.location,
     this.area,
@@ -54,6 +56,7 @@ class CommitteeModel {
       phone: map['phone'] ?? '',
       email: map['email'],
       imageUrl: map['imageUrl'],
+      imageStoragePath: map['imageStoragePath'],
       fatherName: map['fatherName'],
       location: map['location'],
       area: map['area'],
@@ -70,6 +73,7 @@ class CommitteeModel {
       'phone': phone,
       'email': email,
       'imageUrl': imageUrl,
+      'imageStoragePath': imageStoragePath,
       'fatherName': fatherName,
       'location': location,
       'area': area,

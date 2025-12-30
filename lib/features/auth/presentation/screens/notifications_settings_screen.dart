@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class NotificationsSettingsScreen extends StatefulWidget {
   const NotificationsSettingsScreen({super.key});
@@ -49,16 +49,19 @@ class _NotificationsSettingsScreenState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.notifications,
+      appBar: AppBar(
+        title: Text(l10n.notifications),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(DesignTokens.spacingM),
-        children: [
+      body: ResponsivePage(
+        useSafeArea: false,
+        child: ListView(
+          padding: const EdgeInsets.all(DesignTokens.spacingM),
+          children: [
           _buildSectionHeader(l10n.pushNotifications),
           _buildSwitchTile(
             l10n.enablePushNotifications,
@@ -118,7 +121,8 @@ class _NotificationsSettingsScreenState
               _saveSetting('news_updates', value);
             },
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

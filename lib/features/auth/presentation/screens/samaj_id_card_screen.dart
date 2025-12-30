@@ -7,6 +7,7 @@ import 'dart:io';
 import '../../providers/auth_provider.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../shared/data/samaj_id_generator.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class SamajIdCardScreen extends ConsumerStatefulWidget {
   const SamajIdCardScreen({super.key});
@@ -51,8 +52,10 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(DesignTokens.spacingM),
-            child: Column(
-              children: [
+            child: ResponsivePage(
+              useSafeArea: false,
+              child: Column(
+                children: [
                 // ID Card with Screenshot capability
                 Screenshot(
                   controller: _screenshotController,
@@ -70,7 +73,8 @@ class _SamajIdCardScreenState extends ConsumerState<SamajIdCardScreen> {
 
                 // Information
                 _buildInformation(context),
-              ],
+                ],
+              ),
             ),
           );
         },

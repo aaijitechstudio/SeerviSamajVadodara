@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class AddMemberScreen extends StatefulWidget {
   const AddMemberScreen({super.key});
@@ -39,11 +40,13 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
@@ -121,7 +124,8 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                       )
                     : const Text('Add Member'),
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

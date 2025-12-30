@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -12,9 +12,9 @@ class AboutUsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.aboutUs,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(l10n.aboutUs),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -22,9 +22,11 @@ class AboutUsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(DesignTokens.spacingL),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             // About Header
             Container(
               padding: const EdgeInsets.all(DesignTokens.spacingL),
@@ -100,7 +102,8 @@ class AboutUsScreen extends StatelessWidget {
               content: l10n.valuesContent,
               color: AppColors.featurePurple,
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

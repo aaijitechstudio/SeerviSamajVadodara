@@ -6,6 +6,7 @@ import '../../../members/domain/models/user_model.dart';
 import 'add_member_screen.dart';
 import '../../../news/presentation/screens/add_announcement_screen.dart';
 import '../../../events/presentation/screens/add_event_screen.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class AdminPanelScreen extends ConsumerWidget {
   const AdminPanelScreen({super.key});
@@ -21,8 +22,11 @@ class AdminPanelScreen extends ConsumerWidget {
         appBar: AppBar(
           title: const Text('Admin Panel'),
         ),
-        body: const Center(
-          child: Text('Access Denied. Admin privileges required.'),
+        body: const ResponsivePage(
+          useSafeArea: false,
+          child: Center(
+            child: Text('Access Denied. Admin privileges required.'),
+          ),
         ),
       );
     }
@@ -40,12 +44,15 @@ class AdminPanelScreen extends ConsumerWidget {
             ],
           ),
         ),
-        body: const TabBarView(
-          children: [
-            _MembersAdminTab(),
-            _AnnouncementsAdminTab(),
-            _EventsAdminTab(),
-          ],
+        body: const ResponsivePage(
+          useSafeArea: false,
+          child: TabBarView(
+            children: [
+              _MembersAdminTab(),
+              _AnnouncementsAdminTab(),
+              _EventsAdminTab(),
+            ],
+          ),
         ),
         floatingActionButton: Builder(
           builder: (context) {

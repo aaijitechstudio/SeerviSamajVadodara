@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class TermsAndConditionsScreen extends StatelessWidget {
   const TermsAndConditionsScreen({super.key});
@@ -11,8 +11,9 @@ class TermsAndConditionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.termsAndConditionsTitle,
+      appBar: AppBar(
+        title: Text(l10n.termsAndConditionsTitle),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -20,9 +21,11 @@ class TermsAndConditionsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(DesignTokens.spacingL),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Text(
               l10n.termsAndConditionsTitle,
               style: TextStyle(
@@ -80,7 +83,8 @@ class TermsAndConditionsScreen extends StatelessWidget {
               l10n.termsContactDescription,
               style: TextStyle(fontSize: DesignTokens.fontSizeM),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

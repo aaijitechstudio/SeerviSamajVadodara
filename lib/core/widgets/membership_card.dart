@@ -325,39 +325,7 @@ class _MembershipCardState extends State<MembershipCard>
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(DesignTokens.radiusM),
-                  child: widget.profileImageUrl != null &&
-                          widget.profileImageUrl!.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: widget.profileImageUrl!,
-                          fit: BoxFit.cover,
-                          memCacheWidth: 200, // Limit memory usage
-                          memCacheHeight: 200,
-                          placeholder: (context, url) => Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  AppColors.primaryOrange
-                                      .withValues(alpha: 0.3),
-                                  AppColors.primaryOrangeDark
-                                      .withValues(alpha: 0.4),
-                                ],
-                              ),
-                            ),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                  AppColors.backgroundWhite,
-                                ),
-                              ),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              _buildDefaultProfileImage(),
-                        )
-                      : _buildDefaultProfileImage(),
+                  child: _buildProfileImage(),
                 ),
               ),
               // Role Badge Overlapping Bottom-Left with animation
@@ -444,6 +412,49 @@ class _MembershipCardState extends State<MembershipCard>
           ),
         );
       },
+    );
+  }
+
+  Widget _buildProfileImage() {
+    final url = widget.profileImageUrl;
+    if (url == null || url.isEmpty) return _buildDefaultProfileImage();
+
+    // Support local bundled assets for committee members (and any other local images).
+    if (url.startsWith('assets/')) {
+      return Image.asset(
+        url,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildDefaultProfileImage(),
+      );
+    }
+
+    // Default: treat as network URL
+    return CachedNetworkImage(
+      imageUrl: url,
+      fit: BoxFit.cover,
+      memCacheWidth: 200, // Limit memory usage
+      memCacheHeight: 200,
+      placeholder: (context, url) => Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.primaryOrange.withValues(alpha: 0.3),
+              AppColors.primaryOrangeDark.withValues(alpha: 0.4),
+            ],
+          ),
+        ),
+        child: const Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              AppColors.backgroundWhite,
+            ),
+          ),
+        ),
+      ),
+      errorWidget: (context, url, error) => _buildDefaultProfileImage(),
     );
   }
 

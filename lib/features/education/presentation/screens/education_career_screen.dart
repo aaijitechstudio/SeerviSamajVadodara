@@ -8,8 +8,8 @@ import '../../domain/models/exam_model.dart';
 import '../../domain/models/success_story_model.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/design_tokens.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/providers/ui_state_provider.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import 'career_detail_screen.dart';
 import 'scholarship_detail_screen.dart';
 import 'skill_detail_screen.dart';
@@ -109,9 +109,9 @@ class _EducationCareerScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: CustomAppBar(
-        title: 'Education & Career',
-        showLogo: false,
+      appBar: AppBar(
+        title: const Text('Education & Career'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: Column(
@@ -145,15 +145,18 @@ class _EducationCareerScreenState
 
           // Content
           Expanded(
-            child: Consumer(
-              builder: (context, ref, child) {
-                final isSearching = ref.watch(searchActiveProvider);
-                return isSearching
-                    ? const Center(child: CircularProgressIndicator())
-                    : _searchController.text.isNotEmpty
-                        ? _buildSearchResults()
-                        : _buildMainContent();
-              },
+            child: ResponsivePage(
+              useSafeArea: false,
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final isSearching = ref.watch(searchActiveProvider);
+                  return isSearching
+                      ? const Center(child: CircularProgressIndicator())
+                      : _searchController.text.isNotEmpty
+                          ? _buildSearchResults()
+                          : _buildMainContent();
+                },
+              ),
             ),
           ),
         ],

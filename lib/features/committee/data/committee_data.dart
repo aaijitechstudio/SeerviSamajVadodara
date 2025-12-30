@@ -103,6 +103,7 @@ class CommitteeData {
           phone: '',
           email: null,
           imageUrl: null,
+          imageStoragePath: 'committee_members/mukesh_07.png',
           order: 7,
         ),
 
@@ -197,6 +198,7 @@ class CommitteeData {
           phone: '',
           email: null,
           imageUrl: null,
+          imageStoragePath: 'committee_members/amraram_13.png',
           order: 13,
         ),
 

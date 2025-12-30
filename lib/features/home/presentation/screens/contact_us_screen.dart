@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});
@@ -13,9 +13,9 @@ class ContactUsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.contactUs,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(l10n.contactUs),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -23,9 +23,11 @@ class ContactUsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(DesignTokens.spacingL),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             // Contact Header
             Container(
               padding: const EdgeInsets.all(DesignTokens.spacingL),
@@ -103,7 +105,8 @@ class ContactUsScreen extends StatelessWidget {
               color: AppColors.featureTeal,
               onTap: () => _openWebsite(l10n.websiteDetails),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

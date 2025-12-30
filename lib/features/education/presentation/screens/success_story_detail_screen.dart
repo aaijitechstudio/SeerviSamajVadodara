@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/models/success_story_model.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 
 class SuccessStoryDetailScreen extends StatelessWidget {
   final SuccessStoryModel story;
@@ -15,9 +14,9 @@ class SuccessStoryDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: CustomAppBar(
-        title: 'Success Story',
-        showLogo: false,
+      appBar: AppBar(
+        title: const Text('Success Story'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

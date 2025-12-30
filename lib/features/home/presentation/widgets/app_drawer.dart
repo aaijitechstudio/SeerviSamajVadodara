@@ -8,7 +8,6 @@ import '../../../../core/providers/locale_provider.dart';
 import '../../../../core/widgets/page_transitions.dart';
 import '../../../members/domain/models/user_model.dart';
 import '../../../auth/providers/auth_provider.dart';
-import '../../../auth/presentation/screens/login_screen.dart';
 import '../../../events/presentation/screens/events_screen.dart';
 import '../../../committee/presentation/screens/helpline_screen.dart';
 import '../../../admin/presentation/screens/admin_panel_screen.dart';
@@ -590,7 +589,7 @@ class AppDrawer extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DesignTokens.radiusL),
         ),
@@ -654,13 +653,10 @@ class AppDrawer extends ConsumerWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ref.read(authControllerProvider.notifier).signOut();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-                (route) => false,
-              );
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await ref.read(authControllerProvider.notifier).signOut();
+              // AuthGate will route to Welcome/Login automatically after sign out.
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.errorText,

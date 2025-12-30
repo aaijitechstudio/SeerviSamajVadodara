@@ -414,6 +414,49 @@ class FirebaseService {
     }
   }
 
+  /// Ensures the user document exists in Firestore for the given Firebase user.
+  ///
+  /// This is critical for login methods that authenticate successfully but may
+  /// not have created the corresponding `users/{uid}` document yet (e.g. older
+  /// email/password accounts).
+  static Future<void> ensureUserDocumentExistsFromFirebaseUser(
+    User firebaseUser,
+  ) async {
+    // Check network connectivity before making request
+    await NetworkHelper.ensureNetworkConnectivity();
+
+    try {
+      final docRef = _firestore.collection('users').doc(firebaseUser.uid);
+      final doc = await docRef.get();
+      if (doc.exists) return;
+
+      final email = firebaseUser.email ?? '';
+      final inferredName = (email.contains('@') ? email.split('@').first : '')
+          .trim();
+      final name = (firebaseUser.displayName ?? inferredName).trim().isNotEmpty
+          ? (firebaseUser.displayName ?? inferredName).trim()
+          : 'User';
+
+      await docRef.set(
+        {
+          'name': name,
+          'email': email,
+          'phone': firebaseUser.phoneNumber ?? '',
+          'role': 'member',
+          'isVerified': firebaseUser.emailVerified,
+          'isActive': true,
+          'createdAt': FieldValue.serverTimestamp(),
+          'profileImageUrl': firebaseUser.photoURL,
+          'blockedUsers': [],
+          'allowDirectMessages': true,
+        },
+        SetOptions(merge: true),
+      );
+    } catch (e) {
+      throw Exception('Failed to ensure user profile: $e');
+    }
+  }
+
   static Future<void> updateUserData(
       String uid, Map<String, dynamic> data) async {
     // Check network connectivity before making request

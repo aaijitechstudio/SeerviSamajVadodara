@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/widgets/responsive_page.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
@@ -36,11 +37,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+        child: ResponsivePage(
+          useSafeArea: false,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
@@ -126,7 +129,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       )
                     : const Text('Add Event'),
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

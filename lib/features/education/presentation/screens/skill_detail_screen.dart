@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/models/skill_model.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/screens/web_view_screen.dart';
 import '../../../../core/screens/video_player_screen.dart';
 
@@ -17,9 +16,9 @@ class SkillDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: CustomAppBar(
-        title: skill.title,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(skill.title),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

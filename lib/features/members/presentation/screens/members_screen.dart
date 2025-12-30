@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/page_transitions.dart';
 import '../../../../core/widgets/loading_overlay.dart';
 import '../../../../core/widgets/membership_card.dart';
 import '../../../../core/constants/design_tokens.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import '../../providers/members_provider.dart';
 import '../../../auth/providers/auth_provider.dart';
 import 'member_detail_screen.dart';
@@ -82,9 +82,9 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.memberDirectory,
-        showLogo: false,
+      appBar: AppBar(
+        title: Text(l10n.memberDirectory),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(_isSearchActive ? Icons.close : Icons.search),
@@ -164,10 +164,12 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
           // Members List
           Expanded(
-            child: membersState.isLoading
-                ? FullScreenLoader(message: l10n.loading)
-                : filteredMembers.isEmpty
-                    ? Center(
+            child: ResponsivePage(
+              useSafeArea: false,
+              child: membersState.isLoading
+                  ? FullScreenLoader(message: l10n.loading)
+                  : filteredMembers.isEmpty
+                      ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -197,7 +199,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                           ],
                         ),
                       )
-                    : RefreshIndicator(
+                      : RefreshIndicator(
                         onRefresh: () async {
                           await membersController.refreshMembers();
                         },
@@ -233,7 +235,8 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                             );
                           },
                         ),
-                      ),
+                    ),
+            ),
           ),
         ],
       ),

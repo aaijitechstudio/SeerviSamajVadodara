@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/loading_overlay.dart';
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
@@ -57,8 +57,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: l10n.forgotPasswordTitle,
+      appBar: AppBar(
+        title: Text(l10n.forgotPasswordTitle),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -67,11 +68,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(DesignTokens.spacingL),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+          child: ResponsivePage(
+            useSafeArea: false,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                 if (!_emailSent) ...[
                   const SizedBox(height: DesignTokens.spacingXL),
                   Icon(
@@ -166,7 +169,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   ),
                   const SizedBox(height: DesignTokens.spacingXL),
                   ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () =>
+                        Navigator.of(context).pop(), // back to Login
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         vertical: DesignTokens.spacingM,
@@ -180,7 +184,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     child: Text(l10n.backToLogin),
                   ),
                 ],
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -11,6 +11,7 @@ import '../../../../core/widgets/empty_state_widget.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/animations/staggered_list_animation.dart';
+import '../../../../core/widgets/responsive_page.dart';
 import '../../domain/models/vadodara_news_model.dart';
 import '../../data/vadodara_news_service.dart';
 import '../../../auth/providers/auth_provider.dart';
@@ -253,6 +254,11 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final appBarBg = theme.appBarTheme.backgroundColor;
+    final appBarFg = theme.appBarTheme.foregroundColor;
+    final primary = theme.colorScheme.primary;
     final l10n = AppLocalizations.of(context)!;
 
     // Safety check: Ensure TabController has correct length (for hot reload)
@@ -282,43 +288,50 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
         }
       },
       child: Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(l10n.newsAnnouncements),
-        centerTitle: true,
-        backgroundColor: AppColors.backgroundWhite,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.newspaper),
-            tooltip: l10n.eNewspapers,
-            onPressed: () => _navigateToENewspapers(context),
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppColors.primaryOrange,
-          unselectedLabelColor: AppColors.textSecondary,
-          indicatorColor: AppColors.primaryOrange,
-          tabs: [
-            Tab(text: l10n.social),
-            Tab(text: l10n.gujaratNews),
-            Tab(text: l10n.rajasthanNews),
-            Tab(text: l10n.businessNews),
+        backgroundColor:
+            isDark ? theme.scaffoldBackgroundColor : AppColors.backgroundWhite,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(l10n.newsAnnouncements),
+          centerTitle: true,
+          // Match the rest of the app which relies on Theme.appBarTheme.
+          backgroundColor: appBarBg,
+          foregroundColor: appBarFg,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.newspaper),
+              tooltip: l10n.eNewspapers,
+              onPressed: () => _navigateToENewspapers(context),
+            ),
           ],
+          bottom: TabBar(
+            controller: _tabController,
+            labelColor: primary,
+            unselectedLabelColor:
+                (appBarFg ?? AppColors.textSecondary).withValues(alpha: 0.7),
+            indicatorColor: primary,
+            tabs: [
+              Tab(text: l10n.social),
+              Tab(text: l10n.gujaratNews),
+              Tab(text: l10n.rajasthanNews),
+              Tab(text: l10n.businessNews),
+            ],
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          _buildSocialSamajNews(l10n),
-          _buildVadodaraNews(l10n),
-          _buildRajasthanNews(l10n),
-          _buildBusinessNews(l10n),
-        ],
-      ),
+        body: ResponsivePage(
+          useSafeArea: false,
+          child: TabBarView(
+            controller: _tabController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              _buildSocialSamajNews(l10n),
+              _buildVadodaraNews(l10n),
+              _buildRajasthanNews(l10n),
+              _buildBusinessNews(l10n),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -412,7 +425,8 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
             return RepaintBoundary(
               child: StaggeredListAnimation(
                 index: index,
-                child: _buildVadodaraNewsCard(context, _vadodaraNews[index], l10n),
+                child:
+                    _buildVadodaraNewsCard(context, _vadodaraNews[index], l10n),
               ),
             );
           },
@@ -475,7 +489,8 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
             }
             return StaggeredListAnimation(
               index: index,
-              child: _buildVadodaraNewsCard(context, _rajasthanNews[index], l10n),
+              child:
+                  _buildVadodaraNewsCard(context, _rajasthanNews[index], l10n),
             );
           },
         ),
@@ -537,7 +552,8 @@ class _NewsScreenState extends ConsumerState<NewsScreen>
             }
             return StaggeredListAnimation(
               index: index,
-              child: _buildVadodaraNewsCard(context, _businessNews[index], l10n),
+              child:
+                  _buildVadodaraNewsCard(context, _businessNews[index], l10n),
             );
           },
         ),
