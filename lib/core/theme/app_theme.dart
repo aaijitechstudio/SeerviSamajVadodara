@@ -37,6 +37,7 @@ class AppTheme {
         elevation: DesignTokens.elevationNone,
         centerTitle: true,
         surfaceTintColor: Colors.transparent,
+        toolbarHeight: kToolbarHeight, // Ensure consistent height across all app bars
         titleTextStyle: GoogleFonts.nunito(
           fontSize: DesignTokens.fontSizeH6,
           fontWeight: DesignTokens.fontWeightSemiBold,
@@ -44,6 +45,12 @@ class AppTheme {
         ),
         iconTheme: const IconThemeData(
           color: AppColors.primaryOrange,
+        ),
+        shape: const Border(
+          bottom: BorderSide(
+            color: AppColors.dividerColor,
+            width: 1,
+          ),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

@@ -35,8 +35,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final scaffoldBgColor = theme.scaffoldBackgroundColor;
-    final textColor =
-        theme.textTheme.bodySmall?.color ?? AppColors.textSecondary;
+    // final textColor =
+    //     theme.textTheme.bodySmall?.color ?? AppColors.textSecondary; // Removed - not used after highlighting powered by text
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
     final screenWidth = mediaQuery.size.width;
@@ -97,203 +97,221 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
           actions: const [LanguageSwitcher()],
         ),
         body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.primaryOrange.withValues(alpha: 0.1),
-              scaffoldBgColor,
-            ],
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppColors.primaryOrange.withValues(alpha: 0.1),
+                scaffoldBgColor,
+              ],
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                  vertical: verticalPadding,
-                ),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
+          child: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: verticalPadding,
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Samaj Logo with Enhanced Design
-                      // Samaj Logo with Enhanced Design (same as welcome screen)
-                      Container(
-                        width: logoSize,
-                        height: logoSize,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.backgroundWhite,
-                              AppColors.primaryOrange
-                                  .withValues(alpha: 0.05),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Samaj Logo with Enhanced Design
+                        // Samaj Logo with Enhanced Design (same as welcome screen)
+                        Container(
+                          width: logoSize,
+                          height: logoSize,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppColors.backgroundWhite,
+                                AppColors.primaryOrange.withValues(alpha: 0.05),
+                              ],
+                            ),
+                            borderRadius:
+                                BorderRadius.circular(DesignTokens.radiusXL),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primaryOrange
+                                    .withValues(alpha: 0.15),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                                spreadRadius: 2,
+                              ),
+                              const BoxShadow(
+                                color: AppColors.shadowLight,
+                                blurRadius: 10,
+                                offset: Offset(0, 4),
+                              ),
                             ],
                           ),
-                          borderRadius:
-                              BorderRadius.circular(DesignTokens.radiusXL),
-                          boxShadow: [
-                            BoxShadow(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(DesignTokens.radiusL),
+                              child: Image.asset(
+                                'assets/images/seervisamajvadodara.png',
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.people,
+                                    size: DesignTokens.iconSizeXL,
+                                    color: Theme.of(context).primaryColor,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 12 * spacingMultiplier),
+
+                        // App Title with Gradient Effect
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [
+                              AppColors.primaryOrange,
+                              AppColors.primaryOrangeDark,
+                            ],
+                          ).createShader(bounds),
+                          child: Text(
+                            l10n.samajTitle,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: DesignTokens.fontWeightBold,
+                              color: AppColors.textOnPrimary,
+                              fontSize: titleFontSize,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+
+                        SizedBox(height: 4 * spacingMultiplier),
+
+                        Text(
+                          l10n.samajVadodara,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: AppColors.primaryOrangeDark,
+                            fontWeight: DesignTokens.fontWeightSemiBold,
+                            letterSpacing: 0.5,
+                            fontSize: isSmallScreen
+                                ? DesignTokens.fontSizeM
+                                : DesignTokens.fontSizeL,
+                          ),
+                        ),
+
+                        SizedBox(height: 16 * spacingMultiplier),
+
+                        // App Features Section - Enhanced Design with Flexible spacing
+                        Flexible(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildFeatureItem(
+                                context,
+                                icon: Icons.people,
+                                title: l10n.memberDirectory,
+                                description: l10n.connectWithCommunity,
+                                color: AppColors.featureBlue,
+                                isSmallScreen: isSmallScreen,
+                              ),
+                              SizedBox(height: 8 * spacingMultiplier),
+                              _buildFeatureItem(
+                                context,
+                                icon: Icons.event,
+                                title: l10n.events,
+                                description: l10n.stayUpdated,
+                                color: AppColors.featureGreen,
+                                isSmallScreen: isSmallScreen,
+                              ),
+                              SizedBox(height: 8 * spacingMultiplier),
+                              _buildFeatureItem(
+                                context,
+                                icon: Icons.newspaper,
+                                title: l10n.news,
+                                description: l10n.latestAnnouncements,
+                                color: AppColors.featurePurple,
+                                isSmallScreen: isSmallScreen,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: 12 * spacingMultiplier),
+
+                        SizedBox(height: 14 * spacingMultiplier),
+
+                        // Login Button
+                        AppButton(
+                          label: l10n.login,
+                          type: AppButtonType.primary,
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('/login');
+                          },
+                        ),
+
+                        SizedBox(height: 12 * spacingMultiplier),
+
+                        // Register Button
+                        AppButton(
+                          label: l10n.registerMembersOnly,
+                          type: AppButtonType.secondary,
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('/signup');
+                          },
+                        ),
+
+                        SizedBox(height: 16 * spacingMultiplier),
+
+                        // Powered By Footer - Highlighted
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: DesignTokens.spacingM *
+                                  (isSmallScreen ? 0.8 : 1.0),
+                              vertical: DesignTokens.spacingS *
+                                  (isSmallScreen ? 0.8 : 1.0),
+                            ),
+                            decoration: BoxDecoration(
                               color: AppColors.primaryOrange
-                                  .withValues(alpha: 0.15),
-                              blurRadius: 20,
-                              offset: const Offset(0, 8),
-                              spreadRadius: 2,
+                                  .withValues(alpha: 0.1),
+                              borderRadius:
+                                  BorderRadius.circular(DesignTokens.radiusM),
+                              border: Border.all(
+                                color: AppColors.primaryOrange
+                                    .withValues(alpha: 0.3),
+                                width: 1,
+                              ),
                             ),
-                            const BoxShadow(
-                              color: AppColors.shadowLight,
-                              blurRadius: 10,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(DesignTokens.radiusL),
-                            child: Image.asset(
-                              'assets/images/seervisamajvadodara.png',
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.people,
-                                  size: DesignTokens.iconSizeXL,
-                                  color: Theme.of(context).primaryColor,
-                                );
-                              },
+                            child: Text(
+                              l10n.poweredBy,
+                              style: TextStyle(
+                                fontSize: DesignTokens.fontSizeXS *
+                                    (isSmallScreen ? 0.9 : 1.0),
+                                color: AppColors.primaryOrange,
+                                fontWeight: DesignTokens.fontWeightSemiBold,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                      ),
-
-                      SizedBox(height: 12 * spacingMultiplier),
-
-                      // App Title with Gradient Effect
-                      ShaderMask(
-                        shaderCallback: (bounds) => const LinearGradient(
-                          colors: [
-                            AppColors.primaryOrange,
-                            AppColors.primaryOrangeDark,
-                          ],
-                        ).createShader(bounds),
-                        child: Text(
-                          l10n.samajTitle,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: DesignTokens.fontWeightBold,
-                            color: AppColors.textOnPrimary,
-                            fontSize: titleFontSize,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-
-                      SizedBox(height: 4 * spacingMultiplier),
-
-                      Text(
-                        l10n.samajVadodara,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: AppColors.primaryOrangeDark,
-                          fontWeight: DesignTokens.fontWeightSemiBold,
-                          letterSpacing: 0.5,
-                          fontSize: isSmallScreen
-                              ? DesignTokens.fontSizeM
-                              : DesignTokens.fontSizeL,
-                        ),
-                      ),
-
-                      SizedBox(height: 16 * spacingMultiplier),
-
-                      // App Features Section - Enhanced Design with Flexible spacing
-                      Flexible(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildFeatureItem(
-                              context,
-                              icon: Icons.people,
-                              title: l10n.memberDirectory,
-                              description: l10n.connectWithCommunity,
-                              color: AppColors.featureBlue,
-                              isSmallScreen: isSmallScreen,
-                            ),
-                            SizedBox(height: 8 * spacingMultiplier),
-                            _buildFeatureItem(
-                              context,
-                              icon: Icons.event,
-                              title: l10n.events,
-                              description: l10n.stayUpdated,
-                              color: AppColors.featureGreen,
-                              isSmallScreen: isSmallScreen,
-                            ),
-                            SizedBox(height: 8 * spacingMultiplier),
-                            _buildFeatureItem(
-                              context,
-                              icon: Icons.newspaper,
-                              title: l10n.news,
-                              description: l10n.latestAnnouncements,
-                              color: AppColors.featurePurple,
-                              isSmallScreen: isSmallScreen,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: 12 * spacingMultiplier),
-
-                      SizedBox(height: 14 * spacingMultiplier),
-
-                      // Login Button
-                      AppButton(
-                        label: l10n.login,
-                        type: AppButtonType.primary,
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/login');
-                        },
-                      ),
-
-                      SizedBox(height: 12 * spacingMultiplier),
-
-                      // Register Button
-                      AppButton(
-                        label: l10n.registerMembersOnly,
-                        type: AppButtonType.secondary,
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/signup');
-                        },
-                      ),
-
-                      SizedBox(height: 16 * spacingMultiplier),
-
-                      // Powered By Footer
-                      Center(
-                        child: Text(
-                          l10n.poweredBy,
-                          style: TextStyle(
-                            fontSize: DesignTokens.fontSizeXS *
-                                (isSmallScreen ? 0.9 : 1.0),
-                            color: textColor.withValues(alpha: 0.6),
-                            fontWeight: DesignTokens.fontWeightRegular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
         ),
       ),
     );

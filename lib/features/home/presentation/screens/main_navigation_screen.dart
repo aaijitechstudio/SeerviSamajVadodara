@@ -135,15 +135,20 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
           ),
           floatingActionButton: safeIndex == 0 && user != null
               ? FloatingActionButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Navigate to post composer - default to discussion category
-                    Navigator.of(context).push(
+                    final result = await Navigator.of(context).push<bool>(
                       MaterialPageRoute(
                         builder: (context) => const PostComposerScreen(
                           initialCategory: PostCategory.discussion,
                         ),
                       ),
                     );
+                    // Refresh post list if post was created successfully
+                    if (result == true && mounted) {
+                      // Trigger refresh by notifying the post list widget
+                      // The widget will refresh when it becomes visible again
+                    }
                   },
                   child: const Icon(Icons.add),
                 )
@@ -159,48 +164,60 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 ),
               ],
             ),
-            child: SafeArea(
-              top: false,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _buildNavItem(
-                      context,
-                      icon: Icons.home_rounded,
-                      label: l10n.home,
-                      index: 0,
-                    ),
-                    _buildNavItem(
-                      context,
-                      icon: Icons.newspaper_rounded,
-                      label: l10n.news,
-                      index: 1,
-                    ),
-                    _buildNavItem(
-                      context,
-                      icon: Icons.people_rounded,
-                      label: l10n.members,
-                      index: 2,
-                    ),
-                    _buildNavItem(
-                      context,
-                      icon: Icons.school_rounded,
-                      label: 'Education',
-                      index: 3,
-                    ),
-                    _buildNavItem(
-                      context,
-                      icon: Icons.person_rounded,
-                      label: l10n.profile,
-                      index: 4,
-                    ),
-                  ],
-                ),
-              ),
+            child: Builder(
+              builder: (context) {
+                final mediaQuery = MediaQuery.of(context);
+                final bottomPadding = mediaQuery.padding.bottom;
+                // Use minimal bottom padding - only add if device has button navigation
+                // Cap at 8px maximum to prevent excessive white space
+                final safeBottomPadding = bottomPadding > 0
+                    ? (bottomPadding > 8.0 ? 8.0 : bottomPadding)
+                    : 0.0;
+                return Padding(
+                  padding: EdgeInsets.only(
+                    left: 8,
+                    right: 8,
+                    top: 4,
+                    bottom: safeBottomPadding,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _buildNavItem(
+                        context,
+                        icon: Icons.home_rounded,
+                        label: l10n.home,
+                        index: 0,
+                      ),
+                      _buildNavItem(
+                        context,
+                        icon: Icons.newspaper_rounded,
+                        label: l10n.news,
+                        index: 1,
+                      ),
+                      _buildNavItem(
+                        context,
+                        icon: Icons.people_rounded,
+                        label: l10n.members,
+                        index: 2,
+                      ),
+                      _buildNavItem(
+                        context,
+                        icon: Icons.school_rounded,
+                        label: 'Education',
+                        index: 3,
+                      ),
+                      _buildNavItem(
+                        context,
+                        icon: Icons.person_rounded,
+                        label: l10n.profile,
+                        index: 4,
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ),

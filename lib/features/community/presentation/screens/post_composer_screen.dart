@@ -6,6 +6,7 @@ import 'dart:io';
 import '../../../../shared/models/post_model.dart';
 import '../../../../core/repositories/repository_providers.dart';
 import '../../../auth/providers/auth_provider.dart';
+import '../../../home/providers/post_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../../../core/widgets/responsive_page.dart';
 
@@ -318,6 +319,8 @@ class _PostComposerScreenState extends ConsumerState<PostComposerScreen> {
           _uploadProgress = 0.0;
         });
         if (mounted) {
+          // Trigger post list refresh by incrementing the refresh trigger
+          ref.read(postRefreshTriggerProvider.notifier).state++;
           Navigator.of(context).pop(true);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

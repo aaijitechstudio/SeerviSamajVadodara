@@ -119,14 +119,13 @@ class _MembershipCardState extends State<MembershipCard>
               builder: (context, child) {
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
-                  transform:
-                      Matrix4.identity()
-                        ..scaleByDouble(
-                          _isPressed ? 0.98 : 1.0,
-                          _isPressed ? 0.98 : 1.0,
-                          _isPressed ? 0.98 : 1.0,
-                          1.0,
-                        ),
+                  transform: Matrix4.identity()
+                    ..scaleByDouble(
+                      _isPressed ? 0.98 : 1.0,
+                      _isPressed ? 0.98 : 1.0,
+                      _isPressed ? 0.98 : 1.0,
+                      1.0,
+                    ),
                   margin: const EdgeInsets.only(
                     top: DesignTokens.spacingS,
                     bottom: DesignTokens.spacingS,
@@ -272,8 +271,8 @@ class _MembershipCardState extends State<MembershipCard>
               Expanded(
                 child: Text(
                   l10n != null
-                      ? '${l10n.samajTitle} ${l10n.samajVadodara}'
-                      : 'Seervi Kshatriya Samaj Vadodara',
+                      ? '${l10n.samajTitle} ${l10n.samajVadodara} ${_getGujaratText(l10n)}'
+                      : 'Seervi Kshatriya Samaj Vadodara Gujarat',
                   style: TextStyle(
                     fontSize: DesignTokens.fontSizeL,
                     fontWeight: DesignTokens.fontWeightBold,
@@ -356,7 +355,7 @@ class _MembershipCardState extends State<MembershipCard>
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: DesignTokens.spacingS,
-                          vertical: DesignTokens.spacingXS / 2,
+                          vertical: DesignTokens.spacingXS,
                         ),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
@@ -386,7 +385,7 @@ class _MembershipCardState extends State<MembershipCard>
                           children: [
                             const Icon(
                               Icons.star,
-                              size: 14,
+                              size: 12,
                               color: AppColors.backgroundWhite,
                             ),
                             const SizedBox(width: 4),
@@ -394,9 +393,10 @@ class _MembershipCardState extends State<MembershipCard>
                               child: Text(
                                 widget.role!,
                                 style: TextStyle(
-                                  fontSize: DesignTokens.fontSizeS,
+                                  fontSize: DesignTokens.fontSizeXS,
                                   fontWeight: DesignTokens.fontWeightBold,
                                   color: AppColors.backgroundWhite,
+                                  height: 1.2,
                                   shadows: [
                                     Shadow(
                                       color:
@@ -405,8 +405,9 @@ class _MembershipCardState extends State<MembershipCard>
                                     ),
                                   ],
                                 ),
-                                maxLines: 1,
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
                               ),
                             ),
                           ],
@@ -431,7 +432,8 @@ class _MembershipCardState extends State<MembershipCard>
       return Image.asset(
         url,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => _buildDefaultProfileImage(),
+        errorBuilder: (context, error, stackTrace) =>
+            _buildDefaultProfileImage(),
       );
     }
 
@@ -741,5 +743,20 @@ class _MembershipCardState extends State<MembershipCard>
         ],
       ),
     );
+  }
+
+  /// Helper method to get localized Gujarat text
+  String _getGujaratText(AppLocalizations l10n) {
+    // Get locale from context
+    final locale = Localizations.localeOf(context);
+    switch (locale.languageCode) {
+      case 'hi':
+        return 'गुजरात';
+      case 'gu':
+        return 'ગુજરાત';
+      case 'en':
+      default:
+        return 'Gujarat';
+    }
   }
 }

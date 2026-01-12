@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart'; // Commented out - Terms and Conditions UI removed
 import '../../providers/auth_provider.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/auth_preferences.dart';
 import '../../../../core/utils/localization_helper.dart';
 import '../../../../core/widgets/language_switcher.dart';
-import '../../../../core/widgets/google_sign_in_button.dart';
+// import '../../../../core/widgets/google_sign_in_button.dart'; // Commented out - Google Sign In button removed
 import '../../../../core/constants/design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/animations/animated_button.dart';
@@ -60,40 +60,40 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.login),
-          centerTitle: true,
-          leading: Navigator.of(context).canPop()
-              ? IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(),
-                )
-              : null,
-          actions: const [LanguageSwitcher()],
-        ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                AppColors.primaryOrange.withValues(alpha: 0.1),
-                AppColors.backgroundWhite,
-              ],
-            ),
+      appBar: AppBar(
+        title: Text(l10n.login),
+        centerTitle: true,
+        leading: Navigator.of(context).canPop()
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            : null,
+        actions: const [LanguageSwitcher()],
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.primaryOrange.withValues(alpha: 0.1),
+              AppColors.backgroundWhite,
+            ],
           ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(DesignTokens.spacingL),
-              child: ResponsivePage(
-                useSafeArea: false,
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(DesignTokens.spacingL),
+            child: ResponsivePage(
+              useSafeArea: false,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
                     const SizedBox(
                         height:
                             DesignTokens.spacingXXL + DesignTokens.spacingM),
@@ -290,39 +290,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
 
-                    const SizedBox(height: DesignTokens.spacingM),
+                    // const SizedBox(height: DesignTokens.spacingM),
 
-                    // Divider with "OR"
-                    Row(
-                      children: [
-                        Expanded(child: Divider(color: Colors.grey.shade300)),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: DesignTokens.spacingM),
-                          child: Text(
-                            'OR',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        Expanded(child: Divider(color: Colors.grey.shade300)),
-                      ],
-                    ),
+                    // // Divider with "OR"
+                    // Row(
+                    //   children: [
+                    //     Expanded(child: Divider(color: Colors.grey.shade300)),
+                    //     Padding(
+                    //       padding: const EdgeInsets.symmetric(
+                    //           horizontal: DesignTokens.spacingM),
+                    //       child: Text(
+                    //         'OR',
+                    //         style: TextStyle(
+                    //           color: Colors.grey.shade600,
+                    //           fontWeight: FontWeight.w500,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     Expanded(child: Divider(color: Colors.grey.shade300)),
+                    //   ],
+                    // ),
 
-                    const SizedBox(height: DesignTokens.spacingM),
+                    // const SizedBox(height: DesignTokens.spacingM),
 
-                    // Google Sign In Button (Standard Design)
-                    Consumer(
-                      builder: (context, ref, child) {
-                        final authState = ref.watch(authControllerProvider);
-                        return GoogleSignInButton(
-                          onPressed: _handleGoogleSignIn,
-                          isLoading: authState.isGoogleSignInLoading,
-                        );
-                      },
-                    ),
+                    // // Google Sign In Button (Standard Design)
+                    // Consumer(
+                    //   builder: (context, ref, child) {
+                    //     final authState = ref.watch(authControllerProvider);
+                    //     return GoogleSignInButton(
+                    //       onPressed: _handleGoogleSignIn,
+                    //       isLoading: authState.isGoogleSignInLoading,
+                    //     );
+                    //   },
+                    // ),
 
                     const SizedBox(height: DesignTokens.spacingM),
 
@@ -358,91 +358,103 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Text(l10n.dontHaveAccount),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pushReplacementNamed('/signup');
+                            Navigator.of(context)
+                                .pushReplacementNamed('/signup');
                           },
                           child: Text(l10n.signUp),
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: DesignTokens.spacingM),
+                    // const SizedBox(height: DesignTokens.spacingM),
 
-                    // Terms and Privacy Policy
-                    Center(
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Text(
-                            '${l10n.bySigningInYouAgreeTo} ',
-                            style: const TextStyle(
-                              fontSize: DesignTokens.fontSizeS,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => _openUrl('https://example.com/terms'),
-                            child: Text(
-                              l10n.termsAndConditions,
-                              style: const TextStyle(
-                                fontSize: DesignTokens.fontSizeS,
-                                color: AppColors.primaryOrange,
-                                fontWeight: DesignTokens.fontWeightMedium,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            ' ${l10n.and} ',
-                            style: const TextStyle(
-                              fontSize: DesignTokens.fontSizeS,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () =>
-                                _openUrl('https://example.com/privacy'),
-                            child: Text(
-                              l10n.privacyPolicy,
-                              style: const TextStyle(
-                                fontSize: DesignTokens.fontSizeS,
-                                color: AppColors.primaryOrange,
-                                fontWeight: DesignTokens.fontWeightMedium,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // // Terms and Privacy Policy
+                    // Center(
+                    //   child: Wrap(
+                    //     alignment: WrapAlignment.center,
+                    //     crossAxisAlignment: WrapCrossAlignment.center,
+                    //     children: [
+                    //       Text(
+                    //         '${l10n.bySigningInYouAgreeTo} ',
+                    //         style: const TextStyle(
+                    //           fontSize: DesignTokens.fontSizeS,
+                    //           color: AppColors.textSecondary,
+                    //         ),
+                    //       ),
+                    //       GestureDetector(
+                    //         onTap: () => _openUrl('https://example.com/terms'),
+                    //         child: Text(
+                    //           l10n.termsAndConditions,
+                    //           style: const TextStyle(
+                    //             fontSize: DesignTokens.fontSizeS,
+                    //             color: AppColors.primaryOrange,
+                    //             fontWeight: DesignTokens.fontWeightMedium,
+                    //             decoration: TextDecoration.underline,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Text(
+                    //         ' ${l10n.and} ',
+                    //         style: const TextStyle(
+                    //           fontSize: DesignTokens.fontSizeS,
+                    //           color: AppColors.textSecondary,
+                    //         ),
+                    //       ),
+                    //       GestureDetector(
+                    //         onTap: () =>
+                    //             _openUrl('https://example.com/privacy'),
+                    //         child: Text(
+                    //           l10n.privacyPolicy,
+                    //           style: const TextStyle(
+                    //             fontSize: DesignTokens.fontSizeS,
+                    //             color: AppColors.primaryOrange,
+                    //             fontWeight: DesignTokens.fontWeightMedium,
+                    //             decoration: TextDecoration.underline,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
 
                     const SizedBox(height: DesignTokens.spacingL),
 
-                    // Powered By Footer
+                    // Powered By Footer - Highlighted
                     Center(
-                      child: Text(
-                        'Powered by - Seervi Kshatriya Samaj - Vadodara',
-                        style: TextStyle(
-                          fontSize: DesignTokens.fontSizeXS,
-                          color: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.color
-                                  ?.withValues(alpha: 0.6) ??
-                              AppColors.textSecondary,
-                          fontWeight: DesignTokens.fontWeightRegular,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: DesignTokens.spacingM,
+                          vertical: DesignTokens.spacingS,
                         ),
-                        textAlign: TextAlign.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryOrange.withValues(alpha: 0.1),
+                          borderRadius:
+                              BorderRadius.circular(DesignTokens.radiusM),
+                          border: Border.all(
+                            color:
+                                AppColors.primaryOrange.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          'Powered by - Seervi Kshatriya Samaj - Vadodara',
+                          style: TextStyle(
+                            fontSize: DesignTokens.fontSizeXS,
+                            color: AppColors.primaryOrange,
+                            fontWeight: DesignTokens.fontWeightSemiBold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
   Future<void> _handleLogin() async {
@@ -487,48 +499,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Future<void> _handleGoogleSignIn() async {
-    final authController = ref.read(authControllerProvider.notifier);
+  // Commented out - Google Sign In button removed
+  // Future<void> _handleGoogleSignIn() async {
+  //   final authController = ref.read(authControllerProvider.notifier);
 
-    final success = await authController.signInWithGoogle();
+  //   final success = await authController.signInWithGoogle();
 
-    if (success && mounted) {
-      // Log login activity
-      final authState = ref.read(authControllerProvider);
-      final email = authState.user?.email ?? 'google_user';
-      await AuthPreferences.addLoginActivity(
-        email: email,
-        timestamp: DateTime.now(),
-        method: 'google',
-      );
+  //   if (success && mounted) {
+  //     // Log login activity
+  //     final authState = ref.read(authControllerProvider);
+  //     final email = authState.user?.email ?? 'google_user';
+  //     await AuthPreferences.addLoginActivity(
+  //       email: email,
+  //       timestamp: DateTime.now(),
+  //       method: 'google',
+  //     );
 
-      // AuthGate will route to the correct screen on successful login.
-    } else if (mounted) {
-      // Check for error in auth state
-      final authState = ref.read(authControllerProvider);
-      if (authState.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(authState.error!),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
+  //     // AuthGate will route to the correct screen on successful login.
+  //   } else if (mounted) {
+  //     // Check for error in auth state
+  //     final authState = ref.read(authControllerProvider);
+  //     if (authState.error != null) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text(authState.error!),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
-  Future<void> _openUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not open $url'),
-          ),
-        );
-      }
-    }
-  }
+  // Commented out - Terms and Conditions UI removed
+  // Future<void> _openUrl(String url) async {
+  //   final Uri uri = Uri.parse(url);
+  //   if (await canLaunchUrl(uri)) {
+  //     await launchUrl(uri, mode: LaunchMode.externalApplication);
+  //   } else {
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Could not open $url'),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 }

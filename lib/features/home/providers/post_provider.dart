@@ -8,6 +8,9 @@ final postsStreamProvider = StreamProvider.autoDispose<List<PostModel>>((ref) {
   return FirebaseService.getPosts();
 });
 
+// Post refresh trigger provider - increments when a post is created to trigger refresh
+final postRefreshTriggerProvider = StateProvider<int>((ref) => 0);
+
 // Post controller provider (auto-disposing for better memory management)
 final postControllerProvider =
     NotifierProvider.autoDispose<PostController, PostState>(() {

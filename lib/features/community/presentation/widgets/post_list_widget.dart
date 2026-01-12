@@ -7,6 +7,7 @@ import '../../../../core/repositories/repository_providers.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../members/domain/models/user_model.dart';
 import '../../../../shared/data/firebase_service.dart';
+import '../../../home/providers/post_provider.dart';
 import '../screens/post_composer_screen.dart';
 import 'post_item_widget.dart';
 
@@ -24,7 +25,8 @@ class PostListWidget extends ConsumerStatefulWidget {
   ConsumerState<PostListWidget> createState() => _PostListWidgetState();
 }
 
-class _PostListWidgetState extends ConsumerState<PostListWidget> {
+class _PostListWidgetState extends ConsumerState<PostListWidget>
+    with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
   List<PostModel> _posts = [];
   bool _isLoading = false;
@@ -34,18 +36,47 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
   PostFilterType _selectedFilter = PostFilterType.all;
   final Map<String, UserModel> _userCache =
       {}; // Cache for user data to check admin status
+  DateTime? _lastRefreshTime;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadPosts();
     _scrollController.addListener(_onScroll);
+    _lastRefreshTime = DateTime.now();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Listen to post refresh trigger and refresh when a new post is created
+    ref.listen<int>(postRefreshTriggerProvider, (previous, next) {
+      if (previous != null && next > previous && mounted) {
+        // A new post was created, refresh the list
+        _refreshPosts();
+      }
+    });
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Refresh posts when app comes back to foreground
+    if (state == AppLifecycleState.resumed) {
+      // Only refresh if it's been more than 2 seconds since last refresh
+      if (_lastRefreshTime == null ||
+          DateTime.now().difference(_lastRefreshTime!) >
+              const Duration(seconds: 2)) {
+        _refreshPosts();
+      }
+    }
   }
 
   void _onScroll() {
@@ -212,6 +243,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
       _userCache.clear();
       _loadErrorMessage = null;
     });
+    _lastRefreshTime = DateTime.now();
     await _loadPosts();
   }
 
@@ -374,7 +406,8 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, size: 64, color: AppColors.grey500),
+              const Icon(Icons.error_outline,
+                  size: 64, color: AppColors.grey500),
               const SizedBox(height: 12),
               Text(
                 _loadErrorMessage!,
@@ -428,8 +461,8 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
               ),
               const SizedBox(height: 32),
               ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
+                onPressed: () async {
+                  final result = await Navigator.of(context).push<bool>(
                     MaterialPageRoute(
                       builder: (context) => PostComposerScreen(
                         initialCategory:
@@ -437,6 +470,10 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
                       ),
                     ),
                   );
+                  // Refresh posts if a new post was created
+                  if (result == true && mounted) {
+                    _refreshPosts();
+                  }
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Add Post'),
